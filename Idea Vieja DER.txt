@@ -1,3 +1,5 @@
+• No esta basado en el Enunciado, sino mas bien en los Datos que tenemos de la Tabla Maestra. Por lo cual faltarian todo lo que es datos nuestros.
+
 ::::: Columnas de Tabla Maestra :::::
 	   [Paciente_Nombre]
       ,[Paciente_Apellido]

@@ -1,3 +1,4 @@
+--- Necesita ser Actualizado a Nuevo DER
  CREATE SCHEMA kfc AUTHORIZATION gd  
   
   go

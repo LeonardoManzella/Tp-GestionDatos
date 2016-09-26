@@ -72,7 +72,7 @@
 		- Especialidad
 			  <Especialidad_Codigo>						PK
 			  ,[Especialidad_Descripcion]				NOT NULL
-		- Tipos Especialidades
+		- Tipos Especialidades (son agrupaciones de varias especialidades)
 				<Tipo_Especialidad_Codigo>			PK
 				,[Tipo_Especialidad_Descripcion]	NOT NULL
 		- Bonos

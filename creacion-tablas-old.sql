@@ -1,63 +1,85 @@
---- Necesita ser Actualizado a Nuevo DER
- CREATE SCHEMA kfc AUTHORIZATION gd  
-  
-  go
-  create table kfc.MEDICOS(
-	Medico_Dni  numeric(18,0) Primary Key,
-	Medico_Nombre Varchar(255) Null,
-	Medico_Apellido Varchar(255) Null,
-	Medico_Direccion Varchar(255) Null,
-	Medico_Fecha_Nac datetime Null,
-	Medico_Mail varchar(255) Null,
-	Medico_Telefono numeric(18,0) Null,
-   )
-  go
-
-  insert into kfc.MEDICOS 
-  select distinct Medico_Dni, Medico_Nombre,Medico_Apellido,
-		Medico_Direccion, Medico_Fecha_Nac,
-		Medico_Mail, Medico_Telefono
-    FROM [GD2C2016].[gd_esquema].[Maestra]
-	where Medico_Dni is not null
-	order by Medico_Dni
-
-go
-create table kfc.MEDICOS_ESPECIALIDAD(Medico_Dni numeric(18,0),Especialidad_Codigo Numeric(18,0))
-go
-insert into kfc.MEDICOS_ESPECIALIDAD
-select distinct Medico_Dni,Especialidad_Codigo
-FROM [GD2C2016].[gd_esquema].[Maestra]
-where Medico_Dni is not null
-order by Especialidad_Codigo, Medico_Dni
-
-go
-
-create table kfc.ESPECIALIDADES(Especialidad_Codigo Numeric(18,0) Primary Key,
-								Especialidad_Descripcion varchar(255),
-								Tipo_Especialidad_Codigo Numeric(18,0))
-go
-
-insert into kfc.ESPECIALIDADES
-select distinct Especialidad_Codigo, Especialidad_Descripcion, Tipo_Especialidad_Codigo
-FROM [GD2C2016].[gd_esquema].[Maestra]
-Where Especialidad_Codigo is not null
-order by Especialidad_Codigo
-
-go
-
-create table kfc.TIPOS_ESPECIALIDAD(Tipo_Especialidad_Codigo Numeric(18,0) Primary Key,
-									Tipo_Especialidad_Descripcion Varchar(255) Not Null)
-
-go
-
-insert into kfc.TIPOS_ESPECIALIDAD
-select distinct Tipo_Especialidad_Codigo, Tipo_Especialidad_Descripcion
-FROM [GD2C2016].[gd_esquema].[Maestra]
-Where Tipo_Especialidad_Codigo is not null
-order by Tipo_Especialidad_Codigo,Tipo_Especialidad_Descripcion
-
-go
-
-commit
-
-go
+CREATE SCHEMA kfc AUTHORIZATION gd
+GO
+CREATE TABLE kfc.MEDICOS
+          (
+                    Medico_Dni       NUMERIC(18,0) PRIMARY KEY
+                  , Medico_Nombre    VARCHAR(255) NULL
+                  , Medico_Apellido  VARCHAR(255) NULL
+                  , Medico_Direccion VARCHAR(255) NULL
+                  , Medico_Fecha_Nac DATETIME NULL
+                  , Medico_Mail      VARCHAR(255) NULL
+                  , Medico_Telefono  NUMERIC(18,0) NULL
+                  ,
+           )
+GO
+INSERT INTO kfc.MEDICOS
+SELECT DISTINCT Medico_Dni
+        , Medico_Nombre
+        , Medico_Apellido
+        , Medico_Direccion
+        , Medico_Fecha_Nac
+        , Medico_Mail
+        , Medico_Telefono
+FROM
+          [GD2C2016].[gd_esquema].[Maestra]
+WHERE
+          Medico_Dni IS NOT NULL
+ORDER BY
+          Medico_Dni
+GO
+CREATE TABLE kfc.MEDICOS_ESPECIALIDAD
+          (
+                    Medico_Dni          NUMERIC(18,0)
+                  , Especialidad_Codigo NUMERIC(18,0)
+          )
+GO
+INSERT INTO kfc.MEDICOS_ESPECIALIDAD
+SELECT DISTINCT Medico_Dni
+        , Especialidad_Codigo
+FROM
+          [GD2C2016].[gd_esquema].[Maestra]
+WHERE
+          Medico_Dni IS NOT NULL
+ORDER BY
+          Especialidad_Codigo
+        , Medico_Dni
+GO
+CREATE TABLE kfc.ESPECIALIDADES
+          (
+                    Especialidad_Codigo      NUMERIC(18,0) PRIMARY KEY
+                  , Especialidad_Descripcion VARCHAR(255)
+                  , Tipo_Especialidad_Codigo NUMERIC(18,0)
+          )
+GO
+INSERT INTO kfc.ESPECIALIDADES
+SELECT DISTINCT Especialidad_Codigo
+        , Especialidad_Descripcion
+        , Tipo_Especialidad_Codigo
+FROM
+          gd_esquema.Maestra
+WHERE
+          (
+                    Especialidad_Codigo IS NOT NULL
+          )
+ORDER BY
+          Especialidad_Codigo
+GO
+CREATE TABLE kfc.TIPOS_ESPECIALIDAD
+          (
+                    Tipo_Especialidad_Codigo      NUMERIC(18,0) PRIMARY KEY
+                  , Tipo_Especialidad_Descripcion VARCHAR(255) NOT NULL
+          )
+GO
+INSERT INTO kfc.TIPOS_ESPECIALIDAD
+SELECT DISTINCT Tipo_Especialidad_Codigo
+        , Tipo_Especialidad_Descripcion
+FROM
+          [GD2C2016].[gd_esquema].[Maestra]
+WHERE
+          Tipo_Especialidad_Codigo IS NOT NULL
+ORDER BY
+          Tipo_Especialidad_Codigo
+        , Tipo_Especialidad_Descripcion
+GO
+COMMIT
+GO

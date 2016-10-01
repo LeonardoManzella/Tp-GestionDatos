@@ -1,0 +1,9 @@
+:::::::::::::::::::: CONVENCIONES ::::::::::::::::::::
+Por Favor respeten las Convenciones de Nombres, Tablas, Identacion, etc: facilita que nos entendamos entre nosotros
+Usemos en lo posible las Convenciones que dieron en clase, que todos las conocemos.
+Para los nombres de campos clave, ponemos "nombreTabla_clave", para los demas campos no llevan prefijos. 
+Usamos Snake Case.
+Por favor recuerden que la eficiencia de tiempo es muy imporante en el TP. Asi que traten de usar los tipos de datos mas chicos que puedan. no agranden por las dudas.
+
+Si quieren pueden usar esta utilidad online para formatear el codigo: http://www.sqlinform.com/sql_formatter_online.html
+

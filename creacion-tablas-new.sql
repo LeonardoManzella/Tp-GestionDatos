@@ -22,31 +22,21 @@
 	BONOS
 */
 
-
-/* ::::::::::::::::::::: CONVENCIONES :::::::::::::::::::::
-Por Favor respeten las Convenciones de Nombres, Tablas, Identacion, etc: facilita que nos entendamos entre nosotros
-Usemos las Convenciones que dieron en clase, que todos las conocemos.
-Sino, vallan a leer este link que les explica la importancia de las convenciones
-http://www.codeproject.com/Articles/1065295/SQL-Server-Table-and-Column-Naming-Conventions
-
-Si quieren pueden usar esta utilidad online para formatear el codigo: http://www.sqlinform.com/sql_formatter_online.html
-*/
-
 CREATE SCHEMA kfc AUTHORIZATION gd GO
 
 CREATE TABLE kfc.USUARIOS
           (
                     us_id         INT PRIMARY KEY IDENTITY(1,1)
-                  , us_nick       VARCHAR(30) UNIQUE NOT NULL --No quiero poner valores muy grandes para evitar que pese mucho la base de datos y ande lenta, mejor que ande rapida para nosotros
-                  , us_pass       VARCHAR(30) NOT NULL
-                  , us_habilitado BIT NOT NULL
+                  , nick       VARCHAR(30) UNIQUE NOT NULL --No quiero poner valores muy grandes para evitar que pese mucho la base de datos y ande lenta, mejor que ande rapida para nosotros
+                  , pass       VARCHAR(30) NOT NULL
+                  , habilitado BIT NOT NULL
           )
           GO
 CREATE TABLE kfc.ROLES
           (
                     rol_id         INT PRIMARY KEY IDENTITY(1,1)
-                  , rol_desc       VARCHAR(50) UNIQUE NOT NULL
-                  , rol_habilitado BIT NOT NULL
+                  , descripcion       VARCHAR(50) UNIQUE NOT NULL
+                  , habilitado BIT NOT NULL
           )
           GO
 CREATE TABLE kfc.ROLES_USUARIOS
@@ -58,7 +48,7 @@ CREATE TABLE kfc.ROLES_USUARIOS
 CREATE TABLE kfc.FUNCIONALIDADES
           (
                     func_id   INT PRIMARY KEY IDENTITY(1,1)
-                  , func_desc VARCHAR(50) UNIQUE NOT NULL
+                  , descripcion VARCHAR(50) UNIQUE NOT NULL
           )
           GO
 CREATE TABLE kfc.FUNCIONALIDADES_ROLES
@@ -70,10 +60,63 @@ CREATE TABLE kfc.FUNCIONALIDADES_ROLES
 CREATE TABLE kfc.PLANES
           (
                     plan_id                   INT PRIMARY KEY IDENTITY(1,1)
-                  , plan_precio_bono_consulta NUMERIC(18,0) --No existen datos de donde sacar cuotas. No esta en Tabla Original
-                  , plan_precio_bono_farmacia NUMERIC(18,0)
+                  , precio_bono_consulta NUMERIC(18,0) --No existen datos de donde sacar cuotas. No esta en Tabla Original
+                  , precio_bono_farmacia NUMERIC(18,0)
           )
           GO
 CREATE TABLE kfc.AFILIADOS
           (
-          ) GO
+		  afil_id  INT PRIMARY KEY IDENTITY(1,1)
+		  -- Faltan Datos de Persona, lo sacabamos a tabla afuera no?
+		 , habilitado BIT NOT NULL
+		 , cant_hijos	INT		--para que no interesa guardar esto y los hijos y conyuge?
+		 , plan_id	INT NOT NULL REFERENCES PLANES
+		 ,  us_id  INT NULL REFERENCES USUARIOS
+          ) 
+		  GO
+CREATE TABLE kfc.HISTORIAL_AFILIADOS
+          (
+		  afil_id INT NOT NULL REFERENCES AFILIADOS
+		  ,fecha DATETIME
+		  ,plan_activo	INT NOT NULL REFERENCES PLANES
+		  )motivo		VARCHAR(30) NOT NULL
+		  GO
+CREATE TABLE kfc.PROFESIONALES
+          (
+		  prof_id  INT PRIMARY KEY IDENTITY(1,1)
+			-- Faltan Datos de Persona, lo sacabamos a tabla afuera no?
+		  ,us_id  INT NOT NULL REFERENCES USUARIOS
+		  )
+		  GO
+
+CREATE TABLE kfc.TIPOS_ESPECIALIDADES
+(
+	tipo_esp_id		INT PRIMARY KEY IDENTITY(1,1)
+	, descripcion       VARCHAR(50) UNIQUE NOT NULL
+)
+GO
+CREATE TABLE kfc.ESPECIALIDADES
+(
+)
+GO
+CREATE TABLE kfc.ESPECIALIDADES_PROFESIONAL
+(
+)
+GO
+CREATE TABLE kfc.TIPOS_CANCELACIONES
+(
+)
+GO
+CREATE TABLE kfc.CANCELACIONES
+(
+)
+GO
+CREATE TABLE kfc.TURNOS
+(
+)
+GO
+CREATE TABLE kfc.BONOS
+(
+)
+GO
+

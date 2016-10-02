@@ -62,6 +62,7 @@ CREATE TABLE kfc.funcionalidades_roles
 CREATE TABLE kfc.planes
           (
                     plan_id              INT PRIMARY KEY IDENTITY(1,1)
+					, descripcion VARCHAR(50) NOT NULL
                   , cuota                NUMERIC(18,0)
                   , precio_bono_consulta NUMERIC(18,0) NOT NULL
                   , precio_bono_farmacia NUMERIC(18,0) NOT NULL
@@ -79,7 +80,7 @@ CREATE TABLE kfc.afiliados
                   , nombre           VARCHAR(50) NOT NULL
                   , apellido         VARCHAR(50) NOT NULL
                   , tipo_doc         VARCHAR(10) NOT NULL
-                  , numero_doc       NUMERIC(18.0) NOT NULL
+                  , numero_doc       NUMERIC(18,0) NOT NULL
                   , direccion        VARCHAR(50) NULL
                   , telefono         NUMERIC(18, 0) NULL
                   , mail             VARCHAR(50) NULL
@@ -87,8 +88,7 @@ CREATE TABLE kfc.afiliados
                   , fecha_nacimiento DATETIME NOT NULL
                   , estado_id        INT NULL REFERENCES estado_civil
                   , habilitado       BIT NOT NULL
-                  , cant_hijos       INT NULL
-				  , a_cargo			 INT NULL
+				  , personas_a_cargo			 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
                   , plan_id          INT NOT NULL REFERENCES planes
                   , us_id            INT NULL REFERENCES usuarios
           )
@@ -107,7 +107,7 @@ CREATE TABLE kfc.profesionales
                   , nombre           VARCHAR(50) NOT NULL
                   , apellido         VARCHAR(50) NOT NULL
                   , tipo_doc         VARCHAR(10) NOT NULL
-                  , numero_doc       NUMERIC(18.0) NOT NULL
+                  , numero_doc       NUMERIC(18,0) NOT NULL
                   , direccion        VARCHAR(50) NULL
                   , telefono         NUMERIC(18, 0) NULL
                   , mail             VARCHAR(50) NULL
@@ -142,13 +142,14 @@ CREATE TABLE kfc.agenda
                   , hora_desde  TIME(0) -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
                   , hora_hasta  TIME(0)
                   , fecha_desde DATETIME
-                  , fecha_desde DATETIME
+                  , fecha_hasta DATETIME
           )
           GO
 CREATE TABLE kfc.turnos
           (
                     turno_id   INT PRIMARY KEY IDENTITY(1,1)
                   , fecha_hora DATETIME NOT NULL
+				  , hora	   TIME(0)  NOT NULL
                   , afil_id    INT NOT NULL REFERENCES afiliados
                   , espe_id    INT NOT NULL REFERENCES especialidades_profesional
                   , prof_id    INT NOT NULL REFERENCES especialidades_profesional
@@ -165,6 +166,7 @@ CREATE TABLE kfc.cancelaciones
                     cancel_id      INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id       INT NOT NULL REFERENCES turnos
                   , detalle_cancel VARCHAR(50) UNIQUE NOT NULL
+				  , fecha_cancel   DATETIME
                   , tipo_cancel_id INT NOT NULL REFERENCES tipos_cancelaciones
           )
           GO
@@ -173,7 +175,9 @@ CREATE TABLE kfc.bonos
                     bono_id INT PRIMARY KEY IDENTITY(1,1)
                   , plan_id INT NOT NULL REFERENCES planes
                   , afil_id INT NOT NULL REFERENCES afiliados
-          )
+				  , fecha_compra DATETIME NOT NULL
+				  , fecha_impresion DATETIME NULL
+          ) 
           GO
 CREATE TABLE kfc.atenciones
           (

@@ -24,42 +24,42 @@
 	atenciones
 */
 
-CREATE SCHEMA kfc AUTHORIZATION gd GO
+CREATE SCHEMA KFC AUTHORIZATION gd
 
-CREATE TABLE kfc.usuarios
+CREATE TABLE KFC.usuarios
           (
                     us_id      INT PRIMARY KEY IDENTITY(1,1)
                   , nick       VARCHAR(30) UNIQUE NOT NULL --No quiero poner valores muy grandes para evitar que pese mucho la base de datos y ande lenta, mejor que ande rapida para nosotros
                   , pass       VARCHAR(30) NOT NULL
                   , habilitado BIT NOT NULL
           )
-          GO
-CREATE TABLE kfc.roles
+		   
+CREATE TABLE KFC.roles
           (
                     rol_id      INT PRIMARY KEY IDENTITY(1,1)
                   , descripcion VARCHAR(50) UNIQUE NOT NULL
                   , habilitado  BIT NOT NULL
           )
-          GO
-CREATE TABLE kfc.roles_usuarios
+           
+CREATE TABLE KFC.roles_usuarios
           (
                     us_id  INT NOT NULL REFERENCES usuarios
                   , rol_id INT NOT NULL REFERENCES roles
           )
-          GO
-CREATE TABLE kfc.funcionalidades
+           
+CREATE TABLE KFC.funcionalidades
           (
                     func_id     INT PRIMARY KEY IDENTITY(1,1)
                   , descripcion VARCHAR(50) UNIQUE NOT NULL
           )
-          GO
-CREATE TABLE kfc.funcionalidades_roles
+           
+CREATE TABLE KFC.funcionalidades_roles
           (
                     rol_id  INT NOT NULL REFERENCES roles
                   , func_id INT NOT NULL REFERENCES funcionalidades
           )
-          GO
-CREATE TABLE kfc.planes
+           
+CREATE TABLE KFC.planes
           (
                     plan_id              INT PRIMARY KEY IDENTITY(1,1)
 					, descripcion VARCHAR(50) NOT NULL
@@ -67,14 +67,14 @@ CREATE TABLE kfc.planes
                   , precio_bono_consulta NUMERIC(18,0) NOT NULL
                   , precio_bono_farmacia NUMERIC(18,0) NOT NULL
           )
-          GO
-CREATE TABLE kfc.estado_civil
+           
+CREATE TABLE KFC.estado_civil
           (
                     estado_id   INT PRIMARY KEY IDENTITY(1,1)
                   , descripcion VARCHAR(50) UNIQUE NOT NULL
           )
-          GO
-CREATE TABLE kfc.afiliados
+           
+CREATE TABLE KFC.afiliados
           (
                     afil_id          INT PRIMARY KEY IDENTITY(1,1)
                   , nombre           VARCHAR(50) NOT NULL
@@ -88,20 +88,20 @@ CREATE TABLE kfc.afiliados
                   , fecha_nacimiento DATETIME NOT NULL
                   , estado_id        INT NULL REFERENCES estado_civil
                   , habilitado       BIT NOT NULL
-				  , personas_a_cargo			 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
+				  , personas_a_car 			 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
                   , plan_id          INT NOT NULL REFERENCES planes
                   , us_id            INT NULL REFERENCES usuarios
           )
-          GO
-CREATE TABLE kfc.historial_afiliados
+           
+CREATE TABLE KFC.historial_afiliados
           (
                     afil_id       INT NOT NULL REFERENCES afiliados
                   , fecha         DATETIME
                   , plan_activo   INT NOT NULL REFERENCES planes
                   , motivo_cambio VARCHAR(30) NOT NULL
           )
-          GO
-CREATE TABLE kfc.profesionales
+           
+CREATE TABLE KFC.profesionales
           (
                     prof_id          INT PRIMARY KEY IDENTITY(1,1)
                   , nombre           VARCHAR(50) NOT NULL
@@ -115,53 +115,55 @@ CREATE TABLE kfc.profesionales
                   , matricula        VARCHAR(50) NULL
                   , us_id            INT NOT NULL REFERENCES usuarios
           )
-          GO
-CREATE TABLE kfc.tipos_especialidades
+           
+CREATE TABLE KFC.tipos_especialidades
           (
                     tipo_esp_id INT PRIMARY KEY IDENTITY(1,1)
                   , descripcion VARCHAR(50) UNIQUE NOT NULL
           )
-          GO
-CREATE TABLE kfc.especialidades
+           
+CREATE TABLE KFC.especialidades
           (
                     espe_id     INT PRIMARY KEY IDENTITY(1,1)
                   , descripcion VARCHAR(50) UNIQUE NOT NULL
                   , tipo_esp_id INT NOT NULL REFERENCES tipos_especialidades
           )
-          GO
-CREATE TABLE kfc.especialidades_profesional
+           
+CREATE TABLE KFC.especialidades_profesional
           (
                     espe_id INT NOT NULL REFERENCES especialidades
                   , prof_id INT NOT NULL REFERENCES profesionales
+				  ,CONSTRAINT pk_especialidades_profesional PRIMARY KEY (espe_id, prof_id)
           )
-          GO
-CREATE TABLE kfc.agenda
+           
+CREATE TABLE KFC.agenda
           (
-                    espe_id     INT NOT NULL REFERENCES especialidades_profesional
-                  , prof_id     INT NOT NULL REFERENCES especialidades_profesional
+                    espe_id INT NOT NULL 
+                  , prof_id INT NOT NULL
                   , hora_desde  TIME(0) -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
                   , hora_hasta  TIME(0)
                   , fecha_desde DATETIME
                   , fecha_hasta DATETIME
+				  ,CONSTRAINT fk_agenda_especialidades_profesional FOREIGN KEY(espe_id, prof_id)    REFERENCES especialidades_profesional (espe_id, prof_id)
           )
-          GO
-CREATE TABLE kfc.turnos
+CREATE TABLE KFC.turnos
           (
                     turno_id   INT PRIMARY KEY IDENTITY(1,1)
                   , fecha_hora DATETIME NOT NULL
 				  , hora	   TIME(0)  NOT NULL
                   , afil_id    INT NOT NULL REFERENCES afiliados
-                  , espe_id    INT NOT NULL REFERENCES especialidades_profesional
-                  , prof_id    INT NOT NULL REFERENCES especialidades_profesional
+                  , espe_id    INT NOT NULL
+                  , prof_id    INT NOT NULL
+				  , CONSTRAINT fk_turnos_especialidades_profesional FOREIGN KEY(espe_id, prof_id)    REFERENCES especialidades_profesional (espe_id, prof_id)
           )
-          GO
-CREATE TABLE kfc.tipos_cancelaciones
+           
+CREATE TABLE KFC.tipos_cancelaciones
           (
                     tipo_cancel_id INT PRIMARY KEY IDENTITY(1,1)
                   , descripcion    VARCHAR(50) UNIQUE NOT NULL
           )
-          GO
-CREATE TABLE kfc.cancelaciones
+           
+CREATE TABLE KFC.cancelaciones
           (
                     cancel_id      INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id       INT NOT NULL REFERENCES turnos
@@ -169,8 +171,8 @@ CREATE TABLE kfc.cancelaciones
 				  , fecha_cancel   DATETIME
                   , tipo_cancel_id INT NOT NULL REFERENCES tipos_cancelaciones
           )
-          GO
-CREATE TABLE kfc.bonos
+           
+CREATE TABLE KFC.bonos
           (
                     bono_id INT PRIMARY KEY IDENTITY(1,1)
                   , plan_id INT NOT NULL REFERENCES planes
@@ -178,8 +180,8 @@ CREATE TABLE kfc.bonos
 				  , fecha_compra DATETIME NOT NULL
 				  , fecha_impresion DATETIME NULL
           ) 
-          GO
-CREATE TABLE kfc.atenciones
+           
+CREATE TABLE KFC.atenciones
           (
                     atencion_id  INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id     INT NOT NULL REFERENCES turnos
@@ -188,4 +190,4 @@ CREATE TABLE kfc.atenciones
                   , diagnostico  VARCHAR(50) UNIQUE NOT NULL
                   , bono_id      INT NOT NULL REFERENCES bonos
           )
-          GO
+           

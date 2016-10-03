@@ -28,7 +28,7 @@ CREATE SCHEMA KFC AUTHORIZATION gd
 
 CREATE TABLE KFC.usuarios
           (
-                    us_id      INT PRIMARY KEY IDENTITY(1,1)
+                    us_id      INT PRIMARY KEY IDENTITY(1,1)		--No hay que cambiarlo a secuencia? o sacarle el Identity porque lo manejariamos nosotros
                   , nick       VARCHAR(30) UNIQUE NOT NULL --No quiero poner valores muy grandes para evitar que pese mucho la base de datos y ande lenta, mejor que ande rapida para nosotros
                   , pass       VARCHAR(30) NOT NULL
                   , habilitado BIT NOT NULL
@@ -45,6 +45,7 @@ CREATE TABLE KFC.roles_usuarios
           (
                     us_id  INT NOT NULL REFERENCES usuarios
                   , rol_id INT NOT NULL REFERENCES roles
+				   ,CONSTRAINT pk_roles_usuarios PRIMARY KEY (us_id, rol_id)
           )
            
 CREATE TABLE KFC.funcionalidades
@@ -57,6 +58,7 @@ CREATE TABLE KFC.funcionalidades_roles
           (
                     rol_id  INT NOT NULL REFERENCES roles
                   , func_id INT NOT NULL REFERENCES funcionalidades
+				  ,CONSTRAINT pk_funcionalidades_roles PRIMARY KEY (rol_id, func_id)
           )
            
 CREATE TABLE KFC.planes
@@ -99,6 +101,7 @@ CREATE TABLE KFC.historial_afiliados
                   , fecha         DATETIME
                   , plan_activo   INT NOT NULL REFERENCES planes
                   , motivo_cambio VARCHAR(30) NOT NULL
+				  ,CONSTRAINT pk_historial_afiliados PRIMARY KEY (afil_id, fecha)
           )
            
 CREATE TABLE KFC.profesionales
@@ -140,11 +143,13 @@ CREATE TABLE KFC.agenda
           (
                     espe_id INT NOT NULL 
                   , prof_id INT NOT NULL
+				  , dia		INT NOT NULL
                   , hora_desde  TIME(0) -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
                   , hora_hasta  TIME(0)
                   , fecha_desde DATETIME
                   , fecha_hasta DATETIME
 				  ,CONSTRAINT fk_agenda_especialidades_profesional FOREIGN KEY(espe_id, prof_id)    REFERENCES especialidades_profesional (espe_id, prof_id)
+				  ,CONSTRAINT pk_agenda PRIMARY KEY (espe_id, prof_id, dia, fecha_desde, fecha_hasta)	-- Habria que ver si puede acortarse la PK
           )
 CREATE TABLE KFC.turnos
           (

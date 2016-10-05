@@ -29,15 +29,15 @@ CREATE SCHEMA KFC AUTHORIZATION gd
 CREATE TABLE KFC.usuarios
           (
                     us_id      INT PRIMARY KEY IDENTITY(1,1)		--No hay que cambiarlo a secuencia? o sacarle el Identity porque lo manejariamos nosotros
-                  , nick       VARCHAR(30) UNIQUE NOT NULL --No quiero poner valores muy grandes para evitar que pese mucho la base de datos y ande lenta, mejor que ande rapida para nosotros
-                  , pass       VARCHAR(30) NOT NULL
+                  , nick       VARCHAR(255) UNIQUE NOT NULL
+                  , pass       VARCHAR(255) NOT NULL
                   , habilitado BIT NOT NULL
           )
 		   
 CREATE TABLE KFC.roles
           (
                     rol_id      INT PRIMARY KEY IDENTITY(1,1)
-                  , descripcion VARCHAR(50) UNIQUE NOT NULL
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
                   , habilitado  BIT NOT NULL
           )
            
@@ -51,7 +51,7 @@ CREATE TABLE KFC.roles_usuarios
 CREATE TABLE KFC.funcionalidades
           (
                     func_id     INT PRIMARY KEY IDENTITY(1,1)
-                  , descripcion VARCHAR(50) UNIQUE NOT NULL
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
           )
            
 CREATE TABLE KFC.funcionalidades_roles
@@ -64,7 +64,7 @@ CREATE TABLE KFC.funcionalidades_roles
 CREATE TABLE KFC.planes
           (
                     plan_id              INT PRIMARY KEY IDENTITY(1,1)
-					, descripcion VARCHAR(50) NOT NULL
+					, descripcion VARCHAR(255) NOT NULL
                   , cuota                NUMERIC(18,0)
                   , precio_bono_consulta NUMERIC(18,0) NOT NULL
                   , precio_bono_farmacia NUMERIC(18,0) NOT NULL
@@ -73,19 +73,19 @@ CREATE TABLE KFC.planes
 CREATE TABLE KFC.estado_civil
           (
                     estado_id   INT PRIMARY KEY IDENTITY(1,1)
-                  , descripcion VARCHAR(50) UNIQUE NOT NULL
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
           )
            
 CREATE TABLE KFC.afiliados
           (
                     afil_id          INT PRIMARY KEY IDENTITY(1,1)
-                  , nombre           VARCHAR(50) NOT NULL
-                  , apellido         VARCHAR(50) NOT NULL
-                  , tipo_doc         VARCHAR(10) NOT NULL
+                  , nombre           VARCHAR(255) NOT NULL
+                  , apellido         VARCHAR(255) NOT NULL
+                  , tipo_doc         VARCHAR(255) NOT NULL
                   , numero_doc       NUMERIC(18,0) NOT NULL
-                  , direccion        VARCHAR(50) NULL
+                  , direccion        VARCHAR(255) NULL
                   , telefono         NUMERIC(18, 0) NULL
-                  , mail             VARCHAR(50) NULL
+                  , mail             VARCHAR(255) NULL
                   , sexo             CHAR NULL
                   , fecha_nacimiento DATETIME NOT NULL
                   , estado_id        INT NULL REFERENCES estado_civil
@@ -93,6 +93,7 @@ CREATE TABLE KFC.afiliados
 				  , personas_a_car 			 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
                   , plan_id          INT NOT NULL REFERENCES planes
                   , us_id            INT NULL REFERENCES usuarios
+				  , habilitado BIT NOT NULL
           )
            
 CREATE TABLE KFC.historial_afiliados
@@ -100,35 +101,36 @@ CREATE TABLE KFC.historial_afiliados
                     afil_id       INT NOT NULL REFERENCES afiliados
                   , fecha         DATETIME
                   , plan_activo   INT NOT NULL REFERENCES planes
-                  , motivo_cambio VARCHAR(30) NOT NULL
+                  , motivo_cambio VARCHAR(255) NOT NULL
 				  ,CONSTRAINT pk_historial_afiliados PRIMARY KEY (afil_id, fecha)
           )
            
 CREATE TABLE KFC.profesionales
           (
                     prof_id          INT PRIMARY KEY IDENTITY(1,1)
-                  , nombre           VARCHAR(50) NOT NULL
-                  , apellido         VARCHAR(50) NOT NULL
-                  , tipo_doc         VARCHAR(10) NOT NULL
+                  , nombre           VARCHAR(255) NOT NULL
+                  , apellido         VARCHAR(255) NOT NULL
+                  , tipo_doc         VARCHAR(20) NOT NULL
                   , numero_doc       NUMERIC(18,0) NOT NULL
-                  , direccion        VARCHAR(50) NULL
+                  , direccion        VARCHAR(255) NULL
                   , telefono         NUMERIC(18, 0) NULL
-                  , mail             VARCHAR(50) NULL
+                  , mail             VARCHAR(255) NULL
                   , fecha_nacimiento DATETIME NOT NULL
-                  , matricula        VARCHAR(50) NULL
+                  , matricula        VARCHAR(255) NULL
                   , us_id            INT NOT NULL REFERENCES usuarios
+				  , habilitado BIT NOT NULL
           )
            
 CREATE TABLE KFC.tipos_especialidades
           (
                     tipo_esp_id INT PRIMARY KEY IDENTITY(1,1)
-                  , descripcion VARCHAR(50) UNIQUE NOT NULL
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
           )
            
 CREATE TABLE KFC.especialidades
           (
                     espe_id     INT PRIMARY KEY IDENTITY(1,1)
-                  , descripcion VARCHAR(50) UNIQUE NOT NULL
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
                   , tipo_esp_id INT NOT NULL REFERENCES tipos_especialidades
           )
            
@@ -144,10 +146,10 @@ CREATE TABLE KFC.agenda
                     espe_id INT NOT NULL 
                   , prof_id INT NOT NULL
 				  , dia		INT NOT NULL
+				  , fecha_desde DATETIME
+                  , fecha_hasta DATETIME
                   , hora_desde  TIME(0) -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
                   , hora_hasta  TIME(0)
-                  , fecha_desde DATETIME
-                  , fecha_hasta DATETIME
 				  ,CONSTRAINT fk_agenda_especialidades_profesional FOREIGN KEY(espe_id, prof_id)    REFERENCES especialidades_profesional (espe_id, prof_id)
 				  ,CONSTRAINT pk_agenda PRIMARY KEY (espe_id, prof_id, dia, fecha_desde, fecha_hasta)	-- Habria que ver si puede acortarse la PK
           )
@@ -165,14 +167,14 @@ CREATE TABLE KFC.turnos
 CREATE TABLE KFC.tipos_cancelaciones
           (
                     tipo_cancel_id INT PRIMARY KEY IDENTITY(1,1)
-                  , descripcion    VARCHAR(50) UNIQUE NOT NULL
+                  , descripcion    VARCHAR(255) UNIQUE NOT NULL
           )
            
 CREATE TABLE KFC.cancelaciones
           (
                     cancel_id      INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id       INT NOT NULL REFERENCES turnos
-                  , detalle_cancel VARCHAR(50) UNIQUE NOT NULL
+                  , detalle_cancel VARCHAR(255) UNIQUE NOT NULL
 				  , fecha_cancel   DATETIME
                   , tipo_cancel_id INT NOT NULL REFERENCES tipos_cancelaciones
           )
@@ -191,8 +193,8 @@ CREATE TABLE KFC.atenciones
                     atencion_id  INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id     INT NOT NULL REFERENCES turnos
                   , hora_llegada TIME(0) NOT NULL -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
-                  , sintomas     VARCHAR(50) UNIQUE NOT NULL
-                  , diagnostico  VARCHAR(50) UNIQUE NOT NULL
+                  , sintomas     VARCHAR(255) UNIQUE NOT NULL
+                  , diagnostico  VARCHAR(255) UNIQUE NOT NULL
                   , bono_id      INT NOT NULL REFERENCES bonos
           )
            

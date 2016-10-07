@@ -1,7 +1,8 @@
 Concexión BD - C#(Ejecución)
-
 https://msdn.microsoft.com/en-us/library/d7125bke.aspx
 
 Manejo del resultado posterior a la ejecución.
-
 https://msdn.microsoft.com/es-es/library/haa3afyz(v=vs.110).aspx
+
+Manejo de Excepciones de SQL Server
+https://blogs.msdn.microsoft.com/spike/2009/04/06/catch-a-sql-server-raiserror-at-client-side-using-sqldatareader/

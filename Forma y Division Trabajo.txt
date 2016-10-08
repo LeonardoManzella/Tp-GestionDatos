@@ -1,0 +1,36 @@
+:::::Manejo Errores:::::
+- Usar Raise Error Try Catch
+
+::::: Devolver Datos a C# :::::
+Las Consultas devuelven tipos de Datos Cursores
+Estan en Links en un TXT en Github
+
+
+:::::Dividir Trabajo en cada persona:::::
+- Poblado de Datos + Stored Procedures de Insercion para llenar Campos Datos Nuestros - Leo
+- Triggers de Validadiones de la Logica de Negocio (Insert, Update, Delete)  - Vagan
+- Funciones y Stored Procedures para la Logica de Negocio (Funciones manejo interno y calculo resultados, Stored para manejor externo y modificaciones de la base) - Gonza y Raul
+
+::::: Entre Todos :::::
+- Drops de Objetos y Funciones que cada uno Crea
+- Analizar Performance y realizar Turnning de Consultas
+- WinForms C#
+
+
+::::: Usar todos misma version Visual Studio :::::
+- Ver en Casa cual tengo y enviar al grupo foto
+- Tenemos que preguntarle al profesor si la version que usamos sirve o vamos a tener problemas de compatibilidad
+
+
+
+
+::::: Orden Scrip para Trabajar Nosotros :::::
+Crear Schema
+Crear Tablas, FK y Constraints
+Creacion Triggers de Llenado Campos Nuestros
+Poblado de Tablas
+Triggers de Validaciones
+Creacion Funciones/Stored Procedures/Triggers de Logica Negocio
+
+
+	

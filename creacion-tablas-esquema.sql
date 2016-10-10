@@ -192,8 +192,8 @@ CREATE TABLE KFC.atenciones
                     atencion_id  INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id     INT NOT NULL REFERENCES turnos
                   , hora_llegada TIME(0) NOT NULL -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
-                  , sintomas     VARCHAR(255) UNIQUE NOT NULL
-                  , diagnostico  VARCHAR(255) UNIQUE NOT NULL
+                  , sintomas     VARCHAR(255) NOT NULL
+                  , diagnostico  VARCHAR(255) NOT NULL
                   , bono_id      INT NOT NULL REFERENCES bonos
           )
            

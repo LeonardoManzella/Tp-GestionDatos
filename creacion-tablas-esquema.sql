@@ -93,7 +93,6 @@ CREATE TABLE KFC.afiliados
 				  , personas_a_car 			 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
                   , plan_id          INT NOT NULL REFERENCES planes
                   , us_id            INT NULL REFERENCES usuarios
-				  , habilitado BIT NOT NULL
           )
            
 CREATE TABLE KFC.historial_afiliados
@@ -117,7 +116,7 @@ CREATE TABLE KFC.profesionales
                   , mail             VARCHAR(255) NULL
                   , fecha_nacimiento DATETIME NOT NULL
                   , matricula        VARCHAR(255) NULL
-                  , us_id            INT NOT NULL REFERENCES usuarios
+                  , us_id            INT NULL REFERENCES usuarios --Debe poder ser NULL porque hay profesionales sin Usuarios asignados
 				  , habilitado BIT NOT NULL
           )
            

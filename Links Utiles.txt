@@ -1,0 +1,16 @@
+Concexión BD - C#(Ejecución)
+https://msdn.microsoft.com/en-us/library/d7125bke.aspx
+
+Manejo del resultado posterior a la ejecución,  en C# 
+https://msdn.microsoft.com/es-es/library/haa3afyz(v=vs.110).aspx
+
+Manejo de Excepciones de SQL Server en C#
+https://blogs.msdn.microsoft.com/spike/2009/04/06/catch-a-sql-server-raiserror-at-client-side-using-sqldatareader/
+
+Insercion de Clave en Campos Identity
+https://www.mssqltips.com/sqlservertutorial/2521/insert-into-sql-server-table-with-identity-column/
+
+
+Sobre Manejo de Errores y ReRaise Excepciones
+• Les aconsejo usar ;THROW, vean el .SQL "Manejo de Excepciones" que adjunte
+• Link con Explicacion: https://www.simple-talk.com/sql/database-administration/handling-errors-in-sql-server-2012/

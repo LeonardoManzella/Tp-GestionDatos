@@ -41,6 +41,7 @@ WHERE
 
 --Para Planes
 -- El IDENTITY_INSERT me permite introducir manualmente claves donde seria autoincrementable
+-- Link IDENTITY_INSERT: https://www.mssqltips.com/sqlservertutorial/2521/insert-into-sql-server-table-with-identity-column/
 SET IDENTITY_INSERT KFC.planes ON
 INSERT INTO KFC.planes
           (

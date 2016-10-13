@@ -150,7 +150,7 @@ CREATE TABLE KFC.agenda
                   , hora_desde  TIME(0) -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
                   , hora_hasta  TIME(0)
 				  ,CONSTRAINT fk_agenda_especialidades_profesional FOREIGN KEY(espe_id, prof_id) REFERENCES KFC.especialidades_profesional (espe_id, prof_id)
-				  ,CONSTRAINT pk_agenda PRIMARY KEY (espe_id, prof_id, dia, fecha_desde, fecha_hasta)	-- Habria que ver si puede acortarse la PK
+				  ,CONSTRAINT pk_agenda PRIMARY KEY (espe_id, prof_id, dia, fecha_desde, fecha_hasta, hora_desde, hora_hasta)	-- Habria que ver si puede acortarse la PK
           )
 CREATE TABLE KFC.turnos
           (

@@ -22,6 +22,10 @@ INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('administrativo', @true)
 -- Insercion Usuarios del Enunciado
 INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('admin', 'w23e', @true)
 
+--TODO Agrego Usuarios para Afiliados, pedido por el Enunciado
+
+--TODO Agrego Usuarios para Profesionales, pedido por el Enunciado
+
 
 -- Insercion Roles por Usuario
 INSERT INTO KFC.roles_usuarios
@@ -77,6 +81,7 @@ INSERT INTO KFC.afiliados
                   , plan_id
                   , habilitado
           )
+		  --TODO Modificar para que use ID Usuario ingresado al principio
 SELECT DISTINCT 'DNI'
         , Paciente_Dni
         , Paciente_Nombre
@@ -107,6 +112,7 @@ INSERT INTO KFC.profesionales
                   , fecha_nacimiento
                   , habilitado
           )
+		  --TODO Modificar para que use ID Usuario ingresado al principio
 SELECT DISTINCT 'DNI'
         , Medico_Dni
         , Medico_Nombre
@@ -307,7 +313,7 @@ INSERT INTO KFC.atenciones
 			  , bono_id
           )
 SELECT DISTINCT Turno_Numero
-        , Bono_Consulta_Fecha_Impresion --Considero la Fecha de Impresion del Bono como la de la Atencion
+        , Turno_Fecha --Considero la Fecha del Turno como la de la Atencion (unicamente para Turnos Migrados)
         , Consulta_Sintomas
         , Consulta_Enfermedades
         , Bono_Consulta_Numero

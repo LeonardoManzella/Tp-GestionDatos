@@ -65,7 +65,6 @@ CREATE TABLE KFC.planes
           (
                     plan_id              INT PRIMARY KEY IDENTITY(1,1)
 					, descripcion VARCHAR(255) NOT NULL
-                  , cuota                NUMERIC(18,0)
                   , precio_bono_consulta NUMERIC(18,0) NOT NULL
                   , precio_bono_farmacia NUMERIC(18,0) NOT NULL
           )
@@ -92,7 +91,7 @@ CREATE TABLE KFC.afiliados
                   , habilitado       BIT NOT NULL
 				  , personas_a_car 			 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
                   , plan_id          INT NOT NULL REFERENCES KFC.planes
-                  , us_id            INT NULL REFERENCES KFC.usuarios
+                  , us_id            INT NOT NULL REFERENCES KFC.usuarios
           )
            
 CREATE TABLE KFC.historial_afiliados
@@ -116,7 +115,7 @@ CREATE TABLE KFC.profesionales
                   , mail             VARCHAR(255) NULL
                   , fecha_nacimiento DATETIME NOT NULL
                   , matricula        VARCHAR(255) NULL
-                  , us_id            INT NULL REFERENCES KFC.usuarios --Debe poder ser NULL porque hay profesionales sin Usuarios asignados
+                  , us_id            INT NOT NULL REFERENCES KFC.usuarios
 				  , habilitado BIT NOT NULL
           )
            

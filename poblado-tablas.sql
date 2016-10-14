@@ -22,14 +22,43 @@ INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('administrativo', @true)
 -- Insercion Usuarios del Enunciado
 INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('admin', 'w23e', @true)
 
---TODO Agrego Usuarios para Afiliados, pedido por el Enunciado
+--Agrego Usuarios para Afiliados, pedido por el Enunciado
+INSERT INTO KFC.usuarios
+          (
+			  nick 
+			, pass 
+			, habilitado
+          )
+SELECT DISTINCT Paciente_Mail
+        , Paciente_Mail
+        , @true AS habilitado
+FROM
+          GD2C2016.gd_esquema.Maestra
+WHERE
+          Paciente_Mail IS NOT NULL
 
---TODO Agrego Usuarios para Profesionales, pedido por el Enunciado
+
+--Agrego Usuarios para Profesionales, pedido por el Enunciado
+INSERT INTO KFC.usuarios
+          (
+			  nick 
+			, pass 
+			, habilitado
+          )
+SELECT DISTINCT Medico_Mail
+        , Medico_Mail
+        , @true AS habilitado
+FROM
+          GD2C2016.gd_esquema.Maestra
+WHERE
+          Medico_Mail IS NOT NULL
 
 
 -- Insercion Roles por Usuario
 INSERT INTO KFC.roles_usuarios
-          (us_id, rol_id
+          (
+			  us_id
+			, rol_id
           )
 SELECT
           u.us_id
@@ -42,6 +71,57 @@ WHERE
           AND u.nick    = 'admin'
 
 
+-- Insercion Roles para Afiliados
+INSERT INTO KFC.roles_usuarios
+          (
+			  us_id
+			, rol_id
+          )
+SELECT DISTINCT
+          u.us_id
+        , r.rol_id
+FROM
+          KFC.usuarios u
+        , KFC.roles    r
+WHERE
+          r.descripcion = 'afiliado'
+		  -- Selecciono Solo los Afiliados
+          AND u.nick IN (
+							SELECT DISTINCT Paciente_Mail
+							FROM
+										GD2C2016.gd_esquema.Maestra
+							WHERE
+										Paciente_Mail IS NOT NULL
+						)
+ORDER BY  u.us_id
+
+
+-- Insercion Roles para Profesionales
+INSERT INTO KFC.roles_usuarios
+          (
+			  us_id
+			, rol_id
+          )
+SELECT DISTINCT 
+		  u.us_id
+        , r.rol_id
+FROM
+          KFC.usuarios u
+        , KFC.roles    r
+WHERE
+          r.descripcion = 'profesional'
+		  -- Selecciono Solo los Profesionales
+          AND u.nick IN (
+							SELECT DISTINCT Medico_Mail
+							FROM
+										GD2C2016.gd_esquema.Maestra
+							WHERE
+										Medico_Mail IS NOT NULL
+						)
+ORDER BY
+          u.us_id
+
+
 
 --Para Planes
 -- El IDENTITY_INSERT me permite introducir manualmente claves donde seria autoincrementable
@@ -51,13 +131,11 @@ INSERT INTO KFC.planes
           (
                     plan_id
                   , descripcion
-                  , cuota
                   , precio_bono_consulta
                   , precio_bono_farmacia
           )
 SELECT DISTINCT Plan_Med_Codigo
         , Plan_Med_Descripcion
-        , 0 --FIXME De donde Saco datos para Calcular la "Cuota" de cada plan?
         , Plan_Med_Precio_Bono_Consulta
         , Plan_Med_Precio_Bono_Farmacia
 FROM
@@ -79,23 +157,28 @@ INSERT INTO KFC.afiliados
                   , mail
                   , fecha_nacimiento
                   , plan_id
+				  , us_id
                   , habilitado
           )
-		  --TODO Modificar para que use ID Usuario ingresado al principio
-SELECT DISTINCT 'DNI'
-        , Paciente_Dni
-        , Paciente_Nombre
-        , Paciente_Apellido
-        , Paciente_Direccion
-        , Paciente_Telefono
-        , Paciente_Mail
-        , Paciente_Fecha_Nac
-        , Plan_Med_Codigo
-        , @true
+SELECT DISTINCT 'DNI' AS Tipo_Doc
+        , m.Paciente_Dni
+        , m.Paciente_Nombre
+        , m.Paciente_Apellido
+        , m.Paciente_Direccion
+        , m.Paciente_Telefono
+        , m.Paciente_Mail
+        , m.Paciente_Fecha_Nac
+        , m.Plan_Med_Codigo
+		, u.us_id
+        , @true AS habilitado
 FROM
-          GD2C2016.gd_esquema.Maestra
+          GD2C2016.gd_esquema.Maestra m
+		  , KFC.usuarios u
+WHERE
+			Paciente_Dni IS NOT NULL
+			AND m.Paciente_Mail = u.nick
 ORDER BY
-          Paciente_Dni
+          u.us_id
 
 
 
@@ -110,24 +193,27 @@ INSERT INTO KFC.profesionales
                   , telefono
                   , mail
                   , fecha_nacimiento
+				  , us_id
                   , habilitado
           )
-		  --TODO Modificar para que use ID Usuario ingresado al principio
-SELECT DISTINCT 'DNI'
-        , Medico_Dni
-        , Medico_Nombre
-        , Medico_Apellido
-        , Medico_Direccion
-        , Medico_Telefono
-        , Medico_Mail
-        , Medico_Fecha_Nac
-        , @true
+SELECT DISTINCT 'DNI' AS Tipo_Doc
+        , m.Medico_Dni
+        , m.Medico_Nombre
+        , m.Medico_Apellido
+        , m.Medico_Direccion
+        , m.Medico_Telefono
+        , m.Medico_Mail
+        , m.Medico_Fecha_Nac
+		, u.us_id
+        , @true AS habilitado
 FROM
-          GD2C2016.gd_esquema.Maestra
+          GD2C2016.gd_esquema.Maestra m
+		  , KFC.usuarios u
 WHERE
           Medico_Dni IS NOT NULL
+		  AND m.Medico_Mail = u.nick
 ORDER BY
-          Medico_Dni
+          u.us_id
  
 
 
@@ -227,7 +313,6 @@ GROUP BY
 
 
 --Para Tipos Cancelaciones
---TODO Insertar los 2 tipos
 INSERT INTO KFC.tipos_cancelaciones	Values('Por Usuario')
 INSERT INTO KFC.tipos_cancelaciones	Values('Por Medico')
 
@@ -313,7 +398,7 @@ INSERT INTO KFC.atenciones
 			  , bono_id
           )
 SELECT DISTINCT Turno_Numero
-        , Turno_Fecha --Considero la Fecha del Turno como la de la Atencion (unicamente para Turnos Migrados)
+        , Bono_Consulta_Fecha_Impresion --Considero la Fecha de la Impresion del Bono como la de la Atencion (unicamente para Turnos Migrados), Ya que consideramos que el Bono se Imprime al momento de su uso (en el sistema anterior)
         , Consulta_Sintomas
         , Consulta_Enfermedades
         , Bono_Consulta_Numero

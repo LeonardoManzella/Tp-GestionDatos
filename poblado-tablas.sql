@@ -2,25 +2,25 @@ DECLARE @true BIT
 SET @true = 1
 
 -- Insercion Estados Civiles del Enunciado
-INSERT INTO KFC.estado_civil(descripcion) VALUES ('Soltero/a')
-INSERT INTO KFC.estado_civil(descripcion) VALUES ('Casado/a')
-INSERT INTO KFC.estado_civil(descripcion) VALUES ('Viudo/a')
-INSERT INTO KFC.estado_civil(descripcion) VALUES ('Concubinato')
-INSERT INTO KFC.estado_civil(descripcion) VALUES ('Divorciado/a')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('SOLTERO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('CASADO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('VIUDO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('CONCUBINATO')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('DIVORCIADO/A')
 
 -- Insercion Funcionalidades
 
 
 -- Insercion Roles del Enunciado
-INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('afiliado', @true)
-INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('profesional', @true)
-INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('administrativo', @true)
+INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('AFILIADO', @true)
+INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('PROFESIONAL', @true)
+INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('ADMINISTRATIVO', @true)
 
 -- Insercion Funcionalidades por Roles
 
 
 -- Insercion Usuarios del Enunciado
-INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('admin', 'w23e', @true)
+INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('ADMIN', 'W23E', @true)
 
 --Agrego Usuarios para Afiliados, pedido por el Enunciado
 INSERT INTO KFC.usuarios
@@ -29,9 +29,9 @@ INSERT INTO KFC.usuarios
 			, pass 
 			, habilitado
           )
-SELECT DISTINCT Paciente_Mail
-        , Paciente_Mail
-        , @true AS habilitado
+SELECT DISTINCT  UPPER(Paciente_Mail)
+        , UPPER(Paciente_Mail)
+        , 1 AS habilitado
 FROM
           GD2C2016.gd_esquema.Maestra
 WHERE
@@ -45,8 +45,8 @@ INSERT INTO KFC.usuarios
 			, pass 
 			, habilitado
           )
-SELECT DISTINCT Medico_Mail
-        , Medico_Mail
+SELECT DISTINCT  UPPER(Medico_Mail)
+        ,  UPPER(Medico_Mail)
         , @true AS habilitado
 FROM
           GD2C2016.gd_esquema.Maestra
@@ -135,7 +135,7 @@ INSERT INTO KFC.planes
                   , precio_bono_farmacia
           )
 SELECT DISTINCT Plan_Med_Codigo
-        , Plan_Med_Descripcion
+        ,  UPPER(Plan_Med_Descripcion)
         , Plan_Med_Precio_Bono_Consulta
         , Plan_Med_Precio_Bono_Farmacia
 FROM
@@ -162,11 +162,11 @@ INSERT INTO KFC.afiliados
           )
 SELECT DISTINCT 'DNI' AS Tipo_Doc
         , m.Paciente_Dni
-        , m.Paciente_Nombre
-        , m.Paciente_Apellido
-        , m.Paciente_Direccion
+        ,  UPPER(m.Paciente_Nombre)
+        ,  UPPER(m.Paciente_Apellido)
+        ,  UPPER(m.Paciente_Direccion)
         , m.Paciente_Telefono
-        , m.Paciente_Mail
+        ,  UPPER(m.Paciente_Mail)
         , m.Paciente_Fecha_Nac
         , m.Plan_Med_Codigo
 		, u.us_id
@@ -198,11 +198,11 @@ INSERT INTO KFC.profesionales
           )
 SELECT DISTINCT 'DNI' AS Tipo_Doc
         , m.Medico_Dni
-        , m.Medico_Nombre
-        , m.Medico_Apellido
-        , m.Medico_Direccion
+        ,  UPPER(m.Medico_Nombre)
+        ,  UPPER(m.Medico_Apellido)
+        ,  UPPER(m.Medico_Direccion)
         , m.Medico_Telefono
-        , m.Medico_Mail
+        ,  UPPER(m.Medico_Mail)
         , m.Medico_Fecha_Nac
 		, u.us_id
         , @true AS habilitado
@@ -226,7 +226,7 @@ INSERT INTO KFC.tipos_especialidades
 			, descripcion
           )
 SELECT DISTINCT Tipo_Especialidad_Codigo
-        , Tipo_Especialidad_Descripcion
+        ,  UPPER(Tipo_Especialidad_Descripcion)
 FROM
           GD2C2016.gd_esquema.Maestra
 WHERE
@@ -240,10 +240,13 @@ SET IDENTITY_INSERT KFC.tipos_especialidades OFF
 --Para Especialidades
 SET IDENTITY_INSERT KFC.especialidades ON
 INSERT INTO KFC.especialidades
-          (espe_id, descripcion, tipo_esp_id
+          (
+		      espe_id
+			, descripcion
+			, tipo_esp_id
           )
 SELECT DISTINCT Especialidad_Codigo
-        , Especialidad_Descripcion
+        ,  UPPER(Especialidad_Descripcion)
         , Tipo_Especialidad_Codigo
 FROM
           GD2C2016.gd_esquema.Maestra
@@ -259,9 +262,12 @@ SET IDENTITY_INSERT KFC.especialidades OFF
 --Para Especialidad Profesional
 --El ID necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.
 INSERT INTO KFC.especialidades_profesional
-          (espe_id, prof_id
+          (
+		     espe_id
+		   , prof_id
           )
-SELECT DISTINCT m.Especialidad_Codigo
+SELECT DISTINCT 
+		  m.Especialidad_Codigo
         , p.prof_id
 FROM
           GD2C2016.gd_esquema.Maestra m
@@ -288,7 +294,8 @@ INSERT INTO KFC.agenda
                   , hora_desde
                   , hora_hasta
           )
-SELECT DISTINCT m.Especialidad_Codigo
+SELECT DISTINCT 
+		  m.Especialidad_Codigo
         , p.prof_id
         , DATEPART(WEEKDAY, m.Turno_Fecha)       AS dia_semana
         , MIN( m.Turno_Fecha )                   AS fecha_desde
@@ -322,7 +329,7 @@ INSERT INTO KFC.tipos_cancelaciones	Values('Por Medico')
 SET IDENTITY_INSERT KFC.turnos ON
 INSERT INTO KFC.turnos
           (
-			  turno_id
+			    turno_id
 			  , fecha_hora
 			  , hora
 			  , afil_id
@@ -360,7 +367,7 @@ SET IDENTITY_INSERT KFC.turnos OFF
 SET IDENTITY_INSERT KFC.bonos ON
 INSERT INTO KFC.bonos
           (
-			  bono_id
+			    bono_id
 			  , afil_id
 			  , plan_id
 			  , fecha_compra
@@ -391,7 +398,7 @@ SET IDENTITY_INSERT KFC.bonos OFF
 --Para Atenciones
 INSERT INTO KFC.atenciones
           (
-			  turno_id
+			    turno_id
 			  , hora_llegada
 			  , sintomas
 			  , diagnostico
@@ -399,8 +406,8 @@ INSERT INTO KFC.atenciones
           )
 SELECT DISTINCT Turno_Numero
         , Bono_Consulta_Fecha_Impresion --Considero la Fecha de la Impresion del Bono como la de la Atencion (unicamente para Turnos Migrados), Ya que consideramos que el Bono se Imprime al momento de su uso (en el sistema anterior)
-        , Consulta_Sintomas
-        , Consulta_Enfermedades
+        ,  UPPER(Consulta_Sintomas)
+        ,  UPPER(Consulta_Enfermedades)
         , Bono_Consulta_Numero
 FROM
           GD2C2016.gd_esquema.Maestra

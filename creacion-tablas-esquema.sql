@@ -32,6 +32,7 @@ CREATE TABLE KFC.usuarios
                   , nick       VARCHAR(255) UNIQUE NOT NULL
                   , pass       VARCHAR(255) NOT NULL
                   , habilitado BIT NOT NULL
+				  , intentos   INT NOT NULL DEFAULT 0
           )
 		   
 CREATE TABLE KFC.roles
@@ -184,6 +185,7 @@ CREATE TABLE KFC.bonos
                   , afil_id INT NOT NULL REFERENCES KFC.afiliados
 				  , fecha_compra DATETIME NOT NULL
 				  , fecha_impresion DATETIME NULL
+				  , consumido BIT NOT NULL DEFAULT 0			-- Por defecto (Bonos Nuevos) estan sin consumir
           ) 
            
 CREATE TABLE KFC.atenciones

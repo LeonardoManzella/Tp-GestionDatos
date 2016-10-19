@@ -18,6 +18,8 @@ WHERE
 ;
 
 GO
+
+-- Devuelve el ID del Usuario en caso de Verificacion Correcta, o -1 en caso de Error
 CREATE FUNCTION KFC.Validar_Usuario(@usuario VARCHAR(30),
 @contrasenia                                 VARCHAR(30))
 returns INT AS
@@ -109,6 +111,8 @@ RETURN
 SELECT fun.func_id, fun.descripcion FROM kfc.funcionalidades fun;
 
 GO
+
+--Devuelve True (1) o False (0) en tipo BIT
 CREATE PROCEDURE kfc.verificar_funcion_rol( @id_func INT,
 @id_rol                                              INT)
 AS
@@ -124,13 +128,13 @@ AS
                     
                     DECLARE @encontrado BIT
                     IF @@rowcount = 0
-                    BEGIN
-                              SET @encontrado = 0
-                    END
+						BEGIN
+								  SET @encontrado = 0
+						END
                     ELSE
-                    BEGIN
-                              SET @encontrado = 1
-                    END
+						BEGIN
+								  SET @encontrado = 1
+						END
                     RETURN (@encontrado)
           END;
 GO
@@ -149,7 +153,7 @@ RETURN
                     INNER JOIN
                               kfc.afiliados tit
                     ON
-                              ROUND(afi.afil_id / 100, 0, 1)* 100 + 1 = tit.afil_id
+                              ROUND(afi.afil_id / 100, 0, 1)* 100 + 1 = tit.afil_id			-- Lo que hace es considerar unicamente los Afiliados Originales (no conyuge ni hijos). Para hacerlo redondea el numero de afiliado para "truncarle" los ultimos 2 digitos, luego lo multiplica por cien para restablecer el numero original con 00 ultimos 2 digitos (numero familiar), por eso le suma 1
                     INNER JOIN
                               kfc.planes pl
                     ON

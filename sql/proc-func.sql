@@ -278,39 +278,58 @@ GO
 
 	
 --**********************************AGREGADO POR GONZALO**********************************
-CREATE function KFC.Retornar_Id_Afildo(@nombre varchar(255), @apellido varchar(255))
-returns int AS
-Begin
-declare @Afil_id int;
-select @Afil_id = isnull(Afil_id,0) from KFC.afiliados Afi
-Where Afi.nombre = UPPER(@nombre)            
-and Afi.apellido = UPPER(@apellido)        
-and Afi.habilitado = 1;
-return @Afil_id;
-End;
-
-go
-
-CREATE function KFC.Devolver_Turnos_Prof_Afildo(@Afil_id int, @Prof_id int)
-returns table AS
-return ( 
-Select turno_id, fecha_hora, hora
-from KFC.turnos 
-Where afil_id = @Afil_id
-and prof_id =  @Prof_id
+CREATE FUNCTION KFC.Retornar_Id_Afildo(@nombre VARCHAR(255),
+@apellido                                      VARCHAR(255))
+returns INT AS
+BEGIN
+          DECLARE @Afil_id INT;
+          SELECT
+                    @Afil_id = ISNULL(Afil_id,0)
+          FROM
+                    KFC.afiliados Afi
+          WHERE
+                    Afi.nombre         = UPPER(@nombre)
+                    AND Afi.apellido   = UPPER(@apellido)
+                    AND Afi.habilitado = 1
+          ;
+          
+          RETURN @Afil_id;
+END;
+GO
+CREATE FUNCTION KFC.Devolver_Turnos_Prof_Afildo(@Afil_id INT,@Prof_id INT)
+returns TABLE AS
+RETURN
+(
+          SELECT
+                    turno_id
+                  , fecha_hora
+                  , hora
+          FROM
+                    KFC.turnos
+          WHERE
+                    afil_id     = @Afil_id
+                    AND prof_id = @Prof_id 
 );
-
-go
-
-create procedure KFC.Grabar_Resultado_Atencion @turno_id int, @sintomas varchar(255), @diagnostico varchar(255)
-as
-begin
-	begin transaction
-		update kfc.atenciones
-			set  sintomas = @sintomas, diagnostico = @diagnostico
-			where  turno_id = @turno_id
-	commit;
-end;
-	
+GO
+CREATE PROCEDURE KFC.Grabar_Resultado_Atencion
+          @turno_id INT
+          ,
+          @sintomas VARCHAR(255)
+          ,
+          @diagnostico VARCHAR(255)
+		  ,
+		  @hora_llegada DATETIME
+AS
+          BEGIN
+                    BEGIN TRANSACTION
+                    UPDATE
+                              kfc.atenciones
+                    SET       sintomas    = @sintomas
+                            , diagnostico = @diagnostico
+							, hora_llegada = @hora_llegada
+                    WHERE
+                              turno_id = @turno_id
+                    COMMIT;
+          END;
 GO
 --**********************************AGREGADO POR GONZALO**********************************

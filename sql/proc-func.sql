@@ -275,3 +275,42 @@ RETURN
           ;
 
 GO
+
+	
+--**********************************AGREGADO POR GONZALO**********************************
+CREATE function KFC.Retornar_Id_Afildo(@nombre varchar(255), @apellido varchar(255))
+returns int AS
+Begin
+declare @Afil_id int;
+select @Afil_id = isnull(Afil_id,0) from KFC.afiliados Afi
+Where Afi.nombre = UPPER(@nombre)            
+and Afi.apellido = UPPER(@apellido)        
+and Afi.habilitado = 1;
+return @Afil_id;
+End;
+
+go
+
+CREATE function KFC.Devolver_Turnos_Prof_Afildo(@Afil_id int, @Prof_id int)
+returns table AS
+return ( 
+Select turno_id, fecha_hora, hora
+from KFC.turnos 
+Where afil_id = @Afil_id
+and prof_id =  @Prof_id
+);
+
+go
+
+create procedure KFC.Grabar_Resultado_Atencion @turno_id int, @sintomas varchar(255), @diagnostico varchar(255)
+as
+begin
+	begin transaction
+		update kfc.atenciones
+			set  sintomas = @sintomas, diagnostico = @diagnostico
+			where  turno_id = @turno_id
+	commit;
+end;
+	
+GO
+--**********************************AGREGADO POR GONZALO**********************************

@@ -1,3 +1,10 @@
+-- Borrado de Funciones Viejas
+DROP PROCEDURE KFC.deshabilitar_rol_usuarios
+DROP FUNCTION KFC.obtener_turnos_profesional
+DROP PROCEDURE KFC.asignar_turno
+
+
+
 CREATE FUNCTION KFC.Obtener_Roles_Usuario(@usuario_id INT)
 returns TABLE AS
 RETURN
@@ -333,3 +340,88 @@ AS
           END;
 GO
 --**********************************AGREGADO POR GONZALO**********************************
+
+
+
+CREATE PROCEDURE KFC.deshabilitar_rol_usuarios
+          @id_rol INT
+AS
+    BEGIN
+		BEGIN TRY
+			BEGIN TRANSACTION
+				DELETE 
+				FROM KFC.roles_usuarios
+				WHERE rol_id = @id_rol
+                
+				 EXECUTE deshabilitar_rol @id_rol
+			COMMIT;
+		END TRY
+		BEGIN CATCH
+                    IF @@trancount > 0
+                    ROLLBACK TRANSACTION;
+                    ;THROW
+        END CATCH
+    END;
+GO
+
+CREATE FUNCTION KFC.obtener_turnos_profesional( @prof_id INT, @fecha DATETIME)
+returns @retorno TABLE (horario_disponible TIME) AS
+--Uso la Variable "@retorno" tipo Tabla para generar los Horarios Disponibles en base al Rango de Horarios Posibles
+BEGIN
+	DECLARE @hora_desde TIME
+	DECLARE	@hora_hasta	TIME
+	
+	--Me traigo el Rango de Horarios Posibles
+	SELECT @hora_desde = hora_desde, @hora_hasta = hora_hasta
+	FROM	KFC.agenda
+	WHERE	DATEPART(WEEKDAY, @fecha) = dia
+	AND		fecha_desde >= @fecha
+	
+
+	--Inserto Horarios Disponibles, cada 30 minutos (Uso el While para Crear un FOR)
+	WHILE ( DATEDIFF(MINUTE, @hora_desde, @hora_hasta) != 0 )
+	BEGIN
+		--PRINT DATEDIFF(MINUTE, @hora_desde, @hora_hasta)
+		INSERT INTO @retorno VALUES (@hora_desde)
+		SET @hora_desde = DATEADD(MINUTE, 30, @hora_desde)
+	END
+
+	
+	--Quito Horarios ya Tomados por Turnos y Retorno
+	DELETE
+	FROM	@retorno
+	-- Debo convertirlos sino no me deja comparar con el IN
+	WHERE	CONVERT(varchar,horario_disponible, 108)  IN	(
+															SELECT	CONVERT(varchar,hora, 108) AS hora_ocupada
+															FROM	KFC.turnos
+															-- Debo convertirlos para solo comparar la fecha, no la hora incluida
+															WHERE	CONVERT(DATE,fecha_hora) = CONVERT(DATE,@fecha)
+															)
+	RETURN	
+END;
+GO
+
+
+--Crea los turnos
+CREATE PROCEDURE KFC.asignar_turno
+          @fecha DATETIME
+		, @hora	   TIME(0)
+		, @afil_id    INT
+		, @espe_id    INT
+		, @prof_id    INT
+AS
+    BEGIN
+		BEGIN TRY
+			BEGIN TRANSACTION
+				INSERT INTO KFC.turnos(fecha_hora,hora,afil_id,espe_id,prof_id) VALUES (@fecha, @hora, @afil_id, @espe_id, @prof_id)
+			COMMIT;
+		END TRY
+		BEGIN CATCH
+                    IF @@trancount > 0
+                    ROLLBACK TRANSACTION;
+
+					PRINT 'Turno No Ingresado. Fecha ' + CONVERT(varchar,@fecha,102)
+                    ;THROW
+        END CATCH
+    END;
+GO

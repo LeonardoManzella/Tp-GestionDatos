@@ -1,7 +1,10 @@
 -- Borrado de Funciones Viejas
-DROP PROCEDURE KFC.deshabilitar_rol_usuarios
-DROP FUNCTION KFC.obtener_turnos_profesional
-DROP PROCEDURE KFC.asignar_turno
+DROP PROCEDURE KFC.deshabilitar_rol_usuarios;
+GO
+DROP FUNCTION KFC.obtener_turnos_profesional;
+GO
+DROP PROCEDURE KFC.asignar_turno;
+GO
 
 
 
@@ -342,7 +345,11 @@ GO
 --**********************************AGREGADO POR GONZALO**********************************
 
 
-
+------------------DESHABILITAR_ROL_USUARIOS------------------
+--Proposito: Dado el ID de un rol, quitarselo a los usuarios que lo contengan y luego deshabilitarlo
+--
+--Ingreso: id de rol a deshabilitar
+------------------DESHABILITAR_ROL_USUARIOS------------------
 CREATE PROCEDURE KFC.deshabilitar_rol_usuarios
           @id_rol INT
 AS
@@ -364,7 +371,14 @@ AS
     END;
 GO
 
-CREATE FUNCTION KFC.obtener_turnos_profesional( @prof_id INT, @fecha DATETIME)
+
+------------------OBTENER_TURNOS_PROFESIONAL------------------
+--Proposito: Consultar los horarios disponibles para un profesional en un determinado dia (horarios dentro de rango definido para ese dia y que no estan ocupados)
+--
+--Ingreso: id del profesional a consultar horarios y la fecha (formato Año-Mes-Dia) del dia donde quiere ver que horarios hay disponibles 
+--Egreso:	Una Tabla de unica columna Horarios disponibles (multiples filas cada una con un horario disponible)
+------------------OBTENER_TURNOS_PROFESIONAL------------------
+CREATE FUNCTION KFC.obtener_turnos_profesional( @prof_id INT, @fecha DATE)
 returns @retorno TABLE (horario_disponible TIME) AS
 --Uso la Variable "@retorno" tipo Tabla para generar los Horarios Disponibles en base al Rango de Horarios Posibles
 BEGIN
@@ -375,7 +389,8 @@ BEGIN
 	SELECT @hora_desde = hora_desde, @hora_hasta = hora_hasta
 	FROM	KFC.agenda
 	WHERE	DATEPART(WEEKDAY, @fecha) = dia
-	AND		fecha_desde >= @fecha
+	--Convierto para que solo compare por Año-Mes-Dia
+	AND		CONVERT(DATE,fecha_desde) >= @fecha
 	
 
 	--Inserto Horarios Disponibles, cada 30 minutos (Uso el While para Crear un FOR)
@@ -402,10 +417,14 @@ END;
 GO
 
 
---Crea los turnos
+------------------ASIGNAR_TURNO------------------
+--Proposito: Asigna un Turno al Usuario y Profesional para una especialidad
+--
+--Ingreso: Datos necesarios para Crear un Nuevo Turno
+------------------ASIGNAR_TURNO------------------
 CREATE PROCEDURE KFC.asignar_turno
           @fecha DATETIME
-		, @hora	   TIME(0)
+		, @hora	   TIME(0)	--Hora del Turno
 		, @afil_id    INT
 		, @espe_id    INT
 		, @prof_id    INT

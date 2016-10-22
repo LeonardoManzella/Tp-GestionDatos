@@ -288,6 +288,7 @@ GO
 
 	
 --**********************************AGREGADO POR GONZALO**********************************
+--Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.Retornar_Id_Afildo(@nombre VARCHAR(255),
 @apellido                                      VARCHAR(255))
 returns INT AS
@@ -306,6 +307,8 @@ BEGIN
           RETURN @Afil_id;
 END;
 GO
+
+--Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve los 'Turnos' del afiliado con un profesional.	
 CREATE FUNCTION KFC.Devolver_Turnos_Prof_Afildo(@Afil_id INT,@Prof_id INT)
 returns TABLE AS
 RETURN
@@ -321,6 +324,8 @@ RETURN
                     AND prof_id = @Prof_id 
 );
 GO
+	
+--Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Graba los 'Sintomas/Diagnostico' de la atención.	
 CREATE PROCEDURE KFC.Grabar_Resultado_Atencion
           @turno_id INT
           ,
@@ -375,7 +380,7 @@ GO
 ------------------OBTENER_TURNOS_PROFESIONAL------------------
 --Proposito: Consultar los horarios disponibles para un profesional en un determinado dia (horarios dentro de rango definido para ese dia y que no estan ocupados)
 --
---Ingreso: id del profesional a consultar horarios y la fecha (formato A�o-Mes-Dia) del dia donde quiere ver que horarios hay disponibles 
+--Ingreso: id del profesional a consultar horarios y la fecha (formato Año-Mes-Dia) del dia donde quiere ver que horarios hay disponibles 
 --Egreso:	Una Tabla de unica columna Horarios disponibles (multiples filas cada una con un horario disponible)
 ------------------OBTENER_TURNOS_PROFESIONAL------------------
 CREATE FUNCTION KFC.obtener_turnos_profesional( @prof_id INT, @fecha DATE)
@@ -389,7 +394,7 @@ BEGIN
 	SELECT @hora_desde = hora_desde, @hora_hasta = hora_hasta
 	FROM	KFC.agenda
 	WHERE	DATEPART(WEEKDAY, @fecha) = dia
-	--Convierto para que solo compare por A�o-Mes-Dia
+	--Convierto para que solo compare por Año-Mes-Dia
 	AND		CONVERT(DATE,fecha_desde) >= @fecha
 	
 

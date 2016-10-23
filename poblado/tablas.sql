@@ -7,6 +7,7 @@ INSERT INTO KFC.estado_civil(descripcion) VALUES ('CASADO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('VIUDO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('CONCUBINATO')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('DIVORCIADO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('MIGRADO')			--Para los Datos de la Tabla Maestra
 
 -- Insercion Funcionalidades
 
@@ -152,31 +153,37 @@ INSERT INTO KFC.afiliados
                   , numero_doc
                   , nombre
                   , apellido
+				  , sexo
                   , direccion
                   , telefono
                   , mail
                   , fecha_nacimiento
                   , plan_id
 				  , us_id
+				  , estado_id
                   , habilitado
           )
 SELECT DISTINCT 'DNI' AS Tipo_Doc
         , m.Paciente_Dni
         ,  UPPER(m.Paciente_Nombre)
         ,  UPPER(m.Paciente_Apellido)
+		, 'P'								-- P de Pendiente
         ,  UPPER(m.Paciente_Direccion)
         , m.Paciente_Telefono
         ,  UPPER(m.Paciente_Mail)
         , m.Paciente_Fecha_Nac
         , m.Plan_Med_Codigo
 		, u.us_id
+		, e.estado_id
         , @true AS habilitado
 FROM
           GD2C2016.gd_esquema.Maestra m
 		  , KFC.usuarios u
+		  , KFC.estado_civil e
 WHERE
 			Paciente_Dni IS NOT NULL
 			AND m.Paciente_Mail = u.nick
+			AND e.descripcion = 'MIGRADO'
 ORDER BY
           u.us_id
 

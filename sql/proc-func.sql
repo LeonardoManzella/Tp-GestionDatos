@@ -286,8 +286,10 @@ RETURN
 
 GO
 
+--*************************************************************************************************
+--**********************************AGREGADO POR GONZALO - inicio**********************************
+--*************************************************************************************************
 	
---**********************************AGREGADO POR GONZALO**********************************
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.Retornar_Id_Afildo(@nombre VARCHAR(255),
 @apellido                                      VARCHAR(255))
@@ -347,8 +349,74 @@ AS
                     COMMIT;
           END;
 GO
---**********************************AGREGADO POR GONZALO**********************************
+	
+/*CREATE function KFC.Devolver_Precio_Bono(@afiliado_id INT)
+returns table AS
+return ( 
+Select a.plan_id, p.descripcion, p.precio_bono_consulta
+from KFC.afiliados a, KFC.planes p  
+where a.afil_id = @afiliado_id 
+and
+a.plan_id = p.plan_id );
 
+go*/
+
+--Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado).
+CREATE function KFC.Devolver_Precio_Bono(@afiliado_id INT)
+returns table AS
+return ( 
+Select a.plan_id, p.descripcion, p.precio_bono_consulta
+from KFC.afiliados a
+INNER JOIN
+KFC.planes p
+on
+a.plan_id = p.plan_id 
+where a.afil_id = @afiliado_id );
+
+go
+
+--Funcionalidad COMPRAR BONOS. Crea 'Bono' comprado por el afiliado (bono del mismo plan que tiene el afiliado).
+CREATE PROCEDURE KFC.Comprar_Bono(@afiliado_id INT)
+AS
+    BEGIN
+
+		DECLARE @PlanUsuario INT;
+		DECLARE @fecha DATETIME;
+		
+		SET @fecha = getdate();
+
+		SELECT @PlanUsuario = Plan_id
+		FROM   KFC.Afiliados
+		WHERE  afil_id = @afiliado_id;
+
+		BEGIN TRY
+			BEGIN TRANSACTION
+				INSERT INTO KFC.bonos(plan_id,afil_id,fecha_compra) VALUES (@PlanUsuario,@afiliado_id, @fecha)
+			COMMIT;
+		END TRY
+		BEGIN CATCH
+                    IF @@trancount > 0
+                    ROLLBACK TRANSACTION;
+
+					PRINT 'Bono No Ingresado. Fecha ' + CONVERT(varchar,@fecha,102)
+                    ;THROW
+        END CATCH
+    END;
+GO
+
+--Funcionalidad COMPRAR BONOS. Devuelve 'Id Afilaido' y su 'Nombre' para el caso de que administrativo realiza la compra de bonos en nombre de un afiliado.
+CREATE function KFC.Devolver_Afiliado_y_su_Nombre(@Usuario_id INT)
+returns table AS
+return ( 
+Select afil_id, nombre, apellido
+from KFC.afiliados
+where us_id = @Usuario_id );
+
+go
+
+--**********************************************************************************************	
+--**********************************AGREGADO POR GONZALO - fin**********************************
+--**********************************************************************************************
 
 ------------------DESHABILITAR_ROL_USUARIOS------------------
 --Proposito: Dado el ID de un rol, quitarselo a los usuarios que lo contengan y luego deshabilitarlo

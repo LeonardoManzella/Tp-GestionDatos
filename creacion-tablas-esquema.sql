@@ -64,7 +64,7 @@ CREATE TABLE KFC.funcionalidades_roles
 CREATE TABLE KFC.planes
           (
                     plan_id              INT PRIMARY KEY IDENTITY(1,1)
-					, descripcion VARCHAR(255) NOT NULL
+				  , descripcion VARCHAR(255) NOT NULL
                   , precio_bono_consulta NUMERIC(18,0) NOT NULL
                   , precio_bono_farmacia NUMERIC(18,0) NOT NULL
           )
@@ -80,16 +80,16 @@ CREATE TABLE KFC.afiliados
                     afil_id          INT PRIMARY KEY IDENTITY(1,1)
                   , nombre           VARCHAR(255) NOT NULL
                   , apellido         VARCHAR(255) NOT NULL
-                  , tipo_doc         VARCHAR(255) NOT NULL
+                  , tipo_doc         VARCHAR(255) NOT NULL CHECK (tipo_doc IN ('DNI', 'LC', 'LE', 'CI', 'PAS')) 
                   , numero_doc       NUMERIC(18,0) NOT NULL
                   , direccion        VARCHAR(255) NULL
                   , telefono         NUMERIC(18, 0) NULL
                   , mail             VARCHAR(255) NULL
-                  , sexo             CHAR NULL
+                  , sexo             CHAR NULL CHECK (sexo IN ('M', 'F'))
                   , fecha_nacimiento DATETIME NOT NULL
                   , estado_id        INT NULL REFERENCES KFC.estado_civil
                   , habilitado       BIT NOT NULL
-				  , personas_a_car 			 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
+				  , personas_a_car 	 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
                   , plan_id          INT NOT NULL REFERENCES KFC.planes
                   , us_id            INT NOT NULL REFERENCES KFC.usuarios
           )
@@ -143,7 +143,7 @@ CREATE TABLE KFC.agenda
           (
                     espe_id INT NOT NULL 
                   , prof_id INT NOT NULL
-				  , dia		INT NOT NULL
+				  , dia		INT NOT NULL CHECK (dia > 0 AND dia < 8)
 				  , fecha_desde DATETIME
                   , fecha_hasta DATETIME
                   , hora_desde  TIME(0) -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion

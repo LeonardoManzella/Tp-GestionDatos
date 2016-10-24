@@ -7,6 +7,7 @@ INSERT INTO KFC.estado_civil(descripcion) VALUES ('CASADO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('VIUDO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('CONCUBINATO')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('DIVORCIADO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('MIGRADO')			--Para los Datos de la Tabla Maestra
 
 -- Insercion Funcionalidades
 
@@ -123,7 +124,7 @@ ORDER BY
 
 
 
---Para Planes
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Planes
 -- El IDENTITY_INSERT me permite introducir manualmente claves donde seria autoincrementable
 -- Link IDENTITY_INSERT: https://www.mssqltips.com/sqlservertutorial/2521/insert-into-sql-server-table-with-identity-column/
 SET IDENTITY_INSERT KFC.planes ON
@@ -145,44 +146,50 @@ ORDER BY
 SET IDENTITY_INSERT KFC.planes OFF
 
 
---Para Afiliados
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Afiliados
 INSERT INTO KFC.afiliados
           (
                     tipo_doc
                   , numero_doc
                   , nombre
                   , apellido
+				  , sexo
                   , direccion
                   , telefono
                   , mail
                   , fecha_nacimiento
                   , plan_id
 				  , us_id
+				  , estado_id
                   , habilitado
           )
 SELECT DISTINCT 'DNI' AS Tipo_Doc
         , m.Paciente_Dni
         ,  UPPER(m.Paciente_Nombre)
         ,  UPPER(m.Paciente_Apellido)
+		, 'P'								-- P de Pendiente
         ,  UPPER(m.Paciente_Direccion)
         , m.Paciente_Telefono
         ,  UPPER(m.Paciente_Mail)
         , m.Paciente_Fecha_Nac
         , m.Plan_Med_Codigo
 		, u.us_id
+		, e.estado_id
         , @true AS habilitado
 FROM
           GD2C2016.gd_esquema.Maestra m
 		  , KFC.usuarios u
+		  , KFC.estado_civil e
 WHERE
 			Paciente_Dni IS NOT NULL
 			AND m.Paciente_Mail = u.nick
+			AND e.descripcion = 'MIGRADO'
 ORDER BY
           u.us_id
 
 
 
---Para Profesionales
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Profesionales
 INSERT INTO KFC.profesionales
           (
                     tipo_doc
@@ -218,7 +225,7 @@ ORDER BY
 
 
 
---Para Tipos Especialidades
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Tipos Especialidades
 SET IDENTITY_INSERT KFC.tipos_especialidades ON
 INSERT INTO KFC.tipos_especialidades
           (
@@ -237,7 +244,7 @@ SET IDENTITY_INSERT KFC.tipos_especialidades OFF
 
 
 
---Para Especialidades
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Especialidades
 SET IDENTITY_INSERT KFC.especialidades ON
 INSERT INTO KFC.especialidades
           (
@@ -259,8 +266,8 @@ SET IDENTITY_INSERT KFC.especialidades OFF
 
 
 
---Para Especialidad Profesional
---El ID necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Especialidad Profesional
+--El ID de profesional necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
 INSERT INTO KFC.especialidades_profesional
           (
 		     espe_id
@@ -282,8 +289,15 @@ ORDER BY
  
 
 
---Para la Agenda
--- Link CONVERT: https://msdn.microsoft.com/en-us/library/ms187928.aspx
+
+------------------------------------------------------------------
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  la Agenda
+--
+--El ID de Profesional necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
+--Este codigo es complicado, pero basicamente lo que hago es calcular los rangos de horarios usando funciones de sumarizacion
+--No se preocupen tanto por las conversiones y calculos, las hace y funciona bien. Lo comprobe manualmente.
+--Link CONVERT: https://msdn.microsoft.com/en-us/library/ms187928.aspx
+------------------------------------------------------------------
 INSERT INTO KFC.agenda
           (
                     espe_id
@@ -319,13 +333,13 @@ GROUP BY
 
 
 
---Para Tipos Cancelaciones
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Tipos Cancelaciones
 INSERT INTO KFC.tipos_cancelaciones	Values('Por Usuario')
 INSERT INTO KFC.tipos_cancelaciones	Values('Por Medico')
 
 
---Para Turnos
---El ID necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Turnos
+--El ID de profesional, especialidad y afiliado necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla. De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
 SET IDENTITY_INSERT KFC.turnos ON
 INSERT INTO KFC.turnos
           (
@@ -338,7 +352,7 @@ INSERT INTO KFC.turnos
           )
 SELECT DISTINCT m.Turno_Numero
         , m.Turno_Fecha
-        , CONVERT(TIME(0), m.Turno_Fecha) AS hora
+        , CONVERT(TIME(0), m.Turno_Fecha) AS hora		--Covierto Formato Datos
         , a.afil_id
         , m.Especialidad_Codigo
         , p.prof_id
@@ -362,8 +376,8 @@ SET IDENTITY_INSERT KFC.turnos OFF
 
 
 
---Para Bonos
---El ID necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Bonos
+--El ID  de plan y afiliado necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.--El ID necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
 SET IDENTITY_INSERT KFC.bonos ON
 INSERT INTO KFC.bonos
           (
@@ -395,7 +409,7 @@ SET IDENTITY_INSERT KFC.bonos OFF
 
 
 
---Para Atenciones
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Atenciones
 INSERT INTO KFC.atenciones
           (
 			    turno_id

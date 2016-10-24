@@ -1,0 +1,12 @@
+        /// <summary>
+        /// Dispara la búsqueda de ese material, cuando se selecciona su locura
+        /// </summary>
+        private void cmbLocura_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.comboBox1.SelectedIndex != 0)
+            {
+                dispararLocura(this.comboBox1.SelectedValue);
+            };
+        }
+        
+        el summary se escribe colocando ///, luego se completa

@@ -1,0 +1,22 @@
+------------------KFC.FUNCION_BORRACHOS------------------
+--Propósito: Esta funcion sirve para conocer 
+--			cuales de nuestros profesionales
+--			son borrachos empedernidos.
+--
+--Ingreso: un identificador de especialidad.
+--
+--Egreso: devuelve una tabla con el nombre y
+--		 matricula de dichos profesionales.
+--
+------------------KFC.FUNCION_BORRACHOS------------------
+
+
+------------------KFC.TRG_TIENE_BAMBINOS------------------
+--Propósito: Este trigger sirve para notificar
+--			cuando un afiliado tiene a cargo 
+--			menores de 18 años.
+--
+--Disparador: luego de insertado un nuevo afiliado a cargo
+--             de alguien.
+--
+------------------KFC.TRG_TIENE_BAMBINOS------------------

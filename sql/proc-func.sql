@@ -350,7 +350,9 @@ AS
           END;
 GO
 	
-/*CREATE function KFC.Devolver_Precio_Bono(@afiliado_id INT)
+/*
+--Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado).
+CREATE function KFC.Devolver_Precio_Bono(@afiliado_id INT)
 returns table AS
 return ( 
 Select a.plan_id, p.descripcion, p.precio_bono_consulta
@@ -359,7 +361,8 @@ where a.afil_id = @afiliado_id
 and
 a.plan_id = p.plan_id );
 
-go*/
+go
+*/
 
 --Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado).
 CREATE function KFC.Devolver_Precio_Bono(@afiliado_id INT)
@@ -480,6 +483,125 @@ AS
             COMMIT;
 
           END;
+
+GO
+
+--Funcionalidad ABM ROLES. Crea 'Rol'
+CREATE PROCEDURE KFC.Crear_Rol(@descripcion VARCHAR(255))
+AS
+    BEGIN
+
+		DECLARE @Habilitado BIT;
+		DECLARE @fecha DATETIME;
+		
+		SET @Habilitado = 1;
+		SET @fecha = getdate();
+
+		BEGIN TRY
+			BEGIN TRANSACTION
+				INSERT INTO KFC.roles(descripcion, habilitado) VALUES (@descripcion, @Habilitado)
+			COMMIT;
+		END TRY
+		BEGIN CATCH
+                    IF @@trancount > 0
+                    ROLLBACK TRANSACTION;
+
+					PRINT 'Rol No Ingresado. Fecha ' + CONVERT(varchar,@fecha,102)
+                    ;THROW
+        END CATCH
+    END;
+GO
+
+--Funcionalidad ABM ROLES. Retorna todos los 'Roles', para luego elegir uno e ir asignandole funcionalidades
+CREATE FUNCTION kfc.obtener_todas_los_Roles()
+returns TABLE AS
+RETURN
+SELECT * FROM kfc.roles;
+
+GO
+
+--Funcionalidad ABM ROLES. Asigna una 'Funcionalidad' a un rol
+CREATE PROCEDURE KFC.Crear_Funcionalidad_de_Rol(@func_id INT, @rol_id INT)
+AS
+    BEGIN
+
+		DECLARE @fecha DATETIME;
+		SET @fecha = getdate();
+
+		SELECT * FROM KFC.funcionalidades_roles
+		where rol_id = @rol_id
+		and func_id = @func_id;
+
+		IF @@rowcount != 0
+
+			BEGIN TRY
+				BEGIN TRANSACTION
+					INSERT INTO KFC.funcionalidades_roles VALUES (@func_id, @rol_id)
+				COMMIT;
+			END TRY
+			BEGIN CATCH
+						IF @@trancount > 0
+						ROLLBACK TRANSACTION;
+
+						PRINT 'Funcionalidad_Rol No Ingresado. Fecha ' + CONVERT(varchar,@fecha,102)
+						;THROW
+			END CATCH
+    END;
+	
+GO
+
+--Funcionalidad ABM ROLES. Quita una 'Funcionalidad' a un rol
+CREATE PROCEDURE KFC.Quitar_Funcionalidad_de_Rol(@func_id INT, @rol_id INT)
+AS
+    BEGIN
+
+		DECLARE @fecha DATETIME;
+		SET @fecha = getdate();
+
+		SELECT * FROM KFC.funcionalidades_roles
+		where rol_id = @rol_id
+		and func_id = @func_id;
+
+		IF @@rowcount != 0
+
+			BEGIN	
+				BEGIN TRANSACTION
+
+					DELETE
+					FROM KFC.funcionalidades_roles
+					WHERE func_id = @func_id and rol_id = @rol_id;
+				COMMIT;
+			END;
+		ELSE
+			RAISERROR('No existe Funcionalidad_Rol. Fecha ' + CONVERT(varchar,@fecha,102),16,1);
+    END;
+
+GO
+
+--Funcionalidad ABM ROLES. Baja lógica de un 'Rol' y quita rol a usuarios que lo tengan.
+CREATE PROCEDURE KFC.Baja_Logica_Rol(@rol_id INT)
+AS
+    BEGIN
+		BEGIN TRY
+			BEGIN TRANSACTION
+				UPDATE kfc.roles SET habilitado = 0 WHERE rol_id = @rol_id;
+				if @@ROWCOUNT = 0
+					BEGIN
+						PRINT 'No se pudo dar de baja rol';
+						RETURN;
+					END;
+				else
+					DELETE
+					FROM KFC.roles_usuarios
+					WHERE rol_id = @rol_id;
+			COMMIT;
+		END TRY
+		BEGIN CATCH
+                    IF @@trancount > 0
+                    ROLLBACK TRANSACTION;
+                    ;THROW
+        END CATCH
+    END;
 
 GO
 	

@@ -414,6 +414,75 @@ where us_id = @Usuario_id );
 
 go
 
+--Funcionalidad ABM AFILIADOS. Devuelve los 'Afiliado' completo con todos los datos.	
+CREATE FUNCTION KFC.Devolver_Afiliado(@mail VARCHAR(255))
+returns TABLE AS
+RETURN
+(
+          SELECT
+			afil_id,
+			nombre,
+			apellido,
+			tipo_doc,
+			numero_doc,
+			direccion,
+			telefono,
+			mail,
+			sexo,
+			fecha_nacimiento,
+			estado_id,
+			habilitado,
+			personas_a_car,
+			plan_id,
+			us_id
+          
+		  FROM
+                    KFC.afiliados
+          WHERE
+                    mail = @mail
+);
+
+GO
+
+--Funcionalidad ABM AFILIADOS. modifica 'Afiliado' completo con todos los datos.	
+CREATE PROCEDURE KFC.Modificar_Afiliado(@afiliado_id INT, @nombre VARCHAR(255), @apellido VARCHAR(255), @tipo_doc VARCHAR(255), @numero_doc NUMERIC(18,0), @direccion VARCHAR(255), @telefono NUMERIC(18,0), @mail VARCHAR(255), @sexo CHAR(1), @fecha_nacimiento DATETIME, @estado_id INT, @habilitado BIT, @personas_a_car INT, @plan_id INT, @us_id INT)
+AS
+          BEGIN
+				 
+            BEGIN TRANSACTION
+            UPDATE
+				kfc.afiliados
+            SET                        
+				nombre = @nombre, 
+				apellido = @apellido, 
+				tipo_doc = @tipo_doc, 
+				numero_doc = @numero_doc, 
+				direccion = @direccion, 
+				telefono = @telefono, 
+				mail = @mail, 
+				sexo = @sexo, 
+				fecha_nacimiento = @fecha_nacimiento, 
+				estado_id = @estado_id, 
+				habilitado = @habilitado,
+				personas_a_car = @personas_a_car, 
+				plan_id = @plan_id, 
+				us_id   = @us_id 
+            WHERE
+				afil_id = @afiliado_id
+
+			if @@ROWCOUNT = 0
+				BEGIN
+					ROLLBACK TRANSACTION;
+					PRINT 'Afiliado inexistente';
+					RETURN;
+				END;
+
+            COMMIT;
+
+          END;
+
+GO
+	
 --**********************************************************************************************	
 --**********************************AGREGADO POR GONZALO - fin**********************************
 --**********************************************************************************************

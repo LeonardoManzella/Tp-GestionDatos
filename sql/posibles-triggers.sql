@@ -12,22 +12,21 @@ GO
 CREATE TRIGGER KFC.rol_nueva_funcionalidad
 ON KFC.funcionalidades_roles
 INSTEAD OF INSERT AS
-IF NOT EXISTS (SELECT * FROM KFC.roles WHERE rol_id = (SELECT rol_id FROM inserted))
-BEGIN
-RAISERROR ('No existe el rol a insertar en la tabla de relacion', 16, 1);
-RETURN
-END
+	IF NOT EXISTS (SELECT * FROM KFC.roles WHERE rol_id = (SELECT rol_id FROM inserted))
+	BEGIN
+		RAISERROR ('No existe el rol a insertar en la tabla de relacion', 16, 1);
+		RETURN
+	END
 
-IF NOT EXISTS (SELECT * FROM KFC.funcionalidades WHERE func_id = (SELECT func_id FROM inserted))
-BEGIN
-RAISERROR ('No existe la funcionalidad a asociar en la tabla de relacion', 16, 1);
-RETURN
-END
+	IF NOT EXISTS (SELECT * FROM KFC.funcionalidades WHERE func_id = (SELECT func_id FROM inserted))
+		BEGIN
+			RAISERROR ('No existe la funcionalidad a asociar en la tabla de relacion', 16, 1);
+		RETURN
+	END
 
-BEGIN TRANSACTION
-INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
-VALUES((SELECT rol_id FROM inserted), (SELECT func_id FROM inserted));
-COMMIT;
+	INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+	VALUES((SELECT rol_id FROM inserted), (SELECT func_id FROM inserted));
+
 GO
 ---------------------------------------------------------------------------
 
@@ -35,14 +34,13 @@ GO
 CREATE TRIGGER KFC.existe_rol_habilitar_deshabilitar
 ON KFC.roles
 INSTEAD OF UPDATE AS
-IF NOT EXISTS (SELECT * FROM KFC.roles WHERE rol_id = (SELECT rol_id FROM inserted))
-BEGIN
-RAISERROR ('No existe el rol a habilitar/deshabilitar', 16, 1);
-RETURN
-END
-BEGIN TRANSACTION
+	IF NOT EXISTS (SELECT * FROM KFC.roles WHERE rol_id = (SELECT rol_id FROM inserted))
+	BEGIN
+		RAISERROR ('No existe el rol a habilitar/deshabilitar', 16, 1);
+		RETURN
+	END
+
 	UPDATE KFC.roles set habilitado = (SELECT habilitado FROM inserted);
-COMMIT;
 GO
 ---------------------------------------------------------------------------
 

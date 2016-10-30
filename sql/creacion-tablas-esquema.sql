@@ -81,12 +81,12 @@ CREATE TABLE KFC.afiliados
                     afil_id          INT PRIMARY KEY IDENTITY(1,1)
                   , nombre           VARCHAR(255) NOT NULL
                   , apellido         VARCHAR(255) NOT NULL
-                  , tipo_doc         VARCHAR(255) NOT NULL CHECK (tipo_doc IN ('DNI', 'LC', 'LE', 'CI', 'PAS')) 
+                  , tipo_doc         VARCHAR(25) NOT NULL CHECK (tipo_doc IN ('DNI', 'LC', 'LE', 'CI', 'PAS')) 
                   , numero_doc       NUMERIC(18,0) NOT NULL
                   , direccion        VARCHAR(255) NULL
                   , telefono         NUMERIC(18, 0) NULL
                   , mail             VARCHAR(255) NULL
-                  , sexo             CHAR NULL CHECK (sexo IN ('M', 'F'))
+                  , sexo             CHAR NOT NULL CHECK (sexo IN ('M', 'F', 'T', 'P'))
                   , fecha_nacimiento DATETIME NOT NULL
                   , estado_id        INT NOT NULL REFERENCES KFC.estado_civil
                   , habilitado       BIT NOT NULL
@@ -109,7 +109,7 @@ CREATE TABLE KFC.profesionales
                     prof_id          INT PRIMARY KEY IDENTITY(1,1)
                   , nombre           VARCHAR(255) NOT NULL
                   , apellido         VARCHAR(255) NOT NULL
-                  , tipo_doc         VARCHAR(20) NOT NULL
+                  , tipo_doc         VARCHAR(25) NOT NULL CHECK (tipo_doc IN ('DNI', 'LC', 'LE', 'CI', 'PAS')) 
                   , numero_doc       NUMERIC(18,0) NOT NULL
                   , direccion        VARCHAR(255) NULL
                   , telefono         NUMERIC(18, 0) NULL

@@ -49,6 +49,6 @@ Temporary Items
 
 
 # Visual Studio
-ClinicaFrba\ClinicaFrba\bin\*
-ClinicaFrba\ClinicaFrba\obj\*
+ClinicaFrba/ClinicaFrba/bin/*
+ClinicaFrba/ClinicaFrba/obj/*
 *.suo

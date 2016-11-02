@@ -47,6 +47,9 @@ namespace ClinicaFrba
         {
             try
             {
+                this.user = textBox_usuario.Text.Trim();
+                this.password = textBox_password.Text.Trim();
+
                 Negocio.Log_In.Ingresar_App(this.user, this.password);
             }
             catch (Exception ex)

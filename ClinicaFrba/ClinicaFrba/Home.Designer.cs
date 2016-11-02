@@ -53,6 +53,10 @@
             this.nuevRolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bajaRolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.funcionalidadesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBox_usuario = new System.Windows.Forms.TextBox();
+            this.textBox_password = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,14 +86,14 @@
             // logInToolStripMenuItem
             // 
             this.logInToolStripMenuItem.Name = "logInToolStripMenuItem";
-            this.logInToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.logInToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.logInToolStripMenuItem.Text = "Log &In";
             this.logInToolStripMenuItem.Click += new System.EventHandler(this.logInToolStripMenuItem_Click);
             // 
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.salirToolStripMenuItem.Text = "Sali&r";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -108,7 +112,7 @@
             this.modificarAfiliadoToolStripMenuItem,
             this.bajaAfiliadoToolStripMenuItem});
             this.aBMAfiliadoToolStripMenuItem.Name = "aBMAfiliadoToolStripMenuItem";
-            this.aBMAfiliadoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.aBMAfiliadoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aBMAfiliadoToolStripMenuItem.Text = "ABM Afiliado";
             // 
             // nuevoAfiliadoToolStripMenuItem
@@ -245,11 +249,47 @@
             this.funcionalidadesToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.funcionalidadesToolStripMenuItem.Text = "Funcionalidades";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 51);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 13);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Usuario:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(13, 97);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Password:";
+            // 
+            // textBox_usuario
+            // 
+            this.textBox_usuario.Location = new System.Drawing.Point(72, 48);
+            this.textBox_usuario.Name = "textBox_usuario";
+            this.textBox_usuario.Size = new System.Drawing.Size(100, 20);
+            this.textBox_usuario.TabIndex = 3;
+            // 
+            // textBox_password
+            // 
+            this.textBox_password.Location = new System.Drawing.Point(72, 94);
+            this.textBox_password.Name = "textBox_password";
+            this.textBox_password.Size = new System.Drawing.Size(100, 20);
+            this.textBox_password.TabIndex = 3;
+            // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(563, 237);
+            this.Controls.Add(this.textBox_password);
+            this.Controls.Add(this.textBox_usuario);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Home";
@@ -289,6 +329,10 @@
         private System.Windows.Forms.ToolStripMenuItem altaProfesionalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem modificarProfesionalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bajaProfesionalToolStripMenuItem;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBox_usuario;
+        private System.Windows.Forms.TextBox textBox_password;
     }
 }
 

@@ -61,8 +61,27 @@ namespace ClinicaFrba
         private void nuevoAfiliadoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var altaAfiliado = new ABM_AFILIADO();
-            altaAfiliado.funcionalidad = 101;
+            altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.ALTA;
             altaAfiliado.ShowDialog();
+        }
+
+        private void modificarAfiliadoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var altaAfiliado = new ABM_AFILIADO();
+            altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.MODIFICACION;
+            altaAfiliado.ShowDialog();
+        }
+
+        private void bajaAfiliadoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var altaAfiliado = new ABM_AFILIADO();
+            altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.BAJA;
+            altaAfiliado.ShowDialog();
+        }
+
+        private void agendaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -13,7 +13,15 @@ namespace ClinicaFrba.Abm_Afiliado
 {
     public partial class ABM_AFILIADO : Form
     {
-        public int funcionalidad;
+        public enum tipos_funcionalidad
+        {
+            ALTA,
+            MODIFICACION,
+            BAJA
+        };
+
+
+        public tipos_funcionalidad funcionalidad;
         public ABM_AFILIADO()
         {
             InitializeComponent();
@@ -24,15 +32,15 @@ namespace ClinicaFrba.Abm_Afiliado
             try
             {
                 var afiliado = mapAfiliado_Vista();
-                if (funcionalidad == 101)
+                if (funcionalidad == tipos_funcionalidad.ALTA)
                     //alta
                     MessageBox.Show("Hice un alta");
-                else if (funcionalidad == 102)
+                else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
                     //Modific
-                    funcionalidad = 0;
-                else if (funcionalidad == 103)
+                    ;
+                else if (funcionalidad == tipos_funcionalidad.BAJA)
                     //Baja
-                    funcionalidad = 0;
+                    ;
                 ;
             }
             catch (Exception ex)
@@ -43,13 +51,13 @@ namespace ClinicaFrba.Abm_Afiliado
 
         private void ABMAFILIADO_Load(object sender, EventArgs e)
         {
-            if (funcionalidad == 101)
+            if (funcionalidad == tipos_funcionalidad.ALTA)
                 //alta
                 MessageBox.Show("Entro un alta");
-            else if (funcionalidad == 102)
+            else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
                 //Modific
                 funcionalidad = 0;
-            else if (funcionalidad == 103)
+            else if (funcionalidad == tipos_funcionalidad.BAJA)
                 //Baja
                 funcionalidad = 0;
             ;

@@ -8,13 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClinicaFrba.Cancelar_Atencion
+namespace ClinicaFrba.CancelarTurno
 {
-    public partial class CancelarAtencion : Form
+    public partial class CancelarTurnoAfiliado : Form
     {
-        public CancelarAtencion()
+        public CancelarTurnoAfiliado()
         {
             InitializeComponent();
+        }
+
+        private void CancelarAtencion_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

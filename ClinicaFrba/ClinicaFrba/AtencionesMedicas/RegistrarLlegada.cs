@@ -8,13 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClinicaFrba.Abm_Profesional
+namespace ClinicaFrba.AtencionesMedicas
 {
-    public partial class ABMProfesional : Form
+    public partial class RegistrarLlegada : Form
     {
-        public ABMProfesional()
+        public RegistrarLlegada()
         {
             InitializeComponent();
+        }
+
+        private void RegistrarAtencion_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

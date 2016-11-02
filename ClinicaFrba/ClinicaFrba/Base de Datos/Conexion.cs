@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace ClinicaFrba.Base_de_Datos
 {
@@ -12,37 +7,41 @@ namespace ClinicaFrba.Base_de_Datos
         private static Conexion instance = null;
         private static readonly object padlock = new object();
 
-        private SqlConnection conn;
+        private SqlConnection conexion_interna;
 
+        /// <summary>
+        /// Metodo Interno para el Singleton.
+        /// </summary>
+        /// <returns></returns>
         public SqlConnection get()
-            { return conn; }
+            { return conexion_interna; }
 
+
+        /// <summary>
+        /// Constructor Interno
+        /// </summary>
         private Conexion()
         {
-            conn = new SqlConnection("Password=gd2016;Persist Security Info=True;User ID=gd;Initial Catalog=GD2C2016;Data Source=.\\SQLSERVER2012");
+            conexion_interna = new SqlConnection("Password=gd2016;Persist Security Info=True;User ID=gd;Initial Catalog=GD2C2016;Data Source=.\\SQLSERVER2012");
 
-            //
-            //String connectionString;
-            //connectionString = "user id=" + "gd";
-            //connectionString += ";password=" + "gd2016";
-            //connectionString += ";server=localhost";
-            //connectionString += ";Trusted_Connection=yes";
-            //connectionString += ";database=GD2C2016";
-            //connectionString += ";connection timeout=30";
-            //conn.ConnectionString = connectionString;
+            conexion_interna.Open();
 
-            conn.Open();
-
-            var sqlCommand = new SqlCommand("SELECT * FROM KFC.roles", conn);
+            var sqlCommand = new SqlCommand("SELECT * FROM KFC.roles", conexion_interna);
             SqlDataReader reader = sqlCommand.ExecuteReader();
-
+            
+            /* 
+            //Para Pruebas, no borrar
             while (reader.Read())
             {
                 string name = reader.GetString(1);
                 var i = 5;
             }
+            */
         }
 
+        /// <summary>
+        /// Constructor Externo. Es un Singleton. Devuelve siempre la misma conexion.
+        /// </summary>
         public static Conexion Instance
         {
             get

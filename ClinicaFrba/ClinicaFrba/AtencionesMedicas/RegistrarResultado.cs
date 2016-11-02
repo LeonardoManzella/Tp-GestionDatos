@@ -16,5 +16,10 @@ namespace ClinicaFrba.AtencionesMedicas
         {
             InitializeComponent();
         }
+
+        private void RegistrarResultado_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

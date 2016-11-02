@@ -1,4 +1,4 @@
-﻿namespace ClinicaFrba.Cancelar_Turnos
+﻿namespace ClinicaFrba.CancelarTurno
 {
     partial class CancelarTurnoProfesional
     {
@@ -28,9 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // CancelarTurnoProfesional
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Name = "CancelarTurnoProfesional";
             this.Text = "CancelarTurnoProfesional";
+            this.Load += new System.EventHandler(this.CancelarTurnoProfesional_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

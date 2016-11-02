@@ -52,24 +52,6 @@
       <DependentUpon>ABM_AFILIADO.cs</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Abm Especialidades Medicas\ABMEspecialidades.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Abm Especialidades Medicas\ABMEspecialidades.Designer.cs">
-      <DependentUpon>ABMEspecialidades.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Abm Planes\ABMPlanes.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Abm Planes\ABMPlanes.Designer.cs">
-      <DependentUpon>ABMPlanes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Abm Profesional\ABMProfesional.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Abm Profesional\ABMProfesional.Designer.cs">
-      <DependentUpon>ABMProfesional.cs</DependentUpon>
-    </Compile>
     <Compile Include="AbmRol\CrearRol.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,11 +118,11 @@
     <Compile Include="Crear Agenda Medico\AgendaMedico.Designer.cs">
       <DependentUpon>AgendaMedico.cs</DependentUpon>
     </Compile>
-    <Compile Include="AtencionesMedicas\RegistrarAtencion.cs">
+    <Compile Include="AtencionesMedicas\RegistrarLlegada.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AtencionesMedicas\RegistrarAtencion.Designer.cs">
-      <DependentUpon>RegistrarAtencion.cs</DependentUpon>
+    <Compile Include="AtencionesMedicas\RegistrarLlegada.Designer.cs">
+      <DependentUpon>RegistrarLlegada.cs</DependentUpon>
     </Compile>
     <Compile Include="Clases\Usuario.cs" />
     <EmbeddedResource Include="Abm Afiliado\ABM_AFILIADO.resx">
@@ -152,6 +134,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AbmRol\ModificarRol.resx">
       <DependentUpon>ModificarRol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AtencionesMedicas\RegistrarLlegada.resx">
+      <DependentUpon>RegistrarLlegada.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AtencionesMedicas\RegistrarResultado.resx">
+      <DependentUpon>RegistrarResultado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cancelar Turnos\CancelarTurnoAfiliado.resx">
+      <DependentUpon>CancelarTurnoAfiliado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cancelar Turnos\CancelarTurnoProfesional.resx">
+      <DependentUpon>CancelarTurnoProfesional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compra Bono\CompraBono.resx">
+      <DependentUpon>CompraBono.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Crear Agenda Medico\AgendaMedico.resx">
+      <DependentUpon>AgendaMedico.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Home.resx">
       <DependentUpon>Home.cs</DependentUpon>

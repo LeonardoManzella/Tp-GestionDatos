@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ClinicaFrba.Clases;
 
@@ -22,6 +15,8 @@ namespace ClinicaFrba.Abm_Afiliado
 
 
         public tipos_funcionalidad funcionalidad;
+
+
         public ABM_AFILIADO()
         {
             InitializeComponent();
@@ -37,10 +32,10 @@ namespace ClinicaFrba.Abm_Afiliado
                     MessageBox.Show("Hice un alta");
                 else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
                     //Modific
-                    ;
+                    MessageBox.Show("Hice una mod");
                 else if (funcionalidad == tipos_funcionalidad.BAJA)
                     //Baja
-                    ;
+                    MessageBox.Show("Hice una baja");
                 ;
             }
             catch (Exception ex)

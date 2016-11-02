@@ -16,5 +16,10 @@ namespace ClinicaFrba.AbmRol
         {
             InitializeComponent();
         }
+
+        private void ModificarRol_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

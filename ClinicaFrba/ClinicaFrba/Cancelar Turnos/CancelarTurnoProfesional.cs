@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClinicaFrba.Cancelar_Turnos
+namespace ClinicaFrba.CancelarTurno
 {
     public partial class CancelarTurnoProfesional : Form
     {
@@ -16,5 +16,11 @@ namespace ClinicaFrba.Cancelar_Turnos
         {
             InitializeComponent();
         }
+
+        private void CancelarTurnoProfesional_Load(object sender, EventArgs e)
+        {
+
+        }
     }
+
 }

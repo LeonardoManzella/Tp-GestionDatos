@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ClinicaFrba.Listados
+namespace ClinicaFrba.Estadisticas
 {
-    public partial class ListadoEstadisticas : Form
+    public partial class Estadisticas : Form
     {
-        public ListadoEstadisticas()
+        public Estadisticas()
         {
             InitializeComponent();
         }

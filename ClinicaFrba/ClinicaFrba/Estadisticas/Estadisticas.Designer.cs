@@ -1,6 +1,6 @@
-﻿namespace ClinicaFrba.Listados
+﻿namespace ClinicaFrba.Estadisticas
 {
-    partial class ListadoEstadisticas
+    partial class Estadisticas
     {
         /// <summary>
         /// Required designer variable.

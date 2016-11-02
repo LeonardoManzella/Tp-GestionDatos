@@ -1,6 +1,6 @@
-﻿namespace ClinicaFrba.Abm_Profesional
+﻿namespace ClinicaFrba.AtencionesMedicas
 {
-    partial class ABMProfesional
+    partial class RegistrarLlegada
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // RegistrarAtencion
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Name = "RegistrarAtencion";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.RegistrarAtencion_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

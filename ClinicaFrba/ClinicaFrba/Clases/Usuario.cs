@@ -8,7 +8,7 @@ namespace ClinicaFrba
 {
     public class Usuario
     {
-        public int id { get; set; }
+        public Int32 id { get; set; }
         public string apellido { get; set; }
         public string nombre { get; set; }
         public int? plan_id { get; set; }

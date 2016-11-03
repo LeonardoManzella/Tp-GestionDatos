@@ -40,6 +40,9 @@ namespace ClinicaFrba
             this.Close();
         }
 
+        /// <summary>
+        /// Log In de cualquier Usuario en la Base Datos
+        /// </summary>
         private void logInToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try

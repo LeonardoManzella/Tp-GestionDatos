@@ -56,6 +56,7 @@
             this.atencionMedicaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.registrarLlegadaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.registrarResultadoDiagnosticoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label3 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -232,7 +233,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 51);
+            this.label1.Location = new System.Drawing.Point(114, 111);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 1;
@@ -241,7 +242,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 97);
+            this.label2.Location = new System.Drawing.Point(113, 157);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 2;
@@ -249,16 +250,16 @@
             // 
             // textBox_usuario
             // 
-            this.textBox_usuario.Location = new System.Drawing.Point(72, 48);
+            this.textBox_usuario.Location = new System.Drawing.Point(172, 108);
             this.textBox_usuario.Name = "textBox_usuario";
-            this.textBox_usuario.Size = new System.Drawing.Size(100, 20);
+            this.textBox_usuario.Size = new System.Drawing.Size(213, 20);
             this.textBox_usuario.TabIndex = 3;
             // 
             // textBox_password
             // 
-            this.textBox_password.Location = new System.Drawing.Point(72, 94);
+            this.textBox_password.Location = new System.Drawing.Point(172, 154);
             this.textBox_password.Name = "textBox_password";
-            this.textBox_password.Size = new System.Drawing.Size(100, 20);
+            this.textBox_password.Size = new System.Drawing.Size(213, 20);
             this.textBox_password.TabIndex = 3;
             // 
             // atencionMedicaToolStripMenuItem
@@ -284,11 +285,22 @@
             this.registrarResultadoDiagnosticoToolStripMenuItem.Text = "Registrar Resultado Diagnostico";
             this.registrarResultadoDiagnosticoToolStripMenuItem.Click += new System.EventHandler(this.registrarResultadoDiagnosticoToolStripMenuItem_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(115, 53);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(270, 25);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "Bienvenido a Clinica FRBA";
+            // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(563, 237);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox_password);
             this.Controls.Add(this.textBox_usuario);
             this.Controls.Add(this.label2);
@@ -335,6 +347,7 @@
         private System.Windows.Forms.ToolStripMenuItem atencionMedicaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem registrarLlegadaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem registrarResultadoDiagnosticoToolStripMenuItem;
+        private System.Windows.Forms.Label label3;
     }
 }
 

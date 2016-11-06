@@ -30,7 +30,7 @@ CREATE TABLE KFC.usuarios
           (
                     us_id      INT PRIMARY KEY IDENTITY(1,1)		--No hay que cambiarlo a secuencia? o sacarle el Identity porque lo manejariamos nosotros
                   , nick       VARCHAR(255) UNIQUE NOT NULL
-                  , pass       VARCHAR(255) NOT NULL
+                  , pass       VARBINARY(8000) NOT NULL			--NOTA: Es VarBinary por estar Encriptada la Contraseña por SHA2_256. Se encripta al llenar los datos
                   , habilitado BIT NOT NULL
 				  , intentos   INT NOT NULL DEFAULT 0
           )

@@ -1,4 +1,4 @@
-------------------OBTENER_TODOS_LOS_ROLES------------------
+﻿------------------OBTENER_TODOS_LOS_ROLES------------------
 --Proposito: obtiene los roles actuales del sistema
 --
 --Ingreso: -
@@ -287,13 +287,24 @@ RETURN
                     afi.habilitado  = 1
                     AND afi.afil_id = @afiliado_id);
 GO
+
+-------------------------------------
+
+--------------------------------------
 CREATE FUNCTION kfc.fun_obtener_todos_los_planes()
 returns TABLE
 RETURN
 ( SELECT pl.plan_id, pl.descripcion FROM kfc.planes pl);
 GO
 
+------------------------------------------
 
+------------------------------------------
+create procedure kfc.get_afiliado @id_afiliado int
+as
+select * from kfc.afiliados a
+where a.afil_id = @id_afiliado;
+go
 
 
 ------------------OBTENER_ESPECIALIDADES------------------

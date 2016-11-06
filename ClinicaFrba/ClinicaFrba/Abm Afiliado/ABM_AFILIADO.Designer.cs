@@ -55,6 +55,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.cmbPlan = new System.Windows.Forms.ComboBox();
+            this.chk_titular = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -166,7 +167,7 @@
             // 
             // btnAccion
             // 
-            this.btnAccion.Location = new System.Drawing.Point(85, 355);
+            this.btnAccion.Location = new System.Drawing.Point(86, 364);
             this.btnAccion.Name = "btnAccion";
             this.btnAccion.Size = new System.Drawing.Size(120, 37);
             this.btnAccion.TabIndex = 14;
@@ -176,7 +177,7 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(300, 355);
+            this.btnCancelar.Location = new System.Drawing.Point(301, 364);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(120, 37);
             this.btnCancelar.TabIndex = 15;
@@ -204,7 +205,7 @@
             // 
             this.dtFNac.Location = new System.Drawing.Point(11, 95);
             this.dtFNac.Name = "dtFNac";
-            this.dtFNac.Size = new System.Drawing.Size(201, 20);
+            this.dtFNac.Size = new System.Drawing.Size(255, 20);
             this.dtFNac.TabIndex = 21;
             // 
             // label6
@@ -299,11 +300,22 @@
             this.cmbPlan.Size = new System.Drawing.Size(163, 21);
             this.cmbPlan.TabIndex = 20;
             // 
-            // ABMAFILIADO
+            // chk_titular
+            // 
+            this.chk_titular.AutoSize = true;
+            this.chk_titular.Location = new System.Drawing.Point(106, 341);
+            this.chk_titular.Name = "chk_titular";
+            this.chk_titular.Size = new System.Drawing.Size(72, 17);
+            this.chk_titular.TabIndex = 21;
+            this.chk_titular.Text = "Es titular?";
+            this.chk_titular.UseVisualStyleBackColor = true;
+            // 
+            // ABM_AFILIADO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(515, 404);
+            this.ClientSize = new System.Drawing.Size(515, 427);
+            this.Controls.Add(this.chk_titular);
             this.Controls.Add(this.cmbPlan);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.cmbEstadoCiv);
@@ -317,7 +329,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtNroDoc);
             this.Controls.Add(this.label3);
-            this.Name = "ABMAFILIADO";
+            this.Name = "ABM_AFILIADO";
             this.Text = "ABMAFILIADOS";
             this.Load += new System.EventHandler(this.ABMAFILIADO_Load);
             this.groupBox1.ResumeLayout(false);
@@ -357,5 +369,6 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox cmbPlan;
+        private System.Windows.Forms.CheckBox chk_titular;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ClinicaFrba.Clases
 {
@@ -15,6 +16,54 @@ namespace ClinicaFrba.Clases
         {
             this.descripcion = desc.ToString();
             this.identificador = Int32.Parse(id.ToString());
+        }
+
+        public static int obtener_indice(int id, ComboBox combo)
+        {
+            int i = 0;
+            int index = -1;
+            foreach (ComboData element in combo.Items)
+            {
+                if ((int) element.identificador == (int)id)
+                {
+                    index = i;
+                    break;
+                }
+                else {
+                    i = i + 1;
+                };
+            }
+            return index;
+        }
+
+        public static int obtener_indice(string desc, ComboBox combo)
+        {
+            int i = 0;
+            int index = -1;
+            foreach (ComboData element in combo.Items)
+            {
+                if (element.descripcion.ToString() == desc.ToString())
+                {
+                    index = i;
+                    break;
+                }
+                else {
+                    i = i + 1;
+                };
+            }
+            return index;
+        }
+
+        public static int obtener_identificador(ComboBox combo)
+        {
+           var data =(ComboData) combo.Items[combo.SelectedIndex];
+            return data.identificador;
+        }
+
+        public static string obtener_descripcion(ComboBox combo)
+        {
+            var data = (ComboData)combo.Items[combo.SelectedIndex];
+            return data.descripcion;
         }
     }
 }

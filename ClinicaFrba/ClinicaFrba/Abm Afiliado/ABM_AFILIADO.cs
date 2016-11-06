@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using ClinicaFrba.Clases;
+using Microsoft.VisualBasic;
 
 namespace ClinicaFrba.Abm_Afiliado
 {
@@ -15,7 +16,8 @@ namespace ClinicaFrba.Abm_Afiliado
 
 
         public tipos_funcionalidad funcionalidad;
-
+        public Usuario usuario;
+        private Afiliado afiliado;
 
         public ABM_AFILIADO()
         {
@@ -26,16 +28,35 @@ namespace ClinicaFrba.Abm_Afiliado
         {
             try
             {
-                var afiliado = mapAfiliado_Vista();
+
+                mapAfiliado_Vista();
                 if (funcionalidad == tipos_funcionalidad.ALTA)
-                    //alta
-                    MessageBox.Show("Hice un alta");
+                {  //alta
+                    
+                    if (this.chk_titular.Checked)
+                    {
+                        //afiliado.id =  Negocio.ABMUSUARIO.altaUsuario(user);
+                        afiliado.usuario = 1;
+                    }
+                    else
+                    {
+                        var nick = Interaction.InputBox("Ingrese el nick del usuario del titular");
+                        //user.id =  Negocio.ABMUSUARIO.obtenerUsuario(nick);
+                        afiliado.usuario = Int32.Parse(nick);
+                    }
+                    Negocio.ABMAFIL.alta_afiliado(afiliado);
+                    MessageBox.Show("Se ha realizado el alta correctamente");
+                }
                 else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
-                    //Modific
-                    MessageBox.Show("Hice una mod");
+                //Modific
+                {
+                    Negocio.ABMAFIL.modifica_afiliado(afiliado);
+                    MessageBox.Show("Se ha modificado el afiliado sastifactoriamente");
+                }
                 else if (funcionalidad == tipos_funcionalidad.BAJA)
                     //Baja
-                    MessageBox.Show("Hice una baja");
+
+                    MessageBox.Show("Se ha realizado la baja correctamente");
                 ;
             }
             catch (Exception ex)
@@ -46,27 +67,93 @@ namespace ClinicaFrba.Abm_Afiliado
 
         private void ABMAFILIADO_Load(object sender, EventArgs e)
         {
+            cargar_pantalla();
+            txtAfilId.Enabled = false;
             if (funcionalidad == tipos_funcionalidad.ALTA)
-                //alta
-                MessageBox.Show("Entro un alta");
+            {  //alta
+                chk_titular.Visible = true;
+                this.afiliado = new Afiliado();
+            }
             else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
-                //Modific
-                funcionalidad = 0;
-            else if (funcionalidad == tipos_funcionalidad.BAJA)
-                //Baja
-                funcionalidad = 0;
-            ;
+            {
+                chk_titular.Visible = false;
+                var afiliado_id = Int32.Parse(Interaction.InputBox("Ingrese el numero de afiliado a modificar"));
+                this.afiliado = Negocio.ABMAFIL.Get_Afiliado(afiliado_id);
+                afiliado_en_pantalla();
+            }
+            else
+            {
+                chk_titular.Visible = false;
+                var afiliado_id = Int32.Parse(Interaction.InputBox("Ingrese el numero de afiliado a modificar"));
+                this.afiliado = Negocio.ABMAFIL.Get_Afiliado(afiliado_id);
+                afiliado_en_pantalla();
+            }
         }
 
-        private Afiliado mapAfiliado_Vista()
+        private void afiliado_en_pantalla()
         {
-            var afiliado = new Afiliado();
+            txtApellido.Text = afiliado.apellido;
+            txtDireccion.Text = afiliado.direccion;
+            cmbEstadoCiv.SelectedIndex = ComboData.obtener_indice(afiliado.estado_civil, cmbEstadoCiv);
+            TxtMail.Text = afiliado.e_mail;
+            dtFNac.Value = afiliado.fecha_nac;
+            txtAfilId.Text = afiliado.id.ToString();
+            txtNombre.Text = afiliado.nombre;
+            txtNroDoc.Text = afiliado.nro_doc.ToString();
+            cmbPlan.SelectedIndex = ComboData.obtener_indice(afiliado.plan_id.Value, cmbPlan);
+            txtNroTelefono.Text = afiliado.telefono;
+            //selecciono el item que tiene de descripcion
+            cmbSexo.SelectedIndex = ComboData.obtener_indice(afiliado.sexo, cmbSexo);
+            //selecciono el item que tiene de descripcion
+            cmbTipoDoc.SelectedIndex = ComboData.obtener_indice(afiliado.tipo_doc, cmbTipoDoc);
 
-            var conn = Base_de_Datos.Conexion.Instance.get();
+        }
+        private void cargar_pantalla()
+        {
+            #region combos
 
+
+            this.cmbEstadoCiv.DisplayMember = "descripcion";
+            this.cmbEstadoCiv.ValueMember = "identificador";
+            var estados = Negocio.ABMAFIL.get_Estados_Civiles();
+
+            foreach (ComboData estado in estados)
+            {
+                this.cmbEstadoCiv.Items.Add(estado);
+            }
+
+            this.cmbPlan.DisplayMember = "descripcion";
+            this.cmbPlan.ValueMember = "identificador";
+            var planes = Negocio.ABMAFIL.get_Planes_Sociales();
+
+            foreach (ComboData plan in planes)
+            {
+                this.cmbPlan.Items.Add(plan);
+            }
+
+            //cargo el combo de sexo
+            this.cmbSexo.DisplayMember = "descripcion";
+            this.cmbSexo.ValueMember = "identificador";
+            this.cmbSexo.Items.Add(new ComboData(1, "M"));
+            this.cmbSexo.Items.Add(new ComboData(1, "F"));
+
+            //Cargo el combo de tipos de documentos
+            this.cmbTipoDoc.DisplayMember = "descripcion";
+            this.cmbTipoDoc.ValueMember = "identificador";
+            var tipos = Negocio.ABMAFIL.get_Tipos_Documentos();
+
+            foreach (ComboData tipo in tipos)
+            {
+                this.cmbTipoDoc.Items.Add(tipo);
+            }
+            #endregion
+        }
+
+        private void mapAfiliado_Vista()
+        {
             afiliado.apellido = txtApellido.Text;
             afiliado.direccion = txtDireccion.Text;
-            afiliado.estado_civil = Int32.Parse(cmbEstadoCiv.SelectedValue.ToString().Trim());
+            afiliado.estado_civil = ComboData.obtener_identificador(cmbEstadoCiv);
             afiliado.e_mail = TxtMail.Text;
             afiliado.fecha_nac = dtFNac.Value;
             if (!String.IsNullOrEmpty(txtAfilId.Text.Trim()))
@@ -77,12 +164,11 @@ namespace ClinicaFrba.Abm_Afiliado
             if (!String.IsNullOrEmpty(txtNroDoc.Text.Trim()))
                 afiliado.nro_doc = Int32.Parse(txtNroDoc.Text);
 
-            afiliado.plan_id = Int32.Parse(cmbPlan.SelectedValue.ToString());
-            afiliado.sexo = cmbSexo.SelectedValue.ToString()[0];
+            afiliado.plan_id = ComboData.obtener_identificador(cmbPlan);
+            afiliado.sexo = ComboData.obtener_descripcion(cmbSexo)[0];
             afiliado.telefono = txtNroTelefono.Text;
-            afiliado.tipo_doc = cmbTipoDoc.SelectedText.ToString();
-
-            return afiliado;
+            afiliado.tipo_doc = ComboData.obtener_descripcion(cmbTipoDoc);
+            
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ClinicaFrba.Abm_Afiliado;
+using ClinicaFrba.Pedir_Turno;
 using System;
 using System.Windows.Forms;
 
@@ -62,6 +63,7 @@ namespace ClinicaFrba
         {
             var altaAfiliado = new ABM_AFILIADO();
             altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.ALTA;
+            altaAfiliado.usuario = this.usuario;
             altaAfiliado.ShowDialog();
         }
 
@@ -69,6 +71,7 @@ namespace ClinicaFrba
         {
             var altaAfiliado = new ABM_AFILIADO();
             altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.MODIFICACION;
+            altaAfiliado.usuario = this.usuario;
             altaAfiliado.ShowDialog();
         }
 
@@ -76,6 +79,7 @@ namespace ClinicaFrba
         {
             var altaAfiliado = new ABM_AFILIADO();
             altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.BAJA;
+            altaAfiliado.usuario = this.usuario;
             altaAfiliado.ShowDialog();
         }
 
@@ -96,7 +100,9 @@ namespace ClinicaFrba
 
         private void pedirTurnoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new Pedir_Turno.PedirTurno().ShowDialog();
+            var pedir_turno = new PedirTurno();
+            pedir_turno.usuario = this.usuario;
+            pedir_turno.ShowDialog();
         }
 
         private void comprarBonoToolStripMenuItem_Click(object sender, EventArgs e)

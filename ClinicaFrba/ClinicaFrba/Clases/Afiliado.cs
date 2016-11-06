@@ -8,6 +8,7 @@ namespace ClinicaFrba.Clases
 {
     public class Afiliado
     {
+        public int usuario { get; set; }
         public int id { get; set; }
         public string apellido { get; set; }
         public string nombre { get; set; }

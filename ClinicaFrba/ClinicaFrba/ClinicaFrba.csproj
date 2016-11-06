@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -85,6 +86,7 @@
       <DependentUpon>CancelarTurnoProfesional.cs</DependentUpon>
     </Compile>
     <Compile Include="Clases\Afiliado.cs" />
+    <Compile Include="Clases\ComboData.cs" />
     <Compile Include="Compra Bono\CompraBono.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +105,7 @@
     <Compile Include="Estadisticas\Estadisticas.Designer.cs">
       <DependentUpon>Estadisticas.cs</DependentUpon>
     </Compile>
+    <Compile Include="Negocio\ABMAFIL.cs" />
     <Compile Include="Negocio\Log_In.cs" />
     <Compile Include="Pedir Turno\PedirTurno.cs">
       <SubType>Form</SubType>

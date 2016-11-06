@@ -12,6 +12,7 @@ namespace ClinicaFrba.Pedir_Turno
 {
     public partial class PedirTurno : Form
     {
+        public Usuario usuario { get; set; }
         public PedirTurno()
         {
             InitializeComponent();

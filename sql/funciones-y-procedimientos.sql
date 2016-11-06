@@ -45,7 +45,7 @@ BEGIN
                     KFC.usuarios us
           WHERE
                     us.nick           = @usuario
-                    AND us.pass       = HASHBYTES('SHA', @contrasenia)
+                    AND us.pass       = HASHBYTES('SHA2_256', @contrasenia)
                     AND us.habilitado = 1
           ;
           

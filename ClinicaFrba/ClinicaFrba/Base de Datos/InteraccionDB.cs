@@ -10,29 +10,53 @@ namespace ClinicaFrba.Base_de_Datos
     public static class InteraccionDB
     {
 
+        public static SqlDataReader ejecutar_funcion(string funcion, List<SqlParameter> parametros)
+        {
+            SqlConnection conexion = Conexion.Instance.get();
+            SqlCommand comando_sql = new SqlCommand(funcion, conexion);
+
+            foreach (var parametro in parametros)
+            {
+                comando_sql.Parameters.Add(parametro);
+            }
+
+            return comando_sql.ExecuteReader();
+        }
+
+
+
         public static Usuario log_in(string usuario, string password)
         {
             try
             {
-                //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
-                SqlConnection conexion = Conexion.Instance.get();
-
-                SqlCommand comando_sql = new SqlCommand("SELECT KFC.fun_validar_usuario(@user, @contrasenia)", conexion);
+                string funcion = "SELECT KFC.fun_validar_usuario(@user, @contrasenia)";
                 SqlParameter parametro1 = new SqlParameter("@user", SqlDbType.Text);
                 parametro1.Value = usuario.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@contrasenia", SqlDbType.Text);
                 parametro2.Value = password.ToUpper();
-                comando_sql.Parameters.Add(parametro1);
-                comando_sql.Parameters.Add(parametro2);
 
-                //EL ERROR es al convertir a INT32 que no se porque no le gusta. Una vez solucionado eso deberia andar
-                var id = comando_sql.ExecuteReader();
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                
+                var reader = ejecutar_funcion(funcion, parametros);
 
-                //  if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
+                //Veo si trajo datos o no
+                if (!reader.HasRows) throw new Exception("Reader sin Filas: Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
+                int id = -1;
+
+                //Obtengo Multiples datos
+                while (reader.Read())
+                {
+                    id = reader.GetInt32(0);        //Obtengo Dato primer columna, la columna 0
+                    break;      //Por ser unica fila la que quiero
+                }
+                
+                if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
 
 
                 var user = new Usuario();
-                //user.id = id;
+                user.id = id;
                 //Otros valores falta ver que hacemos con eso. No es necesario Obtenerlos de la Base.
                 return user;
             }

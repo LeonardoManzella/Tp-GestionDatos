@@ -187,3 +187,9 @@ GO
 IF OBJECT_ID('KFC.fun_obtener_turnos_profesional') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_turnos_profesional;
 GO
+
+IF OBJECT_ID('KFC.get_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.get_afiliado;
+GO
+
+

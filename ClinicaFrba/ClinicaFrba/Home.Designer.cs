@@ -85,15 +85,15 @@
             // logInToolStripMenuItem
             // 
             this.logInToolStripMenuItem.Name = "logInToolStripMenuItem";
-            this.logInToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.logInToolStripMenuItem.Text = "Log &In";
+            this.logInToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.logInToolStripMenuItem.Text = "&Log In";
             this.logInToolStripMenuItem.Click += new System.EventHandler(this.logInToolStripMenuItem_Click);
             // 
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
-            this.salirToolStripMenuItem.Text = "Sali&r";
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.salirToolStripMenuItem.Text = "&Salir";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
             // afiliadoToolStripMenuItem
@@ -283,7 +283,7 @@
             this.textBox_password.Location = new System.Drawing.Point(209, 175);
             this.textBox_password.Name = "textBox_password";
             this.textBox_password.Size = new System.Drawing.Size(213, 20);
-            this.textBox_password.TabIndex = 3;
+            this.textBox_password.TabIndex = 4;
             // 
             // label3
             // 

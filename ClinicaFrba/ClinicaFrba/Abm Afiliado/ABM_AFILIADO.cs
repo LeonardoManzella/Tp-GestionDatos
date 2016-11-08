@@ -170,5 +170,10 @@ namespace ClinicaFrba.Abm_Afiliado
             afiliado.tipo_doc = ComboData.obtener_descripcion(cmbTipoDoc);
             
         }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

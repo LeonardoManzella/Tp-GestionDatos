@@ -599,6 +599,7 @@ BEGIN
 END;
 GO
 
+/*
 --Funcionalidad COMPRAR BONOS. Devuelve 'Id Afilaido' y su 'Nombre' para el caso de que administrativo realiza la compra de bonos en nombre de un afiliado.
 CREATE function KFC.fun_devolver_afiliado_y_su_nombre(@Usuario_id INT)
 returns table AS
@@ -606,8 +607,8 @@ return (
 Select afil_id, nombre, apellido
 from KFC.afiliados
 where us_id = @Usuario_id );
-
 go
+*/
 
 --Funcionalidad ABM AFILIADOS. Devuelve los 'Afiliado' completo con todos los datos.	
 CREATE FUNCTION KFC.fun_devolver_afiliado(@mail VARCHAR(255))

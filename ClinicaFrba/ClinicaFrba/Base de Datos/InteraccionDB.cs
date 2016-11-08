@@ -24,6 +24,22 @@ namespace ClinicaFrba.Base_de_Datos
         }
 
 
+        private static void ImprimirExcepcion(Exception e)
+        {
+            //Imprimir para DEBUG
+            System.Diagnostics.Debug.WriteLine(e.Message);
+            System.Diagnostics.Debug.WriteLine(e.InnerException);
+            System.Diagnostics.Debug.WriteLine(e.HelpLink);
+            System.Diagnostics.Debug.Write(e.StackTrace);
+
+
+            //Imprimir para Consola :/
+            Console.WriteLine(e.Message);
+            Console.WriteLine(e.InnerException);
+            Console.WriteLine(e.HelpLink);
+            Console.Write(e.StackTrace);
+        }
+
 
         public static Usuario log_in(string usuario, string password)
         {
@@ -62,18 +78,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
-                //Imprimir para DEBUG enserio
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                System.Diagnostics.Debug.WriteLine(e.InnerException);
-                System.Diagnostics.Debug.WriteLine(e.HelpLink);
-                System.Diagnostics.Debug.Write(e.StackTrace);
-
-
-                //Imprimir para Consola :/
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.InnerException);
-                Console.WriteLine(e.HelpLink);
-                Console.Write(e.StackTrace);
+                ImprimirExcepcion(e);
 
                 throw e;
             }
@@ -143,18 +148,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
-                //Imprimir para DEBUG enserio
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                System.Diagnostics.Debug.WriteLine(e.InnerException);
-                System.Diagnostics.Debug.WriteLine(e.HelpLink);
-                System.Diagnostics.Debug.Write(e.StackTrace);
-
-
-                //Imprimir para Consola :/
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.InnerException);
-                Console.WriteLine(e.HelpLink);
-                Console.Write(e.StackTrace);
+                ImprimirExcepcion(e);
 
                 throw e;
             }
@@ -219,18 +213,83 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
-                //Imprimir para DEBUG enserio
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                System.Diagnostics.Debug.WriteLine(e.InnerException);
-                System.Diagnostics.Debug.WriteLine(e.HelpLink);
-                System.Diagnostics.Debug.Write(e.StackTrace);
+                ImprimirExcepcion(e);
 
+                throw e;
+            }
+        }
 
-                //Imprimir para Consola :/
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.InnerException);
-                Console.WriteLine(e.HelpLink);
-                Console.Write(e.StackTrace);
+        public static List<string> pedir_planes_usuario(int id_usuario)
+        {
+            try
+            {
+                string funcion = "SELECT KFC.fun_obtener_planes_afiliado(@afiliado_id)";
+                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Text);
+                parametro.Value = id_usuario;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
+
+                var reader = ejecutar_funcion(funcion, parametros);
+
+                //Veo si trajo datos o no
+                if (!reader.HasRows) throw new Exception("Reader sin Filas: No hay Planes en la Base Datos");
+
+                var planes = new List<string>();
+
+                //Obtengo Multiples datos
+                while (reader.Read())
+                {
+                    string plan = reader.GetString(5);
+                    planes.Add(plan);
+                    plan = "";
+
+                }
+
+                if( planes.Count <= 0 ) throw new Exception("No se cargaron Planes a la Lista");
+
+                return planes;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        public static int obtener_precio_plan(int id_usuario)
+        {
+            try
+            {
+                string funcion = "SELECT KFC.fun_devolver_precio_bono(@afiliado_id)";
+                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Text);
+                parametro.Value = id_usuario;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
+
+                var reader = ejecutar_funcion(funcion, parametros);
+
+                //Veo si trajo datos o no
+                if (!reader.HasRows) throw new Exception("Reader sin Filas: No encontro Precio Plan Base Datos");
+
+                int precio = 0;
+
+                //Obtengo Multiples datos
+                while (reader.Read())
+                {
+                    precio = reader.GetInt32(0);
+                    break;
+
+                }
+                if (precio <= 0) throw new Exception("Precio No valido");
+
+                return precio;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
 
                 throw e;
             }
@@ -274,12 +333,13 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
+                ImprimirExcepcion(e);
                 throw e;
             }
         }
 
         /// <summary>
-        /// Obtiene los distintos planes sociales de nuestro sistema
+        /// Obtiene todos planes sociales de nuestro sistema
         /// </summary>
         /// <returns></returns>
         public static List<ComboData> get_planes_sociales()
@@ -314,6 +374,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
+                ImprimirExcepcion(e);
                 throw e;
             }
         }
@@ -337,6 +398,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
+                ImprimirExcepcion(e);
                 throw e;
             }
         }
@@ -388,6 +450,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
+                ImprimirExcepcion(e);
                 throw e;
             }
 

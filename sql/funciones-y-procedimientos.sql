@@ -552,17 +552,24 @@ go
 
 --Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado).
 CREATE function KFC.fun_devolver_precio_bono(@afiliado_id INT)
-returns table AS
-return ( 
-Select a.plan_id, p.descripcion, p.precio_bono_consulta
-from KFC.afiliados a
-INNER JOIN
-KFC.planes p
-on
-a.plan_id = p.plan_id 
-where a.afil_id = @afiliado_id );
+returns int AS
+BEGIN
 
+		DECLARE @precio INT;
+		SET @precio = 0;
+ 
+		Select @precio = p.precio_bono_consulta
+		from KFC.afiliados a
+			INNER JOIN
+			KFC.planes p
+			on
+			a.plan_id = p.plan_id 
+		where a.afil_id = @afiliado_id
+
+		return @precio;
+END;
 go
+
 
 --Funcionalidad COMPRAR BONOS. Crea 'Bono' comprado por el afiliado (bono del mismo plan que tiene el afiliado).
 CREATE PROCEDURE KFC.pro_comprar_bono(@afiliado_id INT)

@@ -314,7 +314,7 @@ go
 --
 --Egreso: una tabla con todas las especialidades que posee el profesional
 ------------------OBTENER_ESPECIALIDADES------------------
-CREATE FUNCTION kfc.fun_obtener_especialidades(@id_profesional INT)
+CREATE FUNCTION kfc.fun_obtener_especialidades_prof(@id_profesional INT)
 returns TABLE
 RETURN
 SELECT
@@ -336,32 +336,45 @@ WHERE
 GO
 
 
+CREATE FUNCTION kfc.fun_obtener_especialidades()
+returns TABLE
+RETURN
+SELECT
+          esp.espe_id
+        , esp.descripcion
+FROM
+          kfc.especialidades_profesional ep
+          INNER JOIN
+                    kfc.especialidades esp
+          ON
+                    ep.espe_id= esp.espe_id
+;
+
+GO
+
 ------------------OBTENER_PROFESIONALES_POR_ESPECIALIDAD------------------
 --Proposito: Saber que profesionales poseen una especialidad
 --
---Ingreso: un identificador de especialidad
+--Ingreso: una descripcion de especialidad
 --
 --Egreso: una tabla con todas los profesionales que poseen esa especialidad
 ------------------OBTENER_PROFESIONALES_POR_ESPECIALIDAD------------------
-CREATE FUNCTION kfc.fun_obtener_profesionales_por_especialidad (@id_esp INT)
+CREATE FUNCTION kfc.fun_obtener_profesionales_por_especialidad (@desc_esp VARCHAR(50) )
 returns TABLE
 RETURN
 SELECT
           prof.prof_id
-        , concat(prof.apellido,', ',prof.nombre) AS profesional
+        , concat(prof.apellido,',',prof.nombre) AS profesional
 FROM
-          kfc.especialidades_profesional ep
-          INNER JOIN
-                    kfc.profesionales prof
-          ON
-                    ep.prof_id= prof.prof_id
-WHERE
-          (
-                    @id_esp       = 0
-                    OR ep.espe_id = @id_esp
-          )
+		kfc.especialidades_profesional ep
+		INNER JOIN
+				kfc.profesionales prof
+		ON
+				ep.prof_id= prof.prof_id
+		INNER JOIN	KFC.especialidades es
+		ON	es.espe_id = ep.espe_id
+WHERE es.descripcion = @desc_esp
 ;
-
 GO
 
 
@@ -397,6 +410,35 @@ BEGIN
 END;
 GO
 
+CREATE FUNCTION KFC.fun_obtener_id_especialidad(@desc_esp VARCHAR(50) )
+RETURNS INT AS
+BEGIN
+	DECLARE @id INT;
+	SET @id = 0;
+
+	SELECT TOP 1	@id = espe_id
+	FROM	KFC.especialidades
+	WHERE	UPPER(descripcion) = UPPER(@desc_esp)
+
+	return	@id
+END;
+GO
+
+
+CREATE FUNCTION KFC.fun_obtener_id_profesional(@nombre VARCHAR(50), @apellido VARCHAR(50)  )
+RETURNS INT AS
+BEGIN
+	DECLARE @id INT;
+	SET @id = 0;
+
+	SELECT TOP 1	@id = prof_id
+	FROM	KFC.profesionales
+	WHERE	UPPER(nombre) = UPPER(@nombre)
+	AND		UPPER(apellido) = UPPER(@apellido)
+
+	return	@id
+END;
+GO
 
 ------------------OBTENER_TURNOS_DEL_DIA------------------
 --Proposito: Obtener los turnos "ocupados" de un dia
@@ -405,8 +447,8 @@ GO
 --
 --Egreso: una tabla con la fecha, hora, paciente, doctor y especialidad
 ------------------OBTENER_TURNOS_DEL_DIA------------------
-CREATE FUNCTION KFC.fun_obtener_turnos_del_dia (@especialidad INT,
-@profesional                                              INT)
+CREATE FUNCTION KFC.fun_obtener_turnos_del_dia (@desc_especialidad VARCHAR(50),
+@nom_profesional	VARCHAR(50),	@ape_profesional	VARCHAR(50))
 returns TABLE
 RETURN
 (
@@ -430,17 +472,9 @@ RETURN
                               kfc.especialidades esp
                     ON
                               esp.espe_id = t.espe_id
-          WHERE
-                    (
-                              @profesional = 0
-                              OR t.prof_id = @profesional
-                    )
-                    AND
-                    (
-                              @especialidad = 0
-                              OR t.espe_id  = @especialidad
-                    )
-                    AND CONVERT (DATE, t.fecha_hora) = CONVERT ( DATE,GETDATE() )
+          WHERE	t.prof_id = kfc.fun_obtener_id_profesional(@nom_profesional, @ape_profesional)
+          AND	t.espe_id  = kfc.fun_obtener_id_especialidad(@desc_especialidad)
+			AND CONVERT (DATE, t.fecha_hora) = CONVERT ( DATE,GETDATE() )
 )
 GO
 
@@ -475,7 +509,7 @@ CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255),
 returns INT AS
 BEGIN
           DECLARE @Afil_id INT;
-          SELECT
+          SELECT TOP 1
                     @Afil_id = ISNULL(Afil_id,0)
           FROM
                     KFC.afiliados Afi

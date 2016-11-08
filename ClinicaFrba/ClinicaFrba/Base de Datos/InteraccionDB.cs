@@ -41,6 +41,46 @@ namespace ClinicaFrba.Base_de_Datos
         }
 
 
+        private static List<string> ObtenerStringsReader(SqlDataReader reader, int columnaPorObtener)
+        {
+
+            //Veo si trajo datos o no
+            if (!reader.HasRows) throw new Exception("Reader sin Filas");
+
+            var strings = new List<string>();
+
+            //Obtengo Multiples datos
+            while (reader.Read())
+            {
+                string unString = reader.GetString(columnaPorObtener);
+                strings.Add(unString);
+                unString = null;
+
+            }
+
+            if (strings.Count <= 0) throw new Exception("No se cargaron Strings a la Lista");
+            return strings;
+        }
+
+        private static int ObtenerIntReader(SqlDataReader reader, int columnaPorObtener)
+        {
+            //Veo si trajo datos o no
+            if (!reader.HasRows) throw new Exception("Reader sin Filas");
+
+            int valorObtener = 0;
+
+            //Obtengo Multiples datos
+            while (reader.Read())
+            {
+                valorObtener = reader.GetInt32(columnaPorObtener);
+                break;  //Unico Valor a Obtener
+
+            }
+            if (valorObtener <= 0) throw new Exception("Hubo un Problema al Obtener Dato");
+            return valorObtener;
+        }
+
+
         public static Usuario log_in(string usuario, string password)
         {
             try
@@ -57,19 +97,11 @@ namespace ClinicaFrba.Base_de_Datos
                 
                 var reader = ejecutar_funcion(funcion, parametros);
 
-                //Veo si trajo datos o no
-                if (!reader.HasRows) throw new Exception("Reader sin Filas: Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
+
                 int id = -1;
+                id = ObtenerIntReader(reader, 0);
 
-                //Obtengo Multiples datos
-                while (reader.Read())
-                {
-                    id = reader.GetInt32(0);        //Obtengo Dato primer columna, la columna 0
-                    break;      //Por ser unica fila la que quiero
-                }
-                
                 if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
-
 
                 var user = new Usuario();
                 user.id = id;
@@ -100,18 +132,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = ejecutar_funcion(funcion, parametros);
 
-                //Veo si trajo datos o no
-                if (!reader.HasRows) throw new Exception("Reader sin Filas: Afiliado Inexistente, revisar nombre y apellido");
-                int id = -1;
-
-                //Obtengo Multiples datos
-                while (reader.Read())
-                {
-                    id = reader.GetInt32(0);
-                    break;
-                }
-
-                if (id == -1) throw new Exception("Error al convertir datos de la Base");
+                int id = ObtenerIntReader(reader, 0);
 
                 return id;
             }
@@ -272,21 +293,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = ejecutar_funcion(funcion, parametros);
 
-                //Veo si trajo datos o no
-                if (!reader.HasRows) throw new Exception("Reader sin Filas: No hay Planes en la Base Datos");
-
-                var planes = new List<string>();
-
-                //Obtengo Multiples datos
-                while (reader.Read())
-                {
-                    string plan = reader.GetString(5);
-                    planes.Add(plan);
-                    plan = "";
-
-                }
-
-                if( planes.Count <= 0 ) throw new Exception("No se cargaron Planes a la Lista");
+                List<string> planes = ObtenerStringsReader(reader, 5);
 
                 return planes;
             }
@@ -311,19 +318,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = ejecutar_funcion(funcion, parametros);
 
-                //Veo si trajo datos o no
-                if (!reader.HasRows) throw new Exception("Reader sin Filas: No encontro Precio Plan Base Datos");
-
-                int precio = 0;
-
-                //Obtengo Multiples datos
-                while (reader.Read())
-                {
-                    precio = reader.GetInt32(0);
-                    break;
-
-                }
-                if (precio <= 0) throw new Exception("Precio No valido");
+                int precio = ObtenerIntReader(reader, 0);
 
                 return precio;
             }
@@ -334,6 +329,28 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
+
+        public static List<string> obtener_todas_especialidades()
+        {
+            try
+            {
+                string funcion = "SELECT KFC.fun_obtener_especialidades()";
+                var parametros = new List<SqlParameter>();
+
+                var reader = ejecutar_funcion(funcion, parametros);
+                
+                List<string> especialidades = ObtenerStringsReader(reader, 1);
+
+                return especialidades;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
 
         #region Combos
 

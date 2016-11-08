@@ -84,6 +84,46 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
+        public static int obtenerID_afiliado(string nombre, string apellido)
+        {
+            try
+            {
+                string funcion = "SELECT KFC.fun_retornar_id_afildo(@nombre, @apellido)";
+                SqlParameter parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
+                parametro1.Value = nombre.ToUpper();
+                SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
+                parametro2.Value = apellido.ToUpper();
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+
+                var reader = ejecutar_funcion(funcion, parametros);
+
+                //Veo si trajo datos o no
+                if (!reader.HasRows) throw new Exception("Reader sin Filas: Afiliado Inexistente, revisar nombre y apellido");
+                int id = -1;
+
+                //Obtengo Multiples datos
+                while (reader.Read())
+                {
+                    id = reader.GetInt32(0);
+                    break;
+                }
+
+                if (id == -1) throw new Exception("Error al convertir datos de la Base");
+
+                return id;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+
         /// <summary>
         /// Parametriza los datos y administra la conexion con la BD para el alta del afiliado
         /// </summary>

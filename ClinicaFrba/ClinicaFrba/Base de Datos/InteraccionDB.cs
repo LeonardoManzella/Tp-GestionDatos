@@ -23,6 +23,23 @@ namespace ClinicaFrba.Base_de_Datos
             return comando_sql.ExecuteReader();
         }
 
+        public static SqlDataReader ejecutar_storedProcedure(string procedure, List<SqlParameter> parametros)
+        {
+            SqlConnection conexion = Conexion.Instance.get();
+            SqlCommand comando_sql = new SqlCommand(procedure, conexion);
+            comando_sql.CommandType = CommandType.StoredProcedure;
+
+
+            foreach (var parametro in parametros)
+            {
+                comando_sql.Parameters.Add(parametro);
+            }
+
+
+            //rowsAffected = comando_sql.ExecuteNonQuery();
+            return comando_sql.ExecuteReader();
+        }
+
 
         private static void ImprimirExcepcion(Exception e)
         {
@@ -40,7 +57,12 @@ namespace ClinicaFrba.Base_de_Datos
             Console.Write(e.StackTrace);
         }
 
-
+        /// <summary>
+        /// Obtenemos Lista de Strings del Reader. La 'columnaPorObtener' empieza 0 para la primer columna y asi..
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="columnaPorObtener"></param>
+        /// <returns></returns>
         private static List<string> ObtenerStringsReader(SqlDataReader reader, int columnaPorObtener)
         {
 
@@ -62,6 +84,13 @@ namespace ClinicaFrba.Base_de_Datos
             return strings;
         }
 
+
+        /// <summary>
+        /// Obtenemos Int del Reader. La 'columnaPorObtener' empieza 0 para la primer columna y asi..
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="columnaPorObtener"></param>
+        /// <returns></returns>
         private static int ObtenerIntReader(SqlDataReader reader, int columnaPorObtener)
         {
             //Veo si trajo datos o no
@@ -342,6 +371,123 @@ namespace ClinicaFrba.Base_de_Datos
                 List<string> especialidades = ObtenerStringsReader(reader, 1);
 
                 return especialidades;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+
+        /// <summary>
+        /// Ojo devuelve Lista de Apellido Con Nombre Profesional
+        /// </summary>
+        /// <param name="descripcionEspecialidad"></param>
+        /// <returns></returns>
+        public static List<string> obtener_todos_profesionales_para_especialid(string descripcionEspecialidad)
+        {
+            try
+            {
+                string funcion = "SELECT KFC.fun_obtener_profesionales_por_especialidad(@desc_esp)";
+                SqlParameter parametro = new SqlParameter("@desc_esp", SqlDbType.Text);
+                parametro.Value = descripcionEspecialidad;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
+
+                var reader = ejecutar_funcion(funcion, parametros);
+
+                List<string> profesionales = ObtenerStringsReader(reader, 1);
+
+                return profesionales;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        public static List<string> obtener_turnos_disponibles(string apellidoConNombre, DateTime fecha )
+        {
+            try
+            {
+                //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
+                string nombre   = apellidoConNombre.Split('/')[0];
+                string apellido = apellidoConNombre.Split('/')[1]; ;
+
+
+
+                string funcion = "SELECT KFC.fun_obtener_turnos_profesional(@prof_nombre, @prof_apellido, @fecha)";
+                SqlParameter parametro1 = new SqlParameter("@prof_nombre", SqlDbType.Text);
+                parametro1.Value = nombre;
+                SqlParameter parametro2 = new SqlParameter("@prof_apellido", SqlDbType.Text);
+                parametro2.Value = apellido;
+                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.Text);
+                parametro3.Value = fecha;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                parametros.Add(parametro3);
+
+                var reader = ejecutar_funcion(funcion, parametros);
+
+                List<string> especialidades = ObtenerStringsReader(reader, 0);
+
+                return especialidades;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// Devuelve Excepcion si falla, Caso contrario se ejecuto correctamente
+        /// </summary>
+        /// <param name="apellidoConNombre"></param>
+        /// <param name="fecha"></param>
+        /// <param name="descripcionEspecialidad"></param>
+        /// <param name="id_afiliado"></param>
+        public static void asignar_turno(string apellidoConNombre, DateTime fecha, string horario, string descripcionEspecialidad, int id_afiliado)
+        {
+            try
+            {
+                //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
+                string nombre = apellidoConNombre.Split('/')[0];
+                string apellido = apellidoConNombre.Split('/')[1]; ;
+
+                string procedure = "KFC.pro_asignar_turno(@fecha, @hora, @afil_id, @espe_desc, @prof_nombre, @prof_apellido)";
+                SqlParameter parametro1 = new SqlParameter("@prof_nombre", SqlDbType.Text);
+                parametro1.Value = fecha;
+                SqlParameter parametro2 = new SqlParameter("@prof_apellido", SqlDbType.Text);
+                parametro2.Value = horario;
+                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.Text);
+                parametro3.Value = descripcionEspecialidad;
+                SqlParameter parametro4 = new SqlParameter("@fecha", SqlDbType.Text);
+                parametro4.Value = nombre;
+                SqlParameter parametro5 = new SqlParameter("@fecha", SqlDbType.Text);
+                parametro5.Value = apellido;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                parametros.Add(parametro3);
+                parametros.Add(parametro4);
+                parametros.Add(parametro5);
+
+                var reader = ejecutar_storedProcedure(procedure, parametros);
+
+                //Veo si trajo datos o no
+                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Asignar el Turno. Fallo Ejecucion Procedure");
+
+                return;
             }
             catch (Exception e)
             {

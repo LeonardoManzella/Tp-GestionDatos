@@ -425,7 +425,7 @@ END;
 GO
 
 
-CREATE FUNCTION KFC.fun_obtener_id_profesional(@nombre VARCHAR(50), @apellido VARCHAR(50)  )
+CREATE FUNCTION KFC.fun_obtener_id_profesional(@nombre VARCHAR(60), @apellido VARCHAR(60)  )
 RETURNS INT AS
 BEGIN
 	DECLARE @id INT;
@@ -447,8 +447,9 @@ GO
 --
 --Egreso: una tabla con la fecha, hora, paciente, doctor y especialidad
 ------------------OBTENER_TURNOS_DEL_DIA------------------
-CREATE FUNCTION KFC.fun_obtener_turnos_del_dia (@desc_especialidad VARCHAR(50),
-@nom_profesional	VARCHAR(50),	@ape_profesional	VARCHAR(50))
+CREATE FUNCTION KFC.fun_obtener_turnos_del_dia (@especialidad INT,
+												@profesional  INT,
+												@fecha		   DATE)
 returns TABLE
 RETURN
 (
@@ -472,9 +473,9 @@ RETURN
                               kfc.especialidades esp
                     ON
                               esp.espe_id = t.espe_id
-          WHERE	t.prof_id = kfc.fun_obtener_id_profesional(@nom_profesional, @ape_profesional)
-          AND	t.espe_id  = kfc.fun_obtener_id_especialidad(@desc_especialidad)
-			AND CONVERT (DATE, t.fecha_hora) = CONVERT ( DATE,GETDATE() )
+			WHERE	t.prof_id = @especialidad
+			AND		t.espe_id  = @profesional
+			AND		CONVERT (DATE, t.fecha_hora) = @fecha
 )
 GO
 
@@ -884,10 +885,10 @@ GO
 --Proposito: Consultar los horarios disponibles para un profesional en un determinado dia (horarios dentro de rango definido para ese dia y que no estan ocupados)
 --
 --Ingreso: id del profesional a consultar horarios y la fecha (formato Año-Mes-Dia) del dia donde quiere ver que horarios hay disponibles 
---Egreso:	Una Tabla de unica columna Horarios disponibles (multiples filas cada una con un horario disponible)
+--Egreso:	Una Tabla de unica columna Horarios disponibles (formato Varchar) (multiples filas cada una con un horario disponible). Necesito que sera Varchar para evitar problemas de conversion contra la aplicacion
 ------------------OBTENER_TURNOS_PROFESIONAL------------------
-CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_id INT, @fecha DATE)
-returns @retorno TABLE (horario_disponible TIME) AS
+CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @fecha DATE)
+returns @retorno TABLE (horario_disponible VARCHAR(60)) AS
 --Uso la Variable "@retorno" tipo Tabla para generar los Horarios Disponibles en base al Rango de Horarios Posibles
 BEGIN
 	DECLARE @hora_desde TIME
@@ -899,13 +900,14 @@ BEGIN
 	WHERE	DATEPART(WEEKDAY, @fecha) = dia
 	--Convierto para que solo compare por Año-Mes-Dia
 	AND		CONVERT(DATE,fecha_desde) >= @fecha
+	AND		prof_id = kfc.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
 	
 
 	--Inserto Horarios Disponibles, cada 30 minutos (Uso el While para Crear un FOR)
 	WHILE ( DATEDIFF(MINUTE, @hora_desde, @hora_hasta) != 0 )
 	BEGIN
 		--PRINT DATEDIFF(MINUTE, @hora_desde, @hora_hasta)
-		INSERT INTO @retorno VALUES (@hora_desde)
+		INSERT INTO @retorno VALUES ( CONVERT(varchar,@hora_desde, 108) )
 		SET @hora_desde = DATEADD(MINUTE, 30, @hora_desde)
 	END
 
@@ -914,7 +916,7 @@ BEGIN
 	DELETE
 	FROM	@retorno
 	-- Debo convertirlos sino no me deja comparar con el IN
-	WHERE	CONVERT(varchar,horario_disponible, 108)  IN	(
+	WHERE	horario_disponible  IN	(
 															SELECT	CONVERT(varchar,hora, 108) AS hora_ocupada
 															FROM	KFC.turnos
 															-- Debo convertirlos para solo comparar la fecha, no la hora incluida
@@ -932,15 +934,25 @@ GO
 ------------------ASIGNAR_TURNO------------------
 CREATE PROCEDURE KFC.pro_asignar_turno
           @fecha DATETIME
-		, @hora	   TIME(0)	--Hora del Turno
+		, @hora	   VARCHAR(60)	--Hora del Turno, en Formato Varchar Para evitar problemas
 		, @afil_id    INT
-		, @espe_id    INT
-		, @prof_id    INT
+		, @espe_desc  VARCHAR(60)
+		, @prof_nombre VARCHAR(60) 
+		, @prof_apellido VARCHAR(60)
 AS
     BEGIN
 		BEGIN TRY
 			BEGIN TRANSACTION
-				INSERT INTO KFC.turnos(fecha_hora,hora,afil_id,espe_id,prof_id) VALUES (@fecha, @hora, @afil_id, @espe_id, @prof_id)
+				DECLARE @horaConvertida TIME(0);
+				DECLARE @espe_id INT;
+				DECLARE @prof_id INT;
+
+				SET @horaConvertida = CONVERT(TIME(0),@hora);
+				SET @espe_id = KFC.fun_obtener_id_especialidad(@espe_desc);
+				SET @prof_id = KFC.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
+
+
+				INSERT INTO KFC.turnos(fecha_hora,hora,afil_id,espe_id,prof_id) VALUES (@fecha, @horaConvertida, @afil_id, @espe_id, @prof_id)
 			COMMIT;
 		END TRY
 		BEGIN CATCH

@@ -733,7 +733,7 @@ END;
 GO
 
 --Funcionalidad ABM ROLES. Crea 'Rol'
-CREATE PROCEDURE KFC.pro_crear_rol(@descripcion VARCHAR(255))
+CREATE PROCEDURE KFC.pro_crear_rol(@descripcion VARCHAR(255), @id int OUTPUT)
 AS
     BEGIN
 
@@ -747,6 +747,10 @@ AS
 			BEGIN TRANSACTION
 				INSERT INTO KFC.roles(descripcion, habilitado) VALUES (@descripcion, @Habilitado)
 			COMMIT;
+
+			SELECT TOP 1 @id = rol_id
+			FROM	KFC.roles 
+			WHERE	descripcion = @descripcion
 		END TRY
 		BEGIN CATCH
                     IF @@trancount > 0
@@ -767,18 +771,34 @@ SELECT * FROM kfc.roles;
 GO
 
 --Funcionalidad ABM ROLES. Asigna una 'Funcionalidad' a un rol
-CREATE PROCEDURE KFC.pro_crear_funcionalidad_de_rol(@func_id INT, @rol_id INT)
+CREATE PROCEDURE KFC.pro_crear_funcionalidad_de_rol(@func_desc VARCHAR(60) , @rol_id INT)
 AS
 BEGIN
 
 	DECLARE @fecha DATETIME;
 	SET @fecha = getdate();
 
+
+	DECLARE @func_id INT;
+	SET @func_id = 0;
+
+	SELECT	@func_id = f.func_id
+	FROM	KFC.funcionalidades f
+	WHERE	f.descripcion = @func_desc
+
+	IF (@func_id <= 0)
+		BEGIN
+		DECLARE @string VARCHAR(100);
+		SET @string = 'No existe una Funcionalidad con el nombre' + @func_desc
+		RAISERROR(@string,16,1);
+		END
+
+
 	SELECT * FROM KFC.funcionalidades_roles
 	where rol_id = @rol_id
 	and func_id = @func_id;
 
-	IF @@rowcount != 0
+	IF (@@rowcount = 0)
 	BEGIN TRY
 			BEGIN TRANSACTION
 				INSERT INTO KFC.funcionalidades_roles VALUES (@func_id, @rol_id)

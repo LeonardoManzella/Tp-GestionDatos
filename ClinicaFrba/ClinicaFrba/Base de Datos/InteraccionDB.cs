@@ -35,9 +35,29 @@ namespace ClinicaFrba.Base_de_Datos
                 comando_sql.Parameters.Add(parametro);
             }
 
-
+            //TODO Pendiente ver cual realmente es el que hay que usar
             //rowsAffected = comando_sql.ExecuteNonQuery();
             return comando_sql.ExecuteReader();
+        }
+
+        public static SqlCommand ejecutar_storedProcedureConRetorno(string procedure, List<SqlParameter> parametros)
+        {
+            SqlConnection conexion = Conexion.Instance.get();
+            SqlCommand comando_sql = new SqlCommand(procedure, conexion);
+            comando_sql.CommandType = CommandType.StoredProcedure;
+
+
+            foreach (var parametro in parametros)
+            {
+                comando_sql.Parameters.Add(parametro);
+            }
+
+            int rowsAffected = comando_sql.ExecuteNonQuery();
+
+            //Veo si trajo datos o no
+            if (rowsAffected <= 0) throw new Exception("No se modificaron Columnas. Fallo Ejecucion Procedure");
+
+            return comando_sql;
         }
 
 
@@ -123,7 +143,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
-                
+
                 var reader = ejecutar_funcion(funcion, parametros);
 
 
@@ -186,6 +206,10 @@ namespace ClinicaFrba.Base_de_Datos
                 //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
                 SqlConnection conexion = Conexion.Instance.get();
 
+
+                //SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario, @afil_id OUTPUT", conexion);
+                throw new Exception("Raul Fijate aca que la linea de arriba deberia solucionar lo de ID 0");
+
                 SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario", conexion);
                 var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
@@ -231,8 +255,8 @@ namespace ClinicaFrba.Base_de_Datos
 
                 comando_sql.ExecuteReader();
 
-                var id = (int) comando_sql.Parameters["@afil_id"].Value; 
-                if (id == -1) throw new Exception("No se ha podido crear el nuevo afiliado en la base");
+                var id = (int)comando_sql.Parameters["@afil_id"].Value;
+                if (id <= 0) throw new Exception("No se ha podido crear el nuevo afiliado en la base");
 
                 return id;
             }
@@ -243,7 +267,7 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
-        
+
         /// Parametriza los datos y administra la conexion con la BD para la modificación del afiliado
         /// </summary>
         /// <param name="afiliado"></param>
@@ -309,6 +333,8 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
+        #region Bonos
+
         public static List<string> pedir_planes_usuario(int id_usuario)
         {
             try
@@ -359,6 +385,40 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
+        public static void comprar_bono(int id_afiliado, int cantidad_bonos)
+        {
+            try
+            {
+                //Ejecuta tantas veces como Bonos Pedidos por el usuario
+                for (int i = 0; i < cantidad_bonos; i++)
+                {
+                    string procedure = "KFC.pro_comprar_bono  @afil_id";
+                    SqlParameter parametro = new SqlParameter("@afil_id", SqlDbType.Text);
+                    parametro.Value = id_afiliado;
+
+                    var parametros = new List<SqlParameter>();
+                    parametros.Add(parametro);
+
+                    var reader = ejecutar_storedProcedure(procedure, parametros);
+
+                    //Veo si trajo datos o no
+                    if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Asignar el Turno. Fallo Ejecucion Procedure");
+                }
+
+                return;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        #endregion
+
+        #region Turnos
+
         public static List<string> obtener_todas_especialidades()
         {
             try
@@ -367,7 +427,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametros = new List<SqlParameter>();
 
                 var reader = ejecutar_funcion(funcion, parametros);
-                
+
                 List<string> especialidades = ObtenerStringsReader(reader, 1);
 
                 return especialidades;
@@ -411,12 +471,12 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        public static List<string> obtener_turnos_disponibles(string apellidoConNombre, DateTime fecha )
+        public static List<string> obtener_turnos_disponibles(string apellidoConNombre, DateTime fecha)
         {
             try
             {
                 //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
-                string nombre   = apellidoConNombre.Split('/')[0];
+                string nombre = apellidoConNombre.Split('/')[0];
                 string apellido = apellidoConNombre.Split('/')[1]; ;
 
 
@@ -463,17 +523,19 @@ namespace ClinicaFrba.Base_de_Datos
                 string nombre = apellidoConNombre.Split('/')[0];
                 string apellido = apellidoConNombre.Split('/')[1]; ;
 
-                string procedure = "KFC.pro_asignar_turno(@fecha, @hora, @afil_id, @espe_desc, @prof_nombre, @prof_apellido)";
-                SqlParameter parametro1 = new SqlParameter("@prof_nombre", SqlDbType.Text);
+                string procedure = "KFC.pro_asignar_turno @fecha, @hora, @afil_id, @espe_desc, @prof_nombre, @prof_apellido ";
+                SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Text);
                 parametro1.Value = fecha;
-                SqlParameter parametro2 = new SqlParameter("@prof_apellido", SqlDbType.Text);
+                SqlParameter parametro2 = new SqlParameter("@hora", SqlDbType.Text);
                 parametro2.Value = horario;
-                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.Text);
+                SqlParameter parametro3 = new SqlParameter("@espe_desc", SqlDbType.Text);
                 parametro3.Value = descripcionEspecialidad;
-                SqlParameter parametro4 = new SqlParameter("@fecha", SqlDbType.Text);
+                SqlParameter parametro4 = new SqlParameter("@prof_nombre", SqlDbType.Text);
                 parametro4.Value = nombre;
-                SqlParameter parametro5 = new SqlParameter("@fecha", SqlDbType.Text);
+                SqlParameter parametro5 = new SqlParameter("@prof_apellido", SqlDbType.Text);
                 parametro5.Value = apellido;
+                SqlParameter parametro6 = new SqlParameter("@afil_id", SqlDbType.Text);
+                parametro6.Value = id_afiliado;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
@@ -481,6 +543,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametros.Add(parametro3);
                 parametros.Add(parametro4);
                 parametros.Add(parametro5);
+                parametros.Add(parametro6);
 
                 var reader = ejecutar_storedProcedure(procedure, parametros);
 
@@ -496,6 +559,82 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
+
+        #endregion
+
+
+        #region Roles
+
+        public static void crear_rol(string nombre_rol, List<String> funcionalidades_descripcion)
+        {
+            try
+            {
+                string procedure = "KFC.pro_crear_rol @descripcion, @id OUTPUT ";
+                SqlParameter parametro1 = new SqlParameter("@descripcion", SqlDbType.Text);
+                parametro1.Value = nombre_rol;
+                SqlParameter parametroOutput = new SqlParameter("@id", SqlDbType.Text);
+                parametroOutput.DbType = DbType.Int32;
+                parametroOutput.Direction = ParameterDirection.Output;
+
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametroOutput);
+
+                SqlCommand procedureEjecutado = ejecutar_storedProcedureConRetorno(procedure, parametros);
+
+                int id_rol_creado = 0;
+                id_rol_creado = Convert.ToInt32(procedureEjecutado.Parameters["@id"].Value);
+                if (id_rol_creado <= 0) throw new Exception("No se creo el Rol, trajo ID invalido. Fallo Ejecucion Procedure");
+
+                //Inserto Cada Funcionalidad
+                foreach (var funcionalidad in funcionalidades_descripcion)
+                {
+                    insertar_funcionalidad(id_rol_creado, funcionalidad);
+                }
+
+                return;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        public static void insertar_funcionalidad(int id_rol, string descripcion_funcionalidad)
+        {
+            try
+            {
+                string procedure = "KFC.pro_crear_funcionalidad_de_rol @func_desc, @rol_id ";
+                SqlParameter parametro1 = new SqlParameter("@func_desc", SqlDbType.Text);
+                SqlParameter parametro2 = new SqlParameter("@rol_id", SqlDbType.Text);
+
+                parametro1.Value = descripcion_funcionalidad;
+                parametro2.Value = id_rol;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+
+
+                var reader = ejecutar_storedProcedure(procedure, parametros);
+
+                //Veo si trajo datos o no
+                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo asignar la Funcionalidad al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
+
+                return;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        #endregion
 
 
         #region Combos
@@ -612,7 +751,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 //Declaro un Objeto del tipo del retorno
                 var afiliado = new Afiliado();
-                
+
                 //creo la tabla que va a traer los registros
                 DataTable dt = new DataTable();
 

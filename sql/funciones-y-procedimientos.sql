@@ -23,7 +23,6 @@ WHERE
           ) -- =0 devuelve todos los roles
           AND rol.habilitado = 1
 ;
-
 GO
 
 
@@ -203,7 +202,6 @@ FROM
 WHERE
           fr.rol_id = @id_rol
 ;
-
 GO
 
 
@@ -218,7 +216,6 @@ CREATE FUNCTION kfc.fun_obtener_todas_las_funcionalidades()
 returns TABLE AS
 RETURN
 SELECT fun.func_id, fun.descripcion FROM kfc.funcionalidades fun;
-
 GO
 
 ------------------VERIFICAR_FUNCION_ROL------------------
@@ -503,7 +500,7 @@ RETURN
 );
 GO
 
-	
+
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255),
 @apellido                                      VARCHAR(255))
@@ -540,7 +537,7 @@ RETURN
                     AND prof_id = @Prof_id 
 );
 GO
-	
+
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Graba los 'Sintomas/Diagnostico' de la atención.	
 CREATE PROCEDURE KFC.pro_grabar_resultado_atencion
           @turno_id INT
@@ -570,7 +567,7 @@ BEGIN
 	END CATCH
 END;
 GO
-	
+
 /*
 --Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado).
 CREATE function KFC.fun_devolver_precio_bono(@afiliado_id INT)

@@ -51,7 +51,9 @@ namespace ClinicaFrba
                 this.user = textBox_usuario.Text.Trim();
                 this.password = textBox_password.Text.Trim();
 
-                Negocio.Log_In.Ingresar_App(this.user, this.password);
+                this.usuario = Negocio.Log_In.Ingresar_App(this.user, this.password);
+
+                MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

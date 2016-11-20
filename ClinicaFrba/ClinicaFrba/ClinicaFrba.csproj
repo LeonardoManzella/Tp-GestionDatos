@@ -106,6 +106,7 @@
       <DependentUpon>Estadisticas.cs</DependentUpon>
     </Compile>
     <Compile Include="Negocio\ABMAFIL.cs" />
+    <Compile Include="Negocio\Llegada_At_Med.cs" />
     <Compile Include="Negocio\Log_In.cs" />
     <Compile Include="Pedir Turno\PedirTurno.cs">
       <SubType>Form</SubType>

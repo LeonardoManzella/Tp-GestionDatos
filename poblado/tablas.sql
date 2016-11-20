@@ -21,7 +21,7 @@ INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('ADMINISTRATIVO', @true)
 
 
 -- Insercion Usuarios del Enunciado
-INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('ADMIN', 'W23E', @true)
+INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('ADMIN', HASHBYTES('SHA2_256','W23E'), @true)
 
 --Agrego Usuarios para Afiliados, pedido por el Enunciado
 INSERT INTO KFC.usuarios
@@ -31,8 +31,8 @@ INSERT INTO KFC.usuarios
 			, habilitado
           )
 SELECT DISTINCT  UPPER(Paciente_Mail)
-        , UPPER(Paciente_Mail)
-        , 1 AS habilitado
+        ,  HASHBYTES('SHA2_256',UPPER(Paciente_Mail)) AS pass
+        , @true AS habilitado
 FROM
           GD2C2016.gd_esquema.Maestra
 WHERE
@@ -47,7 +47,7 @@ INSERT INTO KFC.usuarios
 			, habilitado
           )
 SELECT DISTINCT  UPPER(Medico_Mail)
-        ,  UPPER(Medico_Mail)
+        ,  HASHBYTES('SHA2_256',UPPER(Medico_Mail)) AS pass
         , @true AS habilitado
 FROM
           GD2C2016.gd_esquema.Maestra

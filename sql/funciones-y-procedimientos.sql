@@ -23,7 +23,6 @@ WHERE
           ) -- =0 devuelve todos los roles
           AND rol.habilitado = 1
 ;
-
 GO
 
 
@@ -45,7 +44,7 @@ BEGIN
                     KFC.usuarios us
           WHERE
                     us.nick           = @usuario
-                    AND us.pass       = HASHBYTES('SHA', @contrasenia)
+                    AND us.pass       = HASHBYTES('SHA2_256', @contrasenia)
                     AND us.habilitado = 1
           ;
           
@@ -203,7 +202,6 @@ FROM
 WHERE
           fr.rol_id = @id_rol
 ;
-
 GO
 
 
@@ -218,7 +216,6 @@ CREATE FUNCTION kfc.fun_obtener_todas_las_funcionalidades()
 returns TABLE AS
 RETURN
 SELECT fun.func_id, fun.descripcion FROM kfc.funcionalidades fun;
-
 GO
 
 ------------------VERIFICAR_FUNCION_ROL------------------
@@ -314,7 +311,7 @@ go
 --
 --Egreso: una tabla con todas las especialidades que posee el profesional
 ------------------OBTENER_ESPECIALIDADES------------------
-CREATE FUNCTION kfc.fun_obtener_especialidades(@id_profesional INT)
+CREATE FUNCTION kfc.fun_obtener_especialidades_prof(@id_profesional INT)
 returns TABLE
 RETURN
 SELECT
@@ -336,32 +333,45 @@ WHERE
 GO
 
 
+CREATE FUNCTION kfc.fun_obtener_especialidades()
+returns TABLE
+RETURN
+SELECT
+          esp.espe_id
+        , esp.descripcion
+FROM
+          kfc.especialidades_profesional ep
+          INNER JOIN
+                    kfc.especialidades esp
+          ON
+                    ep.espe_id= esp.espe_id
+;
+
+GO
+
 ------------------OBTENER_PROFESIONALES_POR_ESPECIALIDAD------------------
 --Proposito: Saber que profesionales poseen una especialidad
 --
---Ingreso: un identificador de especialidad
+--Ingreso: una descripcion de especialidad
 --
 --Egreso: una tabla con todas los profesionales que poseen esa especialidad
 ------------------OBTENER_PROFESIONALES_POR_ESPECIALIDAD------------------
-CREATE FUNCTION kfc.fun_obtener_profesionales_por_especialidad (@id_esp INT)
+CREATE FUNCTION kfc.fun_obtener_profesionales_por_especialidad (@desc_esp VARCHAR(50) )
 returns TABLE
 RETURN
 SELECT
           prof.prof_id
-        , concat(prof.apellido,', ',prof.nombre) AS profesional
+        , concat(prof.apellido,',',prof.nombre) AS profesional
 FROM
-          kfc.especialidades_profesional ep
-          INNER JOIN
-                    kfc.profesionales prof
-          ON
-                    ep.prof_id= prof.prof_id
-WHERE
-          (
-                    @id_esp       = 0
-                    OR ep.espe_id = @id_esp
-          )
+		kfc.especialidades_profesional ep
+		INNER JOIN
+				kfc.profesionales prof
+		ON
+				ep.prof_id= prof.prof_id
+		INNER JOIN	KFC.especialidades es
+		ON	es.espe_id = ep.espe_id
+WHERE es.descripcion = @desc_esp
 ;
-
 GO
 
 
@@ -397,6 +407,35 @@ BEGIN
 END;
 GO
 
+CREATE FUNCTION KFC.fun_obtener_id_especialidad(@desc_esp VARCHAR(50) )
+RETURNS INT AS
+BEGIN
+	DECLARE @id INT;
+	SET @id = 0;
+
+	SELECT TOP 1	@id = espe_id
+	FROM	KFC.especialidades
+	WHERE	UPPER(descripcion) = UPPER(@desc_esp)
+
+	return	@id
+END;
+GO
+
+
+CREATE FUNCTION KFC.fun_obtener_id_profesional(@nombre VARCHAR(60), @apellido VARCHAR(60)  )
+RETURNS INT AS
+BEGIN
+	DECLARE @id INT;
+	SET @id = 0;
+
+	SELECT TOP 1	@id = prof_id
+	FROM	KFC.profesionales
+	WHERE	UPPER(nombre) = UPPER(@nombre)
+	AND		UPPER(apellido) = UPPER(@apellido)
+
+	return	@id
+END;
+GO
 
 ------------------OBTENER_TURNOS_DEL_DIA------------------
 --Proposito: Obtener los turnos "ocupados" de un dia
@@ -406,7 +445,8 @@ GO
 --Egreso: una tabla con la fecha, hora, paciente, doctor y especialidad
 ------------------OBTENER_TURNOS_DEL_DIA------------------
 CREATE FUNCTION KFC.fun_obtener_turnos_del_dia (@especialidad INT,
-@profesional                                              INT)
+												@profesional  INT,
+												@fecha		   DATE)
 returns TABLE
 RETURN
 (
@@ -430,17 +470,9 @@ RETURN
                               kfc.especialidades esp
                     ON
                               esp.espe_id = t.espe_id
-          WHERE
-                    (
-                              @profesional = 0
-                              OR t.prof_id = @profesional
-                    )
-                    AND
-                    (
-                              @especialidad = 0
-                              OR t.espe_id  = @especialidad
-                    )
-                    AND CONVERT (DATE, t.fecha_hora) = CONVERT ( DATE,GETDATE() )
+			WHERE	t.prof_id = @especialidad
+			AND		t.espe_id  = @profesional
+			AND		CONVERT (DATE, t.fecha_hora) = @fecha
 )
 GO
 
@@ -468,14 +500,14 @@ RETURN
 );
 GO
 
-	
+
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255),
 @apellido                                      VARCHAR(255))
 returns INT AS
 BEGIN
           DECLARE @Afil_id INT;
-          SELECT
+          SELECT TOP 1
                     @Afil_id = ISNULL(Afil_id,0)
           FROM
                     KFC.afiliados Afi
@@ -505,7 +537,7 @@ RETURN
                     AND prof_id = @Prof_id 
 );
 GO
-	
+
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Graba los 'Sintomas/Diagnostico' de la atención.	
 CREATE PROCEDURE KFC.pro_grabar_resultado_atencion
           @turno_id INT
@@ -535,7 +567,7 @@ BEGIN
 	END CATCH
 END;
 GO
-	
+
 /*
 --Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado).
 CREATE function KFC.fun_devolver_precio_bono(@afiliado_id INT)
@@ -552,17 +584,24 @@ go
 
 --Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado).
 CREATE function KFC.fun_devolver_precio_bono(@afiliado_id INT)
-returns table AS
-return ( 
-Select a.plan_id, p.descripcion, p.precio_bono_consulta
-from KFC.afiliados a
-INNER JOIN
-KFC.planes p
-on
-a.plan_id = p.plan_id 
-where a.afil_id = @afiliado_id );
+returns int AS
+BEGIN
 
+		DECLARE @precio INT;
+		SET @precio = 0;
+ 
+		Select @precio = p.precio_bono_consulta
+		from KFC.afiliados a
+			INNER JOIN
+			KFC.planes p
+			on
+			a.plan_id = p.plan_id 
+		where a.afil_id = @afiliado_id
+
+		return @precio;
+END;
 go
+
 
 --Funcionalidad COMPRAR BONOS. Crea 'Bono' comprado por el afiliado (bono del mismo plan que tiene el afiliado).
 CREATE PROCEDURE KFC.pro_comprar_bono(@afiliado_id INT)
@@ -592,6 +631,7 @@ BEGIN
 END;
 GO
 
+/*
 --Funcionalidad COMPRAR BONOS. Devuelve 'Id Afilaido' y su 'Nombre' para el caso de que administrativo realiza la compra de bonos en nombre de un afiliado.
 CREATE function KFC.fun_devolver_afiliado_y_su_nombre(@Usuario_id INT)
 returns table AS
@@ -599,8 +639,8 @@ return (
 Select afil_id, nombre, apellido
 from KFC.afiliados
 where us_id = @Usuario_id );
-
 go
+*/
 
 --Funcionalidad ABM AFILIADOS. Devuelve los 'Afiliado' completo con todos los datos.	
 CREATE FUNCTION KFC.fun_devolver_afiliado(@mail VARCHAR(255))
@@ -690,7 +730,7 @@ END;
 GO
 
 --Funcionalidad ABM ROLES. Crea 'Rol'
-CREATE PROCEDURE KFC.pro_crear_rol(@descripcion VARCHAR(255))
+CREATE PROCEDURE KFC.pro_crear_rol(@descripcion VARCHAR(255), @id int OUTPUT)
 AS
     BEGIN
 
@@ -704,6 +744,10 @@ AS
 			BEGIN TRANSACTION
 				INSERT INTO KFC.roles(descripcion, habilitado) VALUES (@descripcion, @Habilitado)
 			COMMIT;
+
+			SELECT TOP 1 @id = rol_id
+			FROM	KFC.roles 
+			WHERE	descripcion = @descripcion
 		END TRY
 		BEGIN CATCH
                     IF @@trancount > 0
@@ -724,18 +768,34 @@ SELECT * FROM kfc.roles;
 GO
 
 --Funcionalidad ABM ROLES. Asigna una 'Funcionalidad' a un rol
-CREATE PROCEDURE KFC.pro_crear_funcionalidad_de_rol(@func_id INT, @rol_id INT)
+CREATE PROCEDURE KFC.pro_crear_funcionalidad_de_rol(@func_desc VARCHAR(60) , @rol_id INT)
 AS
 BEGIN
 
 	DECLARE @fecha DATETIME;
 	SET @fecha = getdate();
 
+
+	DECLARE @func_id INT;
+	SET @func_id = 0;
+
+	SELECT	@func_id = f.func_id
+	FROM	KFC.funcionalidades f
+	WHERE	f.descripcion = @func_desc
+
+	IF (@func_id <= 0)
+		BEGIN
+		DECLARE @string VARCHAR(100);
+		SET @string = 'No existe una Funcionalidad con el nombre' + @func_desc
+		RAISERROR(@string,16,1);
+		END
+
+
 	SELECT * FROM KFC.funcionalidades_roles
 	where rol_id = @rol_id
 	and func_id = @func_id;
 
-	IF @@rowcount != 0
+	IF (@@rowcount = 0)
 	BEGIN TRY
 			BEGIN TRANSACTION
 				INSERT INTO KFC.funcionalidades_roles VALUES (@func_id, @rol_id)
@@ -842,10 +902,10 @@ GO
 --Proposito: Consultar los horarios disponibles para un profesional en un determinado dia (horarios dentro de rango definido para ese dia y que no estan ocupados)
 --
 --Ingreso: id del profesional a consultar horarios y la fecha (formato Año-Mes-Dia) del dia donde quiere ver que horarios hay disponibles 
---Egreso:	Una Tabla de unica columna Horarios disponibles (multiples filas cada una con un horario disponible)
+--Egreso:	Una Tabla de unica columna Horarios disponibles (formato Varchar) (multiples filas cada una con un horario disponible). Necesito que sera Varchar para evitar problemas de conversion contra la aplicacion
 ------------------OBTENER_TURNOS_PROFESIONAL------------------
-CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_id INT, @fecha DATE)
-returns @retorno TABLE (horario_disponible TIME) AS
+CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @fecha DATE)
+returns @retorno TABLE (horario_disponible VARCHAR(60)) AS
 --Uso la Variable "@retorno" tipo Tabla para generar los Horarios Disponibles en base al Rango de Horarios Posibles
 BEGIN
 	DECLARE @hora_desde TIME
@@ -857,13 +917,14 @@ BEGIN
 	WHERE	DATEPART(WEEKDAY, @fecha) = dia
 	--Convierto para que solo compare por Año-Mes-Dia
 	AND		CONVERT(DATE,fecha_desde) >= @fecha
+	AND		prof_id = kfc.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
 	
 
 	--Inserto Horarios Disponibles, cada 30 minutos (Uso el While para Crear un FOR)
 	WHILE ( DATEDIFF(MINUTE, @hora_desde, @hora_hasta) != 0 )
 	BEGIN
 		--PRINT DATEDIFF(MINUTE, @hora_desde, @hora_hasta)
-		INSERT INTO @retorno VALUES (@hora_desde)
+		INSERT INTO @retorno VALUES ( CONVERT(varchar,@hora_desde, 108) )
 		SET @hora_desde = DATEADD(MINUTE, 30, @hora_desde)
 	END
 
@@ -872,7 +933,7 @@ BEGIN
 	DELETE
 	FROM	@retorno
 	-- Debo convertirlos sino no me deja comparar con el IN
-	WHERE	CONVERT(varchar,horario_disponible, 108)  IN	(
+	WHERE	horario_disponible  IN	(
 															SELECT	CONVERT(varchar,hora, 108) AS hora_ocupada
 															FROM	KFC.turnos
 															-- Debo convertirlos para solo comparar la fecha, no la hora incluida
@@ -890,15 +951,25 @@ GO
 ------------------ASIGNAR_TURNO------------------
 CREATE PROCEDURE KFC.pro_asignar_turno
           @fecha DATETIME
-		, @hora	   TIME(0)	--Hora del Turno
+		, @hora	   VARCHAR(60)	--Hora del Turno, en Formato Varchar Para evitar problemas
 		, @afil_id    INT
-		, @espe_id    INT
-		, @prof_id    INT
+		, @espe_desc  VARCHAR(60)
+		, @prof_nombre VARCHAR(60) 
+		, @prof_apellido VARCHAR(60)
 AS
     BEGIN
 		BEGIN TRY
 			BEGIN TRANSACTION
-				INSERT INTO KFC.turnos(fecha_hora,hora,afil_id,espe_id,prof_id) VALUES (@fecha, @hora, @afil_id, @espe_id, @prof_id)
+				DECLARE @horaConvertida TIME(0);
+				DECLARE @espe_id INT;
+				DECLARE @prof_id INT;
+
+				SET @horaConvertida = CONVERT(TIME(0),@hora);
+				SET @espe_id = KFC.fun_obtener_id_especialidad(@espe_desc);
+				SET @prof_id = KFC.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
+
+
+				INSERT INTO KFC.turnos(fecha_hora,hora,afil_id,espe_id,prof_id) VALUES (@fecha, @horaConvertida, @afil_id, @espe_id, @prof_id)
 			COMMIT;
 		END TRY
 		BEGIN CATCH

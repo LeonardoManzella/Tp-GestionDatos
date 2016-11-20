@@ -16,9 +16,9 @@ namespace ClinicaFrba.Negocio
         /// Obtiene los datos necesarios para el alta del nuevo afiliado
         /// </summary>
         /// <param name="afil"></param>
-        public static void alta_afiliado(Afiliado afil)
+        public static int alta_afiliado(Afiliado afil)
         {
-            Base_de_Datos.InteraccionDB.alta_afiliado(afil);
+           return Base_de_Datos.InteraccionDB.alta_afiliado(afil);
         }
 
         /// <summary>
@@ -28,6 +28,16 @@ namespace ClinicaFrba.Negocio
         public static void modifica_afiliado(Afiliado afil)
         {
             Base_de_Datos.InteraccionDB.modifica_afiliado(afil);
+        }
+
+        /// <summary>
+        /// Dar de baja a un afiliado en el sistema
+        /// </summary>
+        /// <param name="afil_id"></param>
+        /// <returns></returns>
+        public static bool baja_afiliado(int afil_id)
+        {
+            return Base_de_Datos.InteraccionDB.baja_afiliado(afil_id);
         }
 
         /// <summary>

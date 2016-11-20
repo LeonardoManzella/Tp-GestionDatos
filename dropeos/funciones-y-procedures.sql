@@ -154,8 +154,8 @@ GO
 IF OBJECT_ID('KFC.fun_obtener_todos_los_planes') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_todos_los_planes;
 GO
-IF OBJECT_ID('KFC.fun_obtener_especialidades') IS NOT NULL
-DROP FUNCTION KFC.fun_obtener_especialidades;
+IF OBJECT_ID('KFC.fun_obtener_especialidades_prof') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_especialidades_prof;
 GO
 IF OBJECT_ID('KFC.fun_obtener_profesionales_por_especialidad') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_profesionales_por_especialidad;
@@ -187,3 +187,21 @@ GO
 IF OBJECT_ID('KFC.fun_obtener_turnos_profesional') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_turnos_profesional;
 GO
+
+IF OBJECT_ID('KFC.fun_obtener_id_especialidad') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_id_especialidad;
+GO
+
+IF OBJECT_ID('KFC.fun_obtener_id_profesional') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_id_profesional;
+GO
+
+IF OBJECT_ID('KFC.fun_obtener_especialidades') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_especialidades;
+GO
+
+IF OBJECT_ID('KFC.get_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.get_afiliado;
+GO
+
+

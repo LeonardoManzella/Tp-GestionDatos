@@ -28,11 +28,19 @@ namespace ClinicaFrba.Abm_Afiliado
         {
             try
             {
+                var cerrar = false;
 
                 mapAfiliado_Vista();
-                if (funcionalidad == tipos_funcionalidad.ALTA)
+
+                if (funcionalidad == tipos_funcionalidad.MODIFICACION)
+                //Modific
+                {
+                    Negocio.ABMAFIL.modifica_afiliado(afiliado);
+                    MessageBox.Show("Se ha modificado el afiliado sastifactoriamente");
+                }
+                else if (funcionalidad == tipos_funcionalidad.ALTA)
                 {  //alta
-                    
+
                     if (this.chk_titular.Checked)
                     {
                         //afiliado.id =  Negocio.ABMUSUARIO.altaUsuario(user);
@@ -44,20 +52,25 @@ namespace ClinicaFrba.Abm_Afiliado
                         //user.id =  Negocio.ABMUSUARIO.obtenerUsuario(nick);
                         afiliado.usuario = Int32.Parse(nick);
                     }
-                    Negocio.ABMAFIL.alta_afiliado(afiliado);
+                    var id_us  = Negocio.ABMAFIL.alta_afiliado(afiliado);
+                    this.txtAfilId.Text = id_us.ToString();
                     MessageBox.Show("Se ha realizado el alta correctamente");
-                }
-                else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
-                //Modific
-                {
-                    Negocio.ABMAFIL.modifica_afiliado(afiliado);
-                    MessageBox.Show("Se ha modificado el afiliado sastifactoriamente");
+                    funcionalidad = tipos_funcionalidad.MODIFICACION;
                 }
                 else if (funcionalidad == tipos_funcionalidad.BAJA)
-                    //Baja
+                //Baja
+                {
+                    var respuesta = Negocio.ABMAFIL.baja_afiliado(afiliado.id);
+                    if (respuesta)
+                        MessageBox.Show("Se ha realizado la baja correctamente");
+                    else
+                        MessageBox.Show("Ha ocurrido un error la baja no ha podido realizarse");
 
-                    MessageBox.Show("Se ha realizado la baja correctamente");
-                ;
+                    cerrar = true;
+                };
+
+                if (cerrar)
+                    this.Close();
             }
             catch (Exception ex)
             {
@@ -168,7 +181,12 @@ namespace ClinicaFrba.Abm_Afiliado
             afiliado.sexo = ComboData.obtener_descripcion(cmbSexo)[0];
             afiliado.telefono = txtNroTelefono.Text;
             afiliado.tipo_doc = ComboData.obtener_descripcion(cmbTipoDoc);
-            
+
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

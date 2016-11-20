@@ -67,7 +67,7 @@ namespace ClinicaFrba.Base_de_Datos
                 //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
                 SqlConnection conexion = Conexion.Instance.get();
 
-                SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario", conexion);
+                SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario, @afil_id", conexion);
                 var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
                 var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
@@ -94,7 +94,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro9.Value = afiliado.estado_civil;
                 parametro10.Value = afiliado.plan_id;
                 parametro11.Value = afiliado.usuario;
-                parametro0.Direction = ParameterDirection.ReturnValue;
+                parametro0.Direction = ParameterDirection.Output;
 
                 comando_sql.Parameters.Add(parametro1);
                 comando_sql.Parameters.Add(parametro2);

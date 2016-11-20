@@ -32,7 +32,7 @@ namespace ClinicaFrba.Abm_Afiliado
                 mapAfiliado_Vista();
                 if (funcionalidad == tipos_funcionalidad.ALTA)
                 {  //alta
-                    
+
                     if (this.chk_titular.Checked)
                     {
                         //afiliado.id =  Negocio.ABMUSUARIO.altaUsuario(user);
@@ -67,26 +67,33 @@ namespace ClinicaFrba.Abm_Afiliado
 
         private void ABMAFILIADO_Load(object sender, EventArgs e)
         {
-            cargar_pantalla();
-            txtAfilId.Enabled = false;
-            if (funcionalidad == tipos_funcionalidad.ALTA)
-            {  //alta
-                chk_titular.Visible = true;
-                this.afiliado = new Afiliado();
-            }
-            else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
+            try
             {
-                chk_titular.Visible = false;
-                var afiliado_id = Int32.Parse(Interaction.InputBox("Ingrese el numero de afiliado a modificar"));
-                this.afiliado = Negocio.ABMAFIL.Get_Afiliado(afiliado_id);
-                afiliado_en_pantalla();
+                cargar_pantalla();
+                txtAfilId.Enabled = false;
+                if (funcionalidad == tipos_funcionalidad.ALTA)
+                {  //alta
+                    chk_titular.Visible = true;
+                    this.afiliado = new Afiliado();
+                }
+                else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
+                {
+                    chk_titular.Visible = false;
+                    var afiliado_id = Int32.Parse(Interaction.InputBox("Ingrese el numero de afiliado a modificar"));
+                    this.afiliado = Negocio.ABMAFIL.Get_Afiliado(afiliado_id);
+                    afiliado_en_pantalla();
+                }
+                else
+                {
+                    chk_titular.Visible = false;
+                    var afiliado_id = Int32.Parse(Interaction.InputBox("Ingrese el numero de afiliado a modificar"));
+                    this.afiliado = Negocio.ABMAFIL.Get_Afiliado(afiliado_id);
+                    afiliado_en_pantalla();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                chk_titular.Visible = false;
-                var afiliado_id = Int32.Parse(Interaction.InputBox("Ingrese el numero de afiliado a modificar"));
-                this.afiliado = Negocio.ABMAFIL.Get_Afiliado(afiliado_id);
-                afiliado_en_pantalla();
+                MessageBox.Show(ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -112,6 +119,11 @@ namespace ClinicaFrba.Abm_Afiliado
         {
             #region combos
 
+            //cargo el combo de sexo
+            this.cmbSexo.DisplayMember = "descripcion";
+            this.cmbSexo.ValueMember = "identificador";
+            this.cmbSexo.Items.Add(new ComboData(1, "M"));
+            this.cmbSexo.Items.Add(new ComboData(1, "F"));
 
             this.cmbEstadoCiv.DisplayMember = "descripcion";
             this.cmbEstadoCiv.ValueMember = "identificador";
@@ -131,21 +143,20 @@ namespace ClinicaFrba.Abm_Afiliado
                 this.cmbPlan.Items.Add(plan);
             }
 
-            //cargo el combo de sexo
-            this.cmbSexo.DisplayMember = "descripcion";
-            this.cmbSexo.ValueMember = "identificador";
-            this.cmbSexo.Items.Add(new ComboData(1, "M"));
-            this.cmbSexo.Items.Add(new ComboData(1, "F"));
-
             //Cargo el combo de tipos de documentos
+
+            var tipos = Negocio.ABMAFIL.get_Tipos_Documentos();
+            this.cmbTipoDoc.DataSource = tipos;
             this.cmbTipoDoc.DisplayMember = "descripcion";
             this.cmbTipoDoc.ValueMember = "identificador";
-            var tipos = Negocio.ABMAFIL.get_Tipos_Documentos();
 
+
+            /*
             foreach (ComboData tipo in tipos)
             {
                 this.cmbTipoDoc.Items.Add(tipo);
             }
+            */
             #endregion
         }
 
@@ -168,7 +179,7 @@ namespace ClinicaFrba.Abm_Afiliado
             afiliado.sexo = ComboData.obtener_descripcion(cmbSexo)[0];
             afiliado.telefono = txtNroTelefono.Text;
             afiliado.tipo_doc = ComboData.obtener_descripcion(cmbTipoDoc);
-            
+
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)

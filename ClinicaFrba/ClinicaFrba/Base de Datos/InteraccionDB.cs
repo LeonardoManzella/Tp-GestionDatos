@@ -130,32 +130,70 @@ namespace ClinicaFrba.Base_de_Datos
         }
 
 
-        public static Usuario log_in(string usuario, string password)
+        public static Usuario log_in(string usuario, string password, string rol_descripcion)
         {
             try
             {
-                string funcion = "SELECT KFC.fun_validar_usuario(@user, @contrasenia)";
+                string funcion = "SELECT KFC.fun_validar_usuario(@user, @contrasenia, @rol_desc)";
                 SqlParameter parametro1 = new SqlParameter("@user", SqlDbType.Text);
                 parametro1.Value = usuario.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@contrasenia", SqlDbType.Text);
                 parametro2.Value = password.ToUpper();
+                SqlParameter parametro3 = new SqlParameter("@rol_desc", SqlDbType.Text);
+                parametro3.Value = rol_descripcion.ToUpper();
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
+                parametros.Add(parametro3);
 
                 var reader = ejecutar_funcion(funcion, parametros);
 
 
                 int id = -1;
-                id = ObtenerIntReader(reader, 0);
+                try
+                {
+                    id = ObtenerIntReader(reader, 0);
+                }
+                catch (Exception e)
+                {
+                    ImprimirExcepcion(e);
+                    throw new Exception("Fallo Obtener Datos: Usuario Inexistente, Esta mal la Contraseña, el Rol o no esta habilitado el Usuario");
+                }
 
-                if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
+                if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña, el Rol o no esta habilitado el Usuario");
 
-                var user = new Usuario();
-                user.id = id;
-                //Otros valores falta ver que hacemos con eso. No es necesario Obtenerlos de la Base.
+                Usuario user = cargar_datos(id);
+
                 return user;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        private static Usuario cargar_datos(int usuario_id)
+        {
+            try
+            {
+                var usuario = new Usuario();
+                usuario.id = usuario_id;
+
+                string funcion = "SELECT * FROM KFC.fun_obtener_roles_usuario(@usuario_id)";
+                SqlParameter parametro = new SqlParameter("@usuario_id", SqlDbType.Int);
+                parametro.Value = usuario_id;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
+
+                var reader = ejecutar_funcion(funcion, parametros);
+                usuario.permisos = ObtenerStringsReader(reader, 1);
+
+                //Otros valores falta ver que hacemos con eso. No es necesario Obtenerlos de la Base.
+                return usuario;
             }
             catch (Exception e)
             {

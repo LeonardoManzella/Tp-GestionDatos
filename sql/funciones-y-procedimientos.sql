@@ -1,7 +1,7 @@
 ﻿------------------OBTENER_TODOS_LOS_ROLES------------------
 --Proposito: obtiene los roles actuales del sistema
 --
---Ingreso: -
+--Ingreso: con ID 0 devuelve todos los roles
 --
 --Egreso: una tabla con la descripcion y el id de los roles
 ------------------OBTENER_TODOS_LOS_ROLES------------------
@@ -20,7 +20,7 @@ WHERE
           (
                     @usuario_id     = 0
                     OR rol_us.us_id = @usuario_id
-          ) -- =0 devuelve todos los roles
+          )
           AND rol.habilitado = 1
 ;
 GO
@@ -34,18 +34,25 @@ GO
 --Egreso: el identificador del usuario. Devuelve -1 si no existe el usuario
 ------------------VALIDAR_USUARIO------------------
 CREATE FUNCTION KFC.fun_validar_usuario(@usuario VARCHAR(30),
-@contrasenia                                 VARCHAR(30))
+@contrasenia                                 VARCHAR(30)
+, @rol_desc	VARCHAR(50)
+)
 returns INT AS
 BEGIN
           DECLARE @id INT;
           SELECT
-                    @id = ISNULL(us_id,-1)
+                    @id = ISNULL(us.us_id,-1)
           FROM
                     KFC.usuarios us
+					INNER JOIN KFC.roles_usuarios ru
+					ON	ru.us_id = us.us_id
+					INNER JOIN KFC.roles r
+					ON ru.rol_id = r.rol_id
           WHERE
                     us.nick           = @usuario
                     AND us.pass       = HASHBYTES('SHA2_256', @contrasenia)
                     AND us.habilitado = 1
+					AND UPPER(r.descripcion) = UPPER(@rol_desc)
           ;
           
           RETURN @id;

@@ -71,7 +71,11 @@
     <Compile Include="AtencionesMedicas\RegistrarResultado.Designer.cs">
       <DependentUpon>RegistrarResultado.cs</DependentUpon>
     </Compile>
+    <Compile Include="Base de Datos\BD_Afiliados.cs" />
+    <Compile Include="Base de Datos\BD_Bonos.cs" />
     <Compile Include="Base de Datos\Conexion.cs" />
+    <Compile Include="Base de Datos\BD_Roles.cs" />
+    <Compile Include="Base de Datos\BD_Turnos.cs" />
     <Compile Include="Base de Datos\InteraccionDB.cs" />
     <Compile Include="Cancelar Turnos\CancelarTurnoAfiliado.cs">
       <SubType>Form</SubType>

@@ -281,6 +281,7 @@
             this.textBox_usuario.Name = "textBox_usuario";
             this.textBox_usuario.Size = new System.Drawing.Size(213, 20);
             this.textBox_usuario.TabIndex = 3;
+            this.textBox_usuario.Text = "ADMIN";
             // 
             // textBox_password
             // 
@@ -288,6 +289,7 @@
             this.textBox_password.Name = "textBox_password";
             this.textBox_password.Size = new System.Drawing.Size(213, 20);
             this.textBox_password.TabIndex = 4;
+            this.textBox_password.Text = "W23E";
             // 
             // label3
             // 
@@ -325,6 +327,7 @@
             this.textBox_rol.Name = "textBox_rol";
             this.textBox_rol.Size = new System.Drawing.Size(213, 20);
             this.textBox_rol.TabIndex = 5;
+            this.textBox_rol.Text = "ADMINISTRATIVO";
             // 
             // label5
             // 

@@ -44,7 +44,8 @@ namespace ClinicaFrba
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            DeshabilitarComponentes();
+            //TODO restablecer
+            //DeshabilitarComponentes();
             this.AcceptButton = boton_loguear;
         }
 

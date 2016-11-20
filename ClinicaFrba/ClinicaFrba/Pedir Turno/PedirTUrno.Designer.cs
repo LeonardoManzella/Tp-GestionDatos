@@ -192,7 +192,6 @@
             // 
             // boton_salir
             // 
-            this.boton_salir.Enabled = false;
             this.boton_salir.Location = new System.Drawing.Point(470, 196);
             this.boton_salir.Name = "boton_salir";
             this.boton_salir.Size = new System.Drawing.Size(106, 64);

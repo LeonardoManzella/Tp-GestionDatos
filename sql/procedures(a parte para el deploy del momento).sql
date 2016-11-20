@@ -1,3 +1,16 @@
+IF OBJECT_ID('KFC.modifica_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.modifica_afiliado;
+GO
+IF OBJECT_ID('KFC.get_cmb_estado_civil') IS NOT NULL
+DROP PROCEDURE KFC.get_cmb_estado_civil;
+GO
+IF OBJECT_ID('KFC.get_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.get_afiliado;
+GO
+IF OBJECT_ID('KFC.alta_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.alta_afiliado;
+GO
+
 CREATE PROCEDURE KFC.alta_afiliado( @nombre VARCHAR(255),
 									@apellido                                   VARCHAR(255),
 									@tipo_doc                                   VARCHAR(25),
@@ -118,19 +131,3 @@ Begin
 			THROW
 			END CATCH
 end;
-
-
-/* DROPEOS
-
-IF OBJECT_ID('KFC.modifica_afiliado') IS NOT NULL
-DROP PROCEDURE KFC.modifica_afiliado;
-
-IF OBJECT_ID('KFC.get_cmb_estado_civil') IS NOT NULL
-DROP PROCEDURE KFC.get_cmb_estado_civil;
-
-IF OBJECT_ID('KFC.get_afiliado') IS NOT NULL
-DROP PROCEDURE KFC.get_afiliado;
-
-IF OBJECT_ID('KFC.alta_afiliado') IS NOT NULL
-DROP PROCEDURE KFC.alta_afiliado;
-*/

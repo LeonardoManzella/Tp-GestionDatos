@@ -69,8 +69,8 @@ namespace ClinicaFrba.Clases
 
         public static void llenarCombo(ComboBox combo, List<String> lista)
         {
-            combo.DisplayMember = "descripcion";
-            combo.ValueMember = "identificador";
+            combo.DisplayMember     = "descripcion";
+            combo.ValueMember       = "identificador";
 
 
             int contador_items = 1;

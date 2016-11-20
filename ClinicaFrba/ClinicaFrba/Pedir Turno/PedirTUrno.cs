@@ -27,18 +27,32 @@ namespace ClinicaFrba.Pedir_Turno
 
         private void PedirTurno_Load(object sender, EventArgs e)
         {
-            ComboData.llenarCombo( comboEspecialidades, InteraccionDB.obtener_todas_especialidades() );
-            descripcion_especialidad = null;
-            apellido_nombre_profesional = null;
+            try
+            {
+                ComboData.llenarCombo(comboEspecialidades, InteraccionDB.obtener_todas_especialidades());
+                descripcion_especialidad = null;
+                apellido_nombre_profesional = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void comboEspecialidades_SelectedIndexChanged(object sender, EventArgs e)
         {
-            comboProfesionales.Enabled = true;
-            descripcion_especialidad = ComboData.obtener_descripcion(comboEspecialidades);
-            var lista = InteraccionDB.obtener_todos_profesionales_para_especialid(descripcion_especialidad);
+            try
+            {
+                comboProfesionales.Enabled = true;
+                descripcion_especialidad = ComboData.obtener_descripcion(comboEspecialidades);
+                var lista = BD_Turnos.obtener_todos_profesionales_para_especialid(descripcion_especialidad);
 
-            ComboData.llenarCombo( comboProfesionales, lista );
+                ComboData.llenarCombo(comboProfesionales, lista);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void comboProfesionales_SelectedIndexChanged(object sender, EventArgs e)
@@ -48,12 +62,28 @@ namespace ClinicaFrba.Pedir_Turno
 
         private void datePicker_fecha_ValueChanged(object sender, EventArgs e)
         {
-            comboHorarios.Enabled = true;
-            apellido_nombre_profesional = ComboData.obtener_descripcion(comboProfesionales);
-            fecha = datePicker_fecha.Value.Date;
-            var lista = InteraccionDB.obtener_turnos_disponibles(apellido_nombre_profesional, fecha);
+            try
+            {
+                apellido_nombre_profesional = ComboData.obtener_descripcion(comboProfesionales);
+                fecha = datePicker_fecha.Value.Date;
+                List<string> lista = null;
+                try
+                {
+                    lista = BD_Turnos.obtener_turnos_disponibles(apellido_nombre_profesional, fecha);
+                }
+                catch
+                {
+                    MessageBox.Show("No hay Turnos Disponibles ese Dia", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                comboHorarios.Enabled = true;
 
-            ComboData.llenarCombo(comboHorarios, lista);
+                ComboData.llenarCombo(comboHorarios, lista);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void comboHorarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -66,7 +96,7 @@ namespace ClinicaFrba.Pedir_Turno
         {
             try
             {
-                InteraccionDB.asignar_turno(apellido_nombre_profesional, fecha, horario, descripcion_especialidad, usuario.id);
+                BD_Turnos.asignar_turno(apellido_nombre_profesional, fecha, horario, descripcion_especialidad, usuario.id);
             }
             catch (Exception ex)
             {

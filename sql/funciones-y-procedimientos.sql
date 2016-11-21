@@ -186,32 +186,6 @@ BEGIN
 END;
 GO
 
-
-------------------OBTENER_FUNCION_ROL------------------
---Proposito: Saber que funciones puede realizar un determinado rol
---
---Ingreso: el identificador del rol
---
---Egreso: una tabla con las funciones de ese rol
-------------------OBTENER_FUNCION_ROL------------------
-CREATE FUNCTION kfc.fun_obtener_funcion_rol( @id_rol INT)
-returns TABLE AS
-RETURN
-SELECT
-          fr.func_id
-        , fun.descripcion
-FROM
-          kfc.funcionalidades_roles fr
-          INNER JOIN
-                    kfc.funcionalidades fun
-          ON
-                    fr.func_id = fun.func_id
-WHERE
-          fr.rol_id = @id_rol
-;
-GO
-
-
 ------------------OBTENER_TODAS_LAS_FUNCIONALIDADES------------------
 --Proposito: Saber que funciones hay en el sistema
 --
@@ -609,7 +583,6 @@ BEGIN
 END;
 go
 
-
 --Funcionalidad COMPRAR BONOS. Crea 'Bono' comprado por el afiliado (bono del mismo plan que tiene el afiliado).
 CREATE PROCEDURE KFC.pro_comprar_bono(@afiliado_id INT)
 AS
@@ -774,6 +747,78 @@ SELECT * FROM kfc.roles;
 
 GO
 
+CREATE FUNCTION KFC.fun_retornar_id_funcionalidad(@func_desc VARCHAR(60))
+returns INT AS
+BEGIN
+			DECLARE @func_id INT;
+			SET @func_id = 0;
+
+			SELECT	@func_id = f.func_id
+			FROM	KFC.funcionalidades f
+			WHERE	UPPER(f.descripcion) = UPPER(@func_desc)
+
+			/*
+			IF (@func_id <= 0)
+				BEGIN
+				DECLARE @string VARCHAR(100);
+				SET @string = 'No existe una Funcionalidad con el nombre' + @func_desc
+				RAISERROR(@string,16,1);
+				END
+			*/
+          
+          RETURN @func_id;
+END;
+GO
+
+CREATE FUNCTION KFC.fun_retornar_id_rol(@rol_nombre VARCHAR(60))
+returns INT AS
+BEGIN
+			DECLARE @rol_id INT;
+			SET @rol_id = -1;
+
+			SELECT	@rol_id = r.rol_id
+			FROM	KFC.roles r
+			WHERE	UPPER(r.descripcion) = UPPER(@rol_nombre)
+
+			/*
+			IF (@@rol_id <= 0)
+				BEGIN
+				DECLARE @string VARCHAR(100);
+				SET @string = 'No existe un Rol con el nombre' + @@rol_nombre
+				RAISERROR(@string,16,1);
+				END
+			*/
+          
+          RETURN @rol_id;
+END;
+GO
+
+
+------------------OBTENER_FUNCION_ROL------------------
+--Proposito: Saber que funciones puede realizar un determinado rol
+--
+--Ingreso: el identificador del rol
+--
+--Egreso: una tabla con las funciones de ese rol
+------------------OBTENER_FUNCION_ROL------------------
+CREATE FUNCTION kfc.fun_obtener_funcion_rol( @id_rol INT)
+returns TABLE AS
+RETURN
+SELECT
+          fr.func_id
+        , fun.descripcion
+FROM
+          kfc.funcionalidades_roles fr
+          INNER JOIN
+                    kfc.funcionalidades fun
+          ON
+                    fr.func_id = fun.func_id
+WHERE
+          fr.rol_id = @id_rol
+;
+GO
+
+
 --Funcionalidad ABM ROLES. Asigna una 'Funcionalidad' a un rol
 CREATE PROCEDURE KFC.pro_crear_funcionalidad_de_rol(@func_desc VARCHAR(60) , @rol_id INT)
 AS
@@ -782,21 +827,8 @@ BEGIN
 	DECLARE @fecha DATETIME;
 	SET @fecha = getdate();
 
-
 	DECLARE @func_id INT;
-	SET @func_id = 0;
-
-	SELECT	@func_id = f.func_id
-	FROM	KFC.funcionalidades f
-	WHERE	f.descripcion = @func_desc
-
-	IF (@func_id <= 0)
-		BEGIN
-		DECLARE @string VARCHAR(100);
-		SET @string = 'No existe una Funcionalidad con el nombre' + @func_desc
-		RAISERROR(@string,16,1);
-		END
-
+	SELECT @func_id = KFC.fun_retornar_id_funcionalidad(@func_desc);
 
 	SELECT * FROM KFC.funcionalidades_roles
 	where rol_id = @rol_id
@@ -805,7 +837,7 @@ BEGIN
 	IF (@@rowcount = 0)
 	BEGIN TRY
 			BEGIN TRANSACTION
-				INSERT INTO KFC.funcionalidades_roles VALUES (@func_id, @rol_id)
+				INSERT INTO KFC.funcionalidades_roles(func_id,rol_id) VALUES (@func_id, @rol_id)
 			COMMIT;
 	END TRY
 	BEGIN CATCH
@@ -819,12 +851,19 @@ END;
 GO
 
 --Funcionalidad ABM ROLES. Quita una 'Funcionalidad' a un rol
-CREATE PROCEDURE KFC.pro_quitar_funcionalidad_de_rol(@func_id INT, @rol_id INT)
+CREATE PROCEDURE KFC.pro_quitar_funcionalidad_de_rol(@func_desc VARCHAR(60), @rol_id INT)
 AS
 BEGIN
 
 	DECLARE @fecha DATETIME;
 	SET @fecha = getdate();
+
+	DECLARE @func_id INT;
+	SELECT @func_id = KFC.fun_retornar_id_funcionalidad(@func_desc);
+
+	SELECT	@func_id = f.func_id
+	FROM	KFC.funcionalidades f
+	WHERE	f.descripcion = @func_desc
 
 	SELECT * FROM KFC.funcionalidades_roles
 	where rol_id = @rol_id

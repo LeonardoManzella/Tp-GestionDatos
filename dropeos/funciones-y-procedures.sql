@@ -131,6 +131,44 @@ GO
 IF OBJECT_ID('KFC.pro_baja_logica_rol') IS NOT NULL
 DROP PROCEDURE KFC.pro_baja_logica_rol;
 GO
+IF OBJECT_ID('KFC.modifica_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.modifica_afiliado;
+GO
+IF OBJECT_ID('KFC.get_cmb_estado_civil') IS NOT NULL
+DROP PROCEDURE KFC.get_cmb_estado_civil;
+GO
+IF OBJECT_ID('KFC.get_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.get_afiliado;
+GO
+IF OBJECT_ID('KFC.alta_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.alta_afiliado;
+GO
+
+IF OBJECT_ID('KFC.get_cmb_planes_sociales') IS NOT NULL
+DROP PROCEDURE KFC.get_cmb_planes_sociales;
+GO
+
+IF OBJECT_ID('KFC.registrar_llegada') IS NOT NULL
+DROP PROCEDURE KFC.registrar_llegada;
+GO
+
+IF OBJECT_ID('KFC.get_bonos_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.get_bonos_afiliado;
+GO
+
+IF OBJECT_ID('KFC.get_turno_hoy') IS NOT NULL
+DROP PROCEDURE KFC.get_turno_hoy;
+GO
+
+IF OBJECT_ID('KFC.get_cmb_prof_x_esp') IS NOT NULL
+DROP PROCEDURE KFC.get_cmb_prof_x_esp;
+GO
+
+IF OBJECT_ID('KFC.get_especialidades') IS NOT NULL
+DROP PROCEDURE KFC.get_especialidades;
+GO
+
+
 
 
 
@@ -198,6 +236,14 @@ GO
 
 IF OBJECT_ID('KFC.fun_obtener_especialidades') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_especialidades;
+GO
+
+IF OBJECT_ID('KFC.fun_retornar_id_funcionalidad') IS NOT NULL
+DROP FUNCTION KFC.fun_retornar_id_funcionalidad;
+GO
+
+IF OBJECT_ID('KFC.fun_retornar_id_rol') IS NOT NULL
+DROP FUNCTION KFC.fun_retornar_id_rol;
 GO
 
 IF OBJECT_ID('KFC.get_afiliado') IS NOT NULL

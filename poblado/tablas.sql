@@ -10,7 +10,20 @@ INSERT INTO KFC.estado_civil(descripcion) VALUES ('DIVORCIADO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('MIGRADO')			--Para los Datos de la Tabla Maestra
 
 -- Insercion Funcionalidades
-
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('ALTA_AFILIADO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('MODIFICAR_AFILIADO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('BAJA_AFILIADO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('PEDIR_TURNO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('CANCELAR_TURNO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('COMPRAR_BONO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('CREAR_AGENDA')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('CANCELAR_TURNOS_AGENDA')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('REGISTRAR_LLEGADA')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('REGISTRAR_DIAGNOSTICO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('CREAR_ROL')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('MODIFICAR_ROL')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('COMPRA_BONO_ADMINISTRADOR')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('ESTADISTICAS')
 
 -- Insercion Roles del Enunciado
 INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('AFILIADO', @true)
@@ -18,7 +31,7 @@ INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('PROFESIONAL', @true)
 INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('ADMINISTRATIVO', @true)
 
 -- Insercion Funcionalidades por Roles
-
+--TODO!
 
 -- Insercion Usuarios del Enunciado
 INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('ADMIN', HASHBYTES('SHA2_256','W23E'), @true)

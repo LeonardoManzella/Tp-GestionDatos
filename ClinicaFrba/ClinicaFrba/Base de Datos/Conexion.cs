@@ -15,7 +15,7 @@ namespace ClinicaFrba.Base_de_Datos
         /// </summary>
         /// <returns></returns>
         public SqlConnection get()
-            { return conexion_interna; }
+        { return conexion_interna; }
 
 
         /// <summary>
@@ -23,22 +23,23 @@ namespace ClinicaFrba.Base_de_Datos
         /// </summary>
         private Conexion()
         {
-            try{
-            conexion_interna = new SqlConnection("Password=gd2016;Persist Security Info=True;User ID=gd;Initial Catalog=GD2C2016;MultipleActiveResultSets=True;Data Source=.\\SQLSERVER2012");
-
-            conexion_interna.Open();
-
-            var sqlCommand = new SqlCommand("SELECT * FROM KFC.roles", conexion_interna);
-            SqlDataReader reader = sqlCommand.ExecuteReader();
-
-            /* 
-            //Para Pruebas, no Borrar
-            while (reader.Read())
+            try
             {
-                string name = reader.GetString(1);
-                var i = 5;
-            }
-            */
+                conexion_interna = new SqlConnection("Password=gd2016;Persist Security Info=True;User ID=gd;Initial Catalog=GD2C2016;MultipleActiveResultSets=True;Data Source=.\\SQLSERVER2012");
+
+                conexion_interna.Open();
+
+                var sqlCommand = new SqlCommand("SELECT * FROM KFC.roles", conexion_interna);
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                /* 
+                //Para Pruebas, no Borrar
+                while (reader.Read())
+                {
+                    string name = reader.GetString(1);
+                    var i = 5;
+                }
+                */
             }
             catch (Exception e)
             {
@@ -68,9 +69,9 @@ namespace ClinicaFrba.Base_de_Datos
             //En realidad es un Getter de la variable instance, de ahi el truco para unica conexion, lo guardamos en una variable estatica de clase
             get
             {
-                lock(padlock)
+                lock (padlock)
                 {
-                    if(instance == null)
+                    if (instance == null)
                     {
                         instance = new Conexion();
                     }

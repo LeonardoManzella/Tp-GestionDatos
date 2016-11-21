@@ -1,5 +1,4 @@
-﻿
-using ClinicaFrba.Clases;
+﻿using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +6,7 @@ using System.Data.SqlClient;
 
 namespace ClinicaFrba.Base_de_Datos
 {
-    
+
     /// <summary>
     /// Contiene cosas Comunes a multiples funcionalidades
     /// </summary>
@@ -415,8 +414,8 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        
-        
+
+
         public static Afiliado get_afiliado(int afiliado_id)
         {
             try
@@ -573,7 +572,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 SqlConnection conexion = Conexion.Instance.get();
 
-                string sql = "kfc.get_cmb_estado_civil";
+                string sql = "kfc.get_cmb_estado_civil" ;
 
                 SqlCommand cmd = new SqlCommand(sql, conexion);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -614,7 +613,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 SqlConnection conexion = Conexion.Instance.get();
 
-                string sql = "kfc.get_cmb_planes_sociales";
+                string sql = "kfc.get_cmb_planes_sociales" ;
 
                 SqlCommand cmd = new SqlCommand(sql, conexion);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);

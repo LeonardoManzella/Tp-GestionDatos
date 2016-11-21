@@ -14,6 +14,7 @@ namespace ClinicaFrba
         public int? plan_id { get; set; }
         public List<string> permisos { get; set; }
         public int rol_seleccionado_id { get; set; }
+        public string rol_seleccionado_descripcion { get; set; }
 
     }
 }

@@ -23,7 +23,7 @@ namespace ClinicaFrba
 
         }
 
-        private void DeshabilitarComponentes()
+        private void deshabilitar_componentes()
         {
             this.afiliadoToolStripMenuItem.Enabled = false;
             this.profesionalesToolStripMenuItem.Enabled = false;
@@ -32,9 +32,10 @@ namespace ClinicaFrba
         }
         private void habilitar_componentes()
         {
-            if (usuario.permisos.Contains("AFILIADO")) this.afiliadoToolStripMenuItem.Enabled = true;
-            if (usuario.permisos.Contains("PROFESIONAL")) this.profesionalesToolStripMenuItem.Enabled = true;
-            if (usuario.permisos.Contains("ADMINISTRATIVO"))
+            //TODO Cambiar a que use cada permiso de cada pestaña!
+            if (usuario.rol_seleccionado_descripcion.Equals("AFILIADO")) this.afiliadoToolStripMenuItem.Enabled = true;
+            if (usuario.rol_seleccionado_descripcion.Equals("PROFESIONAL")) this.profesionalesToolStripMenuItem.Enabled = true;
+            if (usuario.rol_seleccionado_descripcion.Equals("ADMINISTRATIVO"))
             {
                 this.afiliadoToolStripMenuItem.Enabled      = true;
                 this.profesionalesToolStripMenuItem.Enabled = true;
@@ -45,7 +46,7 @@ namespace ClinicaFrba
         private void Form1_Load(object sender, EventArgs e)
         {
             //TODO restablecer
-            //DeshabilitarComponentes();
+            //deshabilitar_componentes();
             this.AcceptButton = boton_loguear;
         }
 

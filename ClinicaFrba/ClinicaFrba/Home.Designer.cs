@@ -232,15 +232,15 @@
             // nuevRolToolStripMenuItem
             // 
             this.nuevRolToolStripMenuItem.Name = "nuevRolToolStripMenuItem";
-            this.nuevRolToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.nuevRolToolStripMenuItem.Text = "&Alta Rol";
+            this.nuevRolToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.nuevRolToolStripMenuItem.Text = "&Nuevo Rol";
             this.nuevRolToolStripMenuItem.Click += new System.EventHandler(this.nuevRolToolStripMenuItem_Click);
             // 
             // bajaRolToolStripMenuItem
             // 
             this.bajaRolToolStripMenuItem.Name = "bajaRolToolStripMenuItem";
-            this.bajaRolToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.bajaRolToolStripMenuItem.Text = "&Baja Rol";
+            this.bajaRolToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bajaRolToolStripMenuItem.Text = "&Modificar Rol";
             this.bajaRolToolStripMenuItem.Click += new System.EventHandler(this.bajaRolToolStripMenuItem_Click);
             // 
             // comprarBonoUsuarioToolStripMenuItem

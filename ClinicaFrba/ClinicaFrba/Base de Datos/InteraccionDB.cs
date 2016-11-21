@@ -27,6 +27,13 @@ namespace ClinicaFrba.Base_de_Datos
             return comando_sql.ExecuteReader();
         }
 
+        /// <summary>
+        /// En el string "procedure" solo asignar el nombre del procedimiento sin parametros. 
+        /// <para>Ejemplo: "KFC.procedimiento"</para>
+        /// </summary>
+        /// <param name="procedure"></param>
+        /// <param name="parametros"></param>
+        /// <returns></returns>
         public static SqlDataReader ejecutar_storedProcedure(string procedure, List<SqlParameter> parametros)
         {
             SqlConnection conexion = Conexion.Instance.get();
@@ -44,6 +51,14 @@ namespace ClinicaFrba.Base_de_Datos
             return comando_sql.ExecuteReader();
         }
 
+        /// <summary>
+        /// En el string "procedure" solo asignar el nombre del procedimiento sin parametros. 
+        /// <para>Ejemplo: "KFC.procedimiento"</para>
+        /// <para>Recordar definir "DbType" y "ParameterDirection" </para>
+        /// </summary>
+        /// <param name="procedure"></param>
+        /// <param name="parametros"></param>
+        /// <returns></returns>
         public static SqlCommand ejecutar_storedProcedureConRetorno(string procedure, List<SqlParameter> parametros)
         {
             SqlConnection conexion = Conexion.Instance.get();
@@ -167,7 +182,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
 
-                Usuario user = cargar_datos(id);
+                Usuario user = cargar_datos(id, rol_descripcion);
 
                 return user;
             }
@@ -352,13 +367,14 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        private static Usuario cargar_datos(int usuario_id)
+        private static Usuario cargar_datos(int usuario_id, string rol_descripcion)
         {
             try
             {
 
                 var usuario = new Usuario();
                 usuario.id = usuario_id;
+                usuario.rol_seleccionado_descripcion = rol_descripcion;
 
                 string funcion = "SELECT * FROM KFC.fun_obtener_roles_usuario(@usuario_id)";
                 SqlParameter parametro = new SqlParameter("@usuario_id", SqlDbType.Int);
@@ -470,8 +486,6 @@ namespace ClinicaFrba.Base_de_Datos
         }
 
 
-        #region Turnos
-
         public static List<string> obtener_todas_especialidades()
         {
             try
@@ -518,7 +532,27 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        #endregion
+        public static List<string> obtener_todas_funcionalidades()
+        {
+            try
+            {
+                string funcion = "SELECT * FROM KFC.fun_obtener_todas_las_funcionalidades()";
+                var parametros = new List<SqlParameter>();
+
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+
+                List<string> funcionalidades = InteraccionDB.ObtenerStringsReader(reader, 1);
+
+                return funcionalidades;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
 
         #region llegada
         public static bool registrar_llegada(int id_afiliado, int id_turno, int id_bono)
@@ -905,6 +939,8 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
         #endregion
+
+
 
 
     }

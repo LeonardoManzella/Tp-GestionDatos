@@ -10,15 +10,15 @@ namespace ClinicaFrba.Negocio
 {
      public static class Log_In
     {
-        public static Usuario Ingresar_App(string usuario,string password)
+        public static Usuario Ingresar_App(string usuario,string password, string rol_descripcion)
         {
             try
             {
-                var valido = validar_datos_login(usuario, password);
+                var valido = validar_datos_login(usuario, password, rol_descripcion);
                 if (valido)
-                    return InteraccionDB.log_in(usuario, password);
+                    return InteraccionDB.log_in(usuario, password, rol_descripcion);
                 else
-                    throw new  Exception("Ha ocurrido un problema, ni el usuario ni la contraseña pueden estar en blanco");
+                    throw new  Exception("Ha ocurrido un problema, ni el usuario ni la contraseña ni el rol pueden estar en blanco");
 
             }
             catch(Exception e)
@@ -27,9 +27,9 @@ namespace ClinicaFrba.Negocio
             }
 
         }
-        private static bool validar_datos_login(string usuario, string password)
+        private static bool validar_datos_login(string usuario, string password, string rol_descripcion)
         {
-            return !(String.IsNullOrEmpty(usuario) && String.IsNullOrEmpty(password));
+            return !(String.IsNullOrEmpty(usuario) && String.IsNullOrEmpty(password) && String.IsNullOrEmpty(rol_descripcion));
         }
     }
 }

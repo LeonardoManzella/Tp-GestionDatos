@@ -12,7 +12,7 @@ namespace ClinicaFrba
         public string apellido { get; set; }
         public string nombre { get; set; }
         public int? plan_id { get; set; }
-        public List<int> permisos { get; set; }
+        public List<string> permisos { get; set; }
         public int rol_seleccionado_id { get; set; }
 
     }

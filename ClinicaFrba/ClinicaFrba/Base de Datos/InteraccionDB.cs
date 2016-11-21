@@ -1,4 +1,5 @@
-﻿using ClinicaFrba.Clases;
+﻿
+using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,9 +7,13 @@ using System.Data.SqlClient;
 
 namespace ClinicaFrba.Base_de_Datos
 {
-
+    
+    /// <summary>
+    /// Contiene cosas Comunes a multiples funcionalidades
+    /// </summary>
     public static class InteraccionDB
     {
+        public static Usuario usuario;
 
         public static SqlDataReader ejecutar_funcion(string funcion, List<SqlParameter> parametros)
         {
@@ -61,7 +66,7 @@ namespace ClinicaFrba.Base_de_Datos
         }
 
 
-        private static void ImprimirExcepcion(Exception e)
+        public static void ImprimirExcepcion(Exception e)
         {
             //Imprimir para DEBUG
             System.Diagnostics.Debug.WriteLine(e.Message);
@@ -83,7 +88,7 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="reader"></param>
         /// <param name="columnaPorObtener"></param>
         /// <returns></returns>
-        private static List<string> ObtenerStringsReader(SqlDataReader reader, int columnaPorObtener)
+        public static List<string> ObtenerStringsReader(SqlDataReader reader, int columnaPorObtener)
         {
 
             //Veo si trajo datos o no
@@ -111,7 +116,7 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="reader"></param>
         /// <param name="columnaPorObtener"></param>
         /// <returns></returns>
-        private static int ObtenerIntReader(SqlDataReader reader, int columnaPorObtener)
+        public static int ObtenerIntReader(SqlDataReader reader, int columnaPorObtener)
         {
             //Veo si trajo datos o no
             if (!reader.HasRows) throw new Exception("Reader sin Filas");
@@ -130,36 +135,47 @@ namespace ClinicaFrba.Base_de_Datos
         }
 
 
-        public static Usuario log_in(string usuario, string password)
+        public static Usuario log_in(string usuario, string password, string rol_descripcion)
         {
             try
             {
-                string funcion = "SELECT KFC.fun_validar_usuario(@user, @contrasenia)";
+                string funcion = "SELECT KFC.fun_validar_usuario(@user, @contrasenia, @rol_desc)";
                 SqlParameter parametro1 = new SqlParameter("@user", SqlDbType.Text);
                 parametro1.Value = usuario.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@contrasenia", SqlDbType.Text);
                 parametro2.Value = password.ToUpper();
+                SqlParameter parametro3 = new SqlParameter("@rol_desc", SqlDbType.Text);
+                parametro3.Value = rol_descripcion.ToUpper();
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
+                parametros.Add(parametro3);
 
                 var reader = ejecutar_funcion(funcion, parametros);
 
 
                 int id = -1;
-                id = ObtenerIntReader(reader, 0);
+                try
+                {
+                    id = ObtenerIntReader(reader, 0);
+                }
+                catch (Exception e)
+                {
+                    ImprimirExcepcion(e);
+                    throw new Exception("Fallo Obtener Datos: Usuario Inexistente, Esta mal la Contraseña, el Rol o no esta habilitado el Usuario");
+                }
 
                 if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
 
-                var user = new Usuario();
-                user.id = id;
-                //Otros valores falta ver que hacemos con eso. No es necesario Obtenerlos de la Base.
+                Usuario user = cargar_datos(id);
+
                 return user;
             }
             catch (Exception e)
             {
                 ImprimirExcepcion(e);
+
 
                 throw e;
             }
@@ -200,6 +216,71 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
+
+        /// Parametriza los datos y administra la conexion con la BD para la modificación del afiliado
+        /// </summary>
+        /// <param name="afiliado"></param>
+        /// <returns></returns>
+        public static void modifica_afiliado(Afiliado afiliado)
+        {
+            try
+            {
+                //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
+                SqlConnection conexion = Conexion.Instance.get();
+
+                SqlCommand comando_sql = new SqlCommand("kfc.modifica_afiliado @afiliado, @nombre, @apellido, @tipo_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario", conexion);
+                var parametro0 = new SqlParameter("@afiliado", SqlDbType.Int);
+                var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
+                var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
+                var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
+                var parametro3_5 = new SqlParameter("@nro_doc", SqlDbType.Int);
+                var parametro4 = new SqlParameter("@direccion", SqlDbType.Text);
+                var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
+                var parametro6 = new SqlParameter("@mail", SqlDbType.Text);
+                var parametro7 = new SqlParameter("@sexo", SqlDbType.Char);
+                var parametro8 = new SqlParameter("@fecha_nac", SqlDbType.DateTime);
+                var parametro9 = new SqlParameter("@estado", SqlDbType.Int);
+                var parametro10 = new SqlParameter("@plan", SqlDbType.Int);
+                var parametro11 = new SqlParameter("@usuario", SqlDbType.Int);
+
+                parametro0.Value = afiliado.id;
+                parametro1.Value = afiliado.nombre.ToUpper();
+                parametro2.Value = afiliado.apellido.ToUpper();
+                parametro3.Value = afiliado.tipo_doc.ToUpper();
+                parametro3_5.Value = afiliado.nro_doc;
+                parametro4.Value = afiliado.direccion.ToUpper();
+                parametro5.Value = afiliado.telefono.ToUpper();
+                parametro6.Value = afiliado.e_mail.ToUpper();
+                parametro7.Value = afiliado.sexo;
+                parametro8.Value = afiliado.fecha_nac;
+                parametro9.Value = afiliado.estado_civil;
+                parametro10.Value = afiliado.plan_id;
+                parametro11.Value = afiliado.usuario;
+
+                comando_sql.Parameters.Add(parametro0);
+                comando_sql.Parameters.Add(parametro1);
+                comando_sql.Parameters.Add(parametro2);
+                comando_sql.Parameters.Add(parametro3);
+                comando_sql.Parameters.Add(parametro3_5);
+                comando_sql.Parameters.Add(parametro4);
+                comando_sql.Parameters.Add(parametro5);
+                comando_sql.Parameters.Add(parametro6);
+                comando_sql.Parameters.Add(parametro7);
+                comando_sql.Parameters.Add(parametro8);
+                comando_sql.Parameters.Add(parametro9);
+                comando_sql.Parameters.Add(parametro10);
+                comando_sql.Parameters.Add(parametro11);
+
+                comando_sql.ExecuteReader();
+
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
 
         /// <summary>
         /// Parametriza los datos y administra la conexion con la BD para el alta del afiliado
@@ -272,62 +353,27 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        /// Parametriza los datos y administra la conexion con la BD para la modificación del afiliado
-        /// </summary>
-        /// <param name="afiliado"></param>
-        /// <returns></returns>
-        public static void modifica_afiliado(Afiliado afiliado)
+        private static Usuario cargar_datos(int usuario_id)
         {
             try
             {
-                //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
-                SqlConnection conexion = Conexion.Instance.get();
 
-                SqlCommand comando_sql = new SqlCommand("kfc.modifica_afiliado @afiliado, @nombre, @apellido, @tipo_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario", conexion);
-                var parametro0 = new SqlParameter("@afiliado", SqlDbType.Int);
-                var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
-                var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
-                var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
-                var parametro3_5 = new SqlParameter("@nro_doc", SqlDbType.Int);
-                var parametro4 = new SqlParameter("@direccion", SqlDbType.Text);
-                var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
-                var parametro6 = new SqlParameter("@mail", SqlDbType.Text);
-                var parametro7 = new SqlParameter("@sexo", SqlDbType.Char);
-                var parametro8 = new SqlParameter("@fecha_nac", SqlDbType.DateTime);
-                var parametro9 = new SqlParameter("@estado", SqlDbType.Int);
-                var parametro10 = new SqlParameter("@plan", SqlDbType.Int);
-                var parametro11 = new SqlParameter("@usuario", SqlDbType.Int);
+                var usuario = new Usuario();
+                usuario.id = usuario_id;
 
-                parametro0.Value = afiliado.id;
-                parametro1.Value = afiliado.nombre.ToUpper();
-                parametro2.Value = afiliado.apellido.ToUpper();
-                parametro3.Value = afiliado.tipo_doc.ToUpper();
-                parametro3_5.Value = afiliado.nro_doc;
-                parametro4.Value = afiliado.direccion.ToUpper();
-                parametro5.Value = afiliado.telefono.ToUpper();
-                parametro6.Value = afiliado.e_mail.ToUpper();
-                parametro7.Value = afiliado.sexo;
-                parametro8.Value = afiliado.fecha_nac;
-                parametro9.Value = afiliado.estado_civil;
-                parametro10.Value = afiliado.plan_id;
-                parametro11.Value = afiliado.usuario;
+                string funcion = "SELECT * FROM KFC.fun_obtener_roles_usuario(@usuario_id)";
+                SqlParameter parametro = new SqlParameter("@usuario_id", SqlDbType.Int);
+                parametro.Value = usuario_id;
 
-                comando_sql.Parameters.Add(parametro0);
-                comando_sql.Parameters.Add(parametro1);
-                comando_sql.Parameters.Add(parametro2);
-                comando_sql.Parameters.Add(parametro3);
-                comando_sql.Parameters.Add(parametro3_5);
-                comando_sql.Parameters.Add(parametro4);
-                comando_sql.Parameters.Add(parametro5);
-                comando_sql.Parameters.Add(parametro6);
-                comando_sql.Parameters.Add(parametro7);
-                comando_sql.Parameters.Add(parametro8);
-                comando_sql.Parameters.Add(parametro9);
-                comando_sql.Parameters.Add(parametro10);
-                comando_sql.Parameters.Add(parametro11);
 
-                comando_sql.ExecuteReader();
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
 
+                var reader = ejecutar_funcion(funcion, parametros);
+                usuario.permisos = ObtenerStringsReader(reader, 1);
+
+                //Otros valores falta ver que hacemos con eso. No es necesario Obtenerlos de la Base.
+                return usuario;
             }
             catch (Exception e)
             {
@@ -369,88 +415,8 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        #region Bonos
-
-        public static List<string> pedir_planes_usuario(int id_usuario)
-        {
-            try
-            {
-                string funcion = "SELECT KFC.fun_obtener_planes_afiliado(@afiliado_id)";
-                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Text);
-                parametro.Value = id_usuario;
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro);
-
-                var reader = ejecutar_funcion(funcion, parametros);
-
-                List<string> planes = ObtenerStringsReader(reader, 5);
-
-                return planes;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
-
-        public static int obtener_precio_plan(int id_usuario)
-        {
-            try
-            {
-                string funcion = "SELECT KFC.fun_devolver_precio_bono(@afiliado_id)";
-                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Text);
-                parametro.Value = id_usuario;
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro);
-
-                var reader = ejecutar_funcion(funcion, parametros);
-
-                int precio = ObtenerIntReader(reader, 0);
-
-                return precio;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
-
-        public static void comprar_bono(int id_afiliado, int cantidad_bonos)
-        {
-            try
-            {
-                //Ejecuta tantas veces como Bonos Pedidos por el usuario
-                for (int i = 0; i < cantidad_bonos; i++)
-                {
-                    string procedure = "KFC.pro_comprar_bono  @afil_id";
-                    SqlParameter parametro = new SqlParameter("@afil_id", SqlDbType.Text);
-                    parametro.Value = id_afiliado;
-
-                    var parametros = new List<SqlParameter>();
-                    parametros.Add(parametro);
-
-                    var reader = ejecutar_storedProcedure(procedure, parametros);
-
-                    //Veo si trajo datos o no
-                    if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Asignar el Turno. Fallo Ejecucion Procedure");
-                }
-
-                return;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
-
+        
+        
         public static Afiliado get_afiliado(int afiliado_id)
         {
             try
@@ -504,7 +470,6 @@ namespace ClinicaFrba.Base_de_Datos
 
         }
 
-        #endregion
 
         #region Turnos
 
@@ -512,214 +477,43 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
-                string funcion = "SELECT KFC.fun_obtener_especialidades()";
+                string funcion = "SELECT * FROM KFC.fun_obtener_especialidades()";
                 var parametros = new List<SqlParameter>();
 
-                var reader = ejecutar_funcion(funcion, parametros);
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
-                List<string> especialidades = ObtenerStringsReader(reader, 1);
+                List<string> especialidades = InteraccionDB.ObtenerStringsReader(reader, 1);
 
                 return especialidades;
             }
             catch (Exception e)
             {
-                ImprimirExcepcion(e);
+                InteraccionDB.ImprimirExcepcion(e);
 
                 throw e;
             }
         }
 
-
-        /// <summary>
-        /// Ojo devuelve Lista de Apellido Con Nombre Profesional
-        /// </summary>
-        /// <param name="descripcionEspecialidad"></param>
-        /// <returns></returns>
-        public static List<string> obtener_todos_profesionales_para_especialid(string descripcionEspecialidad)
+        public static List<string> pedir_planes_usuario(int id_usuario)
         {
             try
             {
-                string funcion = "SELECT KFC.fun_obtener_profesionales_por_especialidad(@desc_esp)";
-                SqlParameter parametro = new SqlParameter("@desc_esp", SqlDbType.Text);
-                parametro.Value = descripcionEspecialidad;
+                string funcion = "SELECT * FROM  KFC.fun_obtener_planes_afiliado(@afiliado_id)";
+                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Text);
+                parametro.Value = id_usuario;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro);
 
-                var reader = ejecutar_funcion(funcion, parametros);
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
-                List<string> profesionales = ObtenerStringsReader(reader, 1);
+                List<string> planes = InteraccionDB.ObtenerStringsReader(reader, 5);
 
-                return profesionales;
+                return planes;
             }
             catch (Exception e)
             {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
-
-        public static List<string> obtener_turnos_disponibles(string apellidoConNombre, DateTime fecha)
-        {
-            try
-            {
-                //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
-                string nombre = apellidoConNombre.Split('/')[0];
-                string apellido = apellidoConNombre.Split('/')[1]; ;
-
-
-
-                string funcion = "SELECT KFC.fun_obtener_turnos_profesional(@prof_nombre, @prof_apellido, @fecha)";
-                SqlParameter parametro1 = new SqlParameter("@prof_nombre", SqlDbType.Text);
-                parametro1.Value = nombre;
-                SqlParameter parametro2 = new SqlParameter("@prof_apellido", SqlDbType.Text);
-                parametro2.Value = apellido;
-                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.Text);
-                parametro3.Value = fecha;
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro1);
-                parametros.Add(parametro2);
-                parametros.Add(parametro3);
-
-                var reader = ejecutar_funcion(funcion, parametros);
-
-                List<string> especialidades = ObtenerStringsReader(reader, 0);
-
-                return especialidades;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
-
-        /// <summary>
-        /// Devuelve Excepcion si falla, Caso contrario se ejecuto correctamente
-        /// </summary>
-        /// <param name="apellidoConNombre"></param>
-        /// <param name="fecha"></param>
-        /// <param name="descripcionEspecialidad"></param>
-        /// <param name="id_afiliado"></param>
-        public static void asignar_turno(string apellidoConNombre, DateTime fecha, string horario, string descripcionEspecialidad, int id_afiliado)
-        {
-            try
-            {
-                //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
-                string nombre = apellidoConNombre.Split('/')[0];
-                string apellido = apellidoConNombre.Split('/')[1]; ;
-
-                string procedure = "KFC.pro_asignar_turno @fecha, @hora, @afil_id, @espe_desc, @prof_nombre, @prof_apellido ";
-                SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Text);
-                parametro1.Value = fecha;
-                SqlParameter parametro2 = new SqlParameter("@hora", SqlDbType.Text);
-                parametro2.Value = horario;
-                SqlParameter parametro3 = new SqlParameter("@espe_desc", SqlDbType.Text);
-                parametro3.Value = descripcionEspecialidad;
-                SqlParameter parametro4 = new SqlParameter("@prof_nombre", SqlDbType.Text);
-                parametro4.Value = nombre;
-                SqlParameter parametro5 = new SqlParameter("@prof_apellido", SqlDbType.Text);
-                parametro5.Value = apellido;
-                SqlParameter parametro6 = new SqlParameter("@afil_id", SqlDbType.Text);
-                parametro6.Value = id_afiliado;
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro1);
-                parametros.Add(parametro2);
-                parametros.Add(parametro3);
-                parametros.Add(parametro4);
-                parametros.Add(parametro5);
-                parametros.Add(parametro6);
-
-                var reader = ejecutar_storedProcedure(procedure, parametros);
-
-                //Veo si trajo datos o no
-                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Asignar el Turno. Fallo Ejecucion Procedure");
-
-                return;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
-
-
-
-        #endregion
-
-
-        #region Roles
-
-        public static void crear_rol(string nombre_rol, List<String> funcionalidades_descripcion)
-        {
-            try
-            {
-                string procedure = "KFC.pro_crear_rol @descripcion, @id OUTPUT ";
-                SqlParameter parametro1 = new SqlParameter("@descripcion", SqlDbType.Text);
-                parametro1.Value = nombre_rol;
-                SqlParameter parametroOutput = new SqlParameter("@id", SqlDbType.Text);
-                parametroOutput.DbType = DbType.Int32;
-                parametroOutput.Direction = ParameterDirection.Output;
-
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro1);
-                parametros.Add(parametroOutput);
-
-                SqlCommand procedureEjecutado = ejecutar_storedProcedureConRetorno(procedure, parametros);
-
-                int id_rol_creado = 0;
-                id_rol_creado = Convert.ToInt32(procedureEjecutado.Parameters["@id"].Value);
-                if (id_rol_creado <= 0) throw new Exception("No se creo el Rol, trajo ID invalido. Fallo Ejecucion Procedure");
-
-                //Inserto Cada Funcionalidad
-                foreach (var funcionalidad in funcionalidades_descripcion)
-                {
-                    insertar_funcionalidad(id_rol_creado, funcionalidad);
-                }
-
-                return;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
-
-        public static void insertar_funcionalidad(int id_rol, string descripcion_funcionalidad)
-        {
-            try
-            {
-                string procedure = "KFC.pro_crear_funcionalidad_de_rol @func_desc, @rol_id ";
-                SqlParameter parametro1 = new SqlParameter("@func_desc", SqlDbType.Text);
-                SqlParameter parametro2 = new SqlParameter("@rol_id", SqlDbType.Text);
-
-                parametro1.Value = descripcion_funcionalidad;
-                parametro2.Value = id_rol;
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro1);
-                parametros.Add(parametro2);
-
-
-                var reader = ejecutar_storedProcedure(procedure, parametros);
-
-                //Veo si trajo datos o no
-                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo asignar la Funcionalidad al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
-
-                return;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
+                InteraccionDB.ImprimirExcepcion(e);
 
                 throw e;
             }
@@ -728,13 +522,13 @@ namespace ClinicaFrba.Base_de_Datos
         #endregion
 
         #region llegada
-        public static bool registrar_llegada(int id_afiliado , int id_turno, int id_bono)
+        public static bool registrar_llegada(int id_afiliado, int id_turno, int id_bono)
         {
             try
             {
-                
+
                 string sql = "kfc.registrar_llegada @id_afiliado , @id_turno, @id_bono, @fecha";
-                
+
                 SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Time);
                 parametro1.Value = DateTime.Now.TimeOfDay;
                 SqlParameter parametro2 = new SqlParameter("@id_turno", SqlDbType.Int);
@@ -820,7 +614,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 SqlConnection conexion = Conexion.Instance.get();
 
-                string sql = "kfc.get_cmb_planes_sociales";
+                string sql = "select * from kfc.fun_obtener_todos_los_planes";
 
                 SqlCommand cmd = new SqlCommand(sql, conexion);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -868,6 +662,7 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
+
 
         /// <summary>
         /// Obtiene las especialidades para atencion 

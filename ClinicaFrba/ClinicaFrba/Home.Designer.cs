@@ -57,6 +57,10 @@
             this.textBox_usuario = new System.Windows.Forms.TextBox();
             this.textBox_password = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.boton_loguear = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBox_rol = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -85,14 +89,14 @@
             // logInToolStripMenuItem
             // 
             this.logInToolStripMenuItem.Name = "logInToolStripMenuItem";
-            this.logInToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.logInToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.logInToolStripMenuItem.Text = "&Log In";
             this.logInToolStripMenuItem.Click += new System.EventHandler(this.logInToolStripMenuItem_Click);
             // 
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.salirToolStripMenuItem.Text = "&Salir";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -277,6 +281,7 @@
             this.textBox_usuario.Name = "textBox_usuario";
             this.textBox_usuario.Size = new System.Drawing.Size(213, 20);
             this.textBox_usuario.TabIndex = 3;
+            this.textBox_usuario.Text = "ADMIN";
             // 
             // textBox_password
             // 
@@ -284,6 +289,7 @@
             this.textBox_password.Name = "textBox_password";
             this.textBox_password.Size = new System.Drawing.Size(213, 20);
             this.textBox_password.TabIndex = 4;
+            this.textBox_password.Text = "W23E";
             // 
             // label3
             // 
@@ -295,11 +301,52 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Bienvenido a Clinica FRBA";
             // 
+            // boton_loguear
+            // 
+            this.boton_loguear.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.boton_loguear.Location = new System.Drawing.Point(442, 121);
+            this.boton_loguear.Name = "boton_loguear";
+            this.boton_loguear.Size = new System.Drawing.Size(109, 74);
+            this.boton_loguear.TabIndex = 7;
+            this.boton_loguear.Text = "Loguear";
+            this.boton_loguear.UseVisualStyleBackColor = true;
+            this.boton_loguear.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(146, 218);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Rol a Usar";
+            // 
+            // textBox_rol
+            // 
+            this.textBox_rol.Location = new System.Drawing.Point(209, 218);
+            this.textBox_rol.Name = "textBox_rol";
+            this.textBox_rol.Size = new System.Drawing.Size(213, 20);
+            this.textBox_rol.TabIndex = 5;
+            this.textBox_rol.Text = "ADMINISTRATIVO";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(242, 251);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(166, 13);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "TODO cambiar roles a ComboBox";
+            // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(563, 294);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.textBox_rol);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.boton_loguear);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox_password);
             this.Controls.Add(this.textBox_usuario);
@@ -348,6 +395,10 @@
         private System.Windows.Forms.ToolStripMenuItem registrarLlegadaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem registrarResultadoDiagnosticoToolStripMenuItem;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button boton_loguear;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBox_rol;
+        private System.Windows.Forms.Label label5;
     }
 }
 

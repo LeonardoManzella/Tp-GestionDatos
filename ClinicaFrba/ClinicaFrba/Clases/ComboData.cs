@@ -65,5 +65,20 @@ namespace ClinicaFrba.Clases
             var data = (ComboData)combo.Items[combo.SelectedIndex];
             return data.descripcion;
         }
+
+
+        public static void llenarCombo(ComboBox combo, List<String> lista)
+        {
+            combo.DisplayMember     = "descripcion";
+            combo.ValueMember       = "identificador";
+
+
+            int contador_items = 1;
+            foreach (var item in lista)
+            {
+                combo.Items.Add(new ComboData(contador_items, item));
+                contador_items++;
+            }
+        }
     }
 }

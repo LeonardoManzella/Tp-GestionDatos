@@ -28,7 +28,13 @@ namespace ClinicaFrba.Compra_Bono
 
         private void CompraBono_Load(object sender, EventArgs e)
         {
-            //TODO dividir por funcionalidad, si es admin muestra todo, si es Usuario debe ocultar elementos de ADMIN
+            try {
+                //TODO dividir por funcionalidad, si es admin muestra todo, si es Usuario debe ocultar elementos de ADMIN
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

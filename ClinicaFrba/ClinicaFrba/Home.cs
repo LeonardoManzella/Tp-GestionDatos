@@ -11,6 +11,7 @@ namespace ClinicaFrba
     {
         public string user;
         public string password;
+        public string rol_descripcion;
         public Usuario usuario;
 
         public void asegurarConeccion()
@@ -24,16 +25,28 @@ namespace ClinicaFrba
 
         private void DeshabilitarComponentes()
         {
-            /*
-           this.afiliadoToolStripMenuItem.Enabled = false;
+            this.afiliadoToolStripMenuItem.Enabled = false;
             this.profesionalesToolStripMenuItem.Enabled = false;
-            this.turnosToolStripMenuItem.Enabled = false;
             this.adminToolStripMenuItem.Enabled = false;
-            */
+
         }
+        private void habilitar_componentes()
+        {
+            if (usuario.permisos.Contains("AFILIADO")) this.afiliadoToolStripMenuItem.Enabled = true;
+            if (usuario.permisos.Contains("PROFESIONAL")) this.profesionalesToolStripMenuItem.Enabled = true;
+            if (usuario.permisos.Contains("ADMINISTRATIVO"))
+            {
+                this.afiliadoToolStripMenuItem.Enabled      = true;
+                this.profesionalesToolStripMenuItem.Enabled = true;
+                this.adminToolStripMenuItem.Enabled         = true;
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            DeshabilitarComponentes();
+            //TODO restablecer
+            //DeshabilitarComponentes();
+            this.AcceptButton = boton_loguear;
         }
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -46,18 +59,26 @@ namespace ClinicaFrba
         /// </summary>
         private void logInToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            loguear();
+        }
+
+        private void loguear()
+        {
             try
             {
-                this.user = textBox_usuario.Text.Trim();
-                this.password = textBox_password.Text.Trim();
+                this.user               = textBox_usuario.Text.Trim();
+                this.password           = textBox_password.Text.Trim();
+                this.rol_descripcion    = textBox_rol.Text.Trim();
 
-                this.usuario = Negocio.Log_In.Ingresar_App(this.user, this.password);
+                this.usuario = Negocio.Log_In.Ingresar_App(this.user, this.password, this.rol_descripcion);
 
                 MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                habilitar_componentes();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"Log_In", MessageBoxButtons.OK ,MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -144,6 +165,11 @@ namespace ClinicaFrba
         private void registrarResultadoDiagnosticoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new AtencionesMedicas.RegistrarResultado().ShowDialog();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            loguear();
         }
     }
 }

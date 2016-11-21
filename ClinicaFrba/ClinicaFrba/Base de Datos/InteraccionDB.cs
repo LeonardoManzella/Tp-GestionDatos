@@ -614,7 +614,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 SqlConnection conexion = Conexion.Instance.get();
 
-                string sql = "select * from kfc.fun_obtener_todos_los_planes";
+                string sql = "kfc.get_cmb_planes_sociales";
 
                 SqlCommand cmd = new SqlCommand(sql, conexion);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);

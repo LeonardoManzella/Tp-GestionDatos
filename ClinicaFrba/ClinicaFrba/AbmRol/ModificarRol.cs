@@ -32,6 +32,8 @@ namespace ClinicaFrba.AbmRol
                 nombreRol = null;
                 funcionalidades_del_rol = new List<string>();
                 funcionalidades_posibles = InteraccionDB.obtener_todas_funcionalidades();
+
+                resetear_botones();
             }
             catch (Exception ex)
             {
@@ -43,6 +45,9 @@ namespace ClinicaFrba.AbmRol
         {
             try
             {
+                resetear_botones();
+
+
                 this.nombreRol = textBox_nombreRol.Text.Trim();
                 if (String.IsNullOrEmpty(nombreRol)) throw new Exception("Nombre Vacio");
 
@@ -62,6 +67,8 @@ namespace ClinicaFrba.AbmRol
                     checkedListBox_Funcionalidades.Items.Add(func, false);
                 }
 
+                this.checkBox_rolHabilitado.Checked = BD_Roles.obtener_estado_habilitado_rol(id_rol);
+
                 this.label3.Text = id_rol.ToString();
                 this.checkedListBox_Funcionalidades.Enabled = true;
                 this.checkBox_rolHabilitado.Enabled         = true;
@@ -69,9 +76,18 @@ namespace ClinicaFrba.AbmRol
             }
             catch (Exception ex)
             {
-                this.label3.Text = "";
+                resetear_botones();
                 MessageBox.Show(ex.Message, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void resetear_botones()
+        {
+            this.checkedListBox_Funcionalidades.Items.Clear();
+            this.label3.Text = "";
+            this.checkedListBox_Funcionalidades.Enabled = false;
+            this.checkBox_rolHabilitado.Enabled = false;
+            this.button_modificarRol.Enabled = false;
         }
 
         private List<string> funcionalidadesSinSeleccionar()
@@ -101,13 +117,53 @@ namespace ClinicaFrba.AbmRol
                 {
                     string fun = Convert.ToString(item);
                     funcionalidades_elegidas.Add(fun);
-                    //MessageBox.Show(fun, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
+                    //MessageBox.Show(fun, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
                 }
+
+                var funcs_por_agregar = funcionalidades_por_agregar(funcionalidades_elegidas);
+                foreach (string func in funcs_por_agregar)
+                {
+                    BD_Roles.insertar_funcionalidad(id_rol,func);
+                }
+
+                var funcs_por_quitar = funcionalidades_por_quitar(funcionalidades_elegidas);
+                foreach (string func in funcs_por_quitar)
+                {
+                    BD_Roles.quitar_funcionalidad(id_rol, func);
+                }
+
+
+                bool estado = this.checkBox_rolHabilitado.Checked;
+                BD_Roles.setear_habilitacion(id_rol,estado);
+
+                MessageBox.Show("Rol Modificado con Exito", "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private List<string> funcionalidades_por_agregar(List<string> funcionalidades_elegidas)
+        {
+            //Busco las que no estaban antes que fueron seleccionadas ahora, ahora hay que agregarlas
+            return funcionalidades_elegidas.FindAll(f => !this.funcionalidades_del_rol.Contains(f) );
+        }
+
+        private List<string> funcionalidades_por_quitar(List<string> funcionalidades_elegidas)
+        {
+            //Busco las que estaban antes que no fueron seleccionadas ahora, ahora hay que quitarlas
+            return this.funcionalidades_del_rol.FindAll(f => !funcionalidades_elegidas.Contains(f));
+        }
+
+        private void button_cancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void button_eliminar_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

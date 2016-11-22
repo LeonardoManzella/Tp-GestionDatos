@@ -144,7 +144,33 @@ namespace ClinicaFrba.Base_de_Datos
                 break;  //Unico Valor a Obtener
 
             }
-            if (valorObtener <= 0) throw new Exception("Hubo un Problema al Obtener Dato");
+            if (valorObtener <= 0) throw new Exception("Hubo un Problema al Obtener Dato Int");
+            return valorObtener;
+        }
+
+        // <summary>
+        /// Obtenemos Bool del Reader. La 'columnaPorObtener' empieza 0 para la primer columna y asi..
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="columnaPorObtener"></param>
+        /// <returns></returns>
+        public static bool ObtenerBoolReader(SqlDataReader reader, int columnaPorObtener)
+        {
+            //Veo si trajo datos o no
+            if (!reader.HasRows) throw new Exception("Reader sin Filas");
+
+            bool valorObtener = false;
+            bool flag_leyo_algo = false;
+
+            //Obtengo Multiples datos
+            while (reader.Read())
+            {
+                valorObtener = reader.GetBoolean(columnaPorObtener);
+                flag_leyo_algo = true;
+                break;  //Unico Valor a Obtener
+
+            }
+            if (flag_leyo_algo==false) throw new Exception("Hubo un Problema al Obtener Dato Booleano");
             return valorObtener;
         }
 

@@ -246,8 +246,15 @@ IF OBJECT_ID('KFC.fun_retornar_id_rol') IS NOT NULL
 DROP FUNCTION KFC.fun_retornar_id_rol;
 GO
 
+IF OBJECT_ID('KFC.fun_obtener_habilitacion_rol') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_habilitacion_rol;
+GO
+
 IF OBJECT_ID('KFC.get_afiliado') IS NOT NULL
 DROP PROCEDURE KFC.get_afiliado;
 GO
 
+IF OBJECT_ID('KFC.pro_setear_rol_estado_habilitacion') IS NOT NULL
+DROP PROCEDURE KFC.pro_setear_rol_estado_habilitacion;
+GO
 

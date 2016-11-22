@@ -36,12 +36,13 @@
             this.checkedListBox_Funcionalidades = new System.Windows.Forms.CheckedListBox();
             this.button_modificarRol = new System.Windows.Forms.Button();
             this.checkBox_rolHabilitado = new System.Windows.Forms.CheckBox();
+            this.button_cancelar = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(25, 151);
+            this.label1.Location = new System.Drawing.Point(11, 115);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(203, 13);
             this.label1.TabIndex = 0;
@@ -67,7 +68,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(399, 37);
+            this.label3.Location = new System.Drawing.Point(399, 18);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(127, 18);
             this.label3.TabIndex = 3;
@@ -97,7 +98,7 @@
             // 
             this.button_modificarRol.Enabled = false;
             this.button_modificarRol.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_modificarRol.Location = new System.Drawing.Point(390, 121);
+            this.button_modificarRol.Location = new System.Drawing.Point(390, 75);
             this.button_modificarRol.Name = "button_modificarRol";
             this.button_modificarRol.Size = new System.Drawing.Size(136, 66);
             this.button_modificarRol.TabIndex = 6;
@@ -109,18 +110,29 @@
             // 
             this.checkBox_rolHabilitado.AutoSize = true;
             this.checkBox_rolHabilitado.Enabled = false;
-            this.checkBox_rolHabilitado.Location = new System.Drawing.Point(402, 82);
+            this.checkBox_rolHabilitado.Location = new System.Drawing.Point(402, 52);
             this.checkBox_rolHabilitado.Name = "checkBox_rolHabilitado";
             this.checkBox_rolHabilitado.Size = new System.Drawing.Size(85, 17);
             this.checkBox_rolHabilitado.TabIndex = 7;
             this.checkBox_rolHabilitado.Text = "¿Habilitado?";
             this.checkBox_rolHabilitado.UseVisualStyleBackColor = true;
             // 
+            // button_cancelar
+            // 
+            this.button_cancelar.Location = new System.Drawing.Point(402, 167);
+            this.button_cancelar.Name = "button_cancelar";
+            this.button_cancelar.Size = new System.Drawing.Size(108, 36);
+            this.button_cancelar.TabIndex = 8;
+            this.button_cancelar.Text = "Cancelar";
+            this.button_cancelar.UseVisualStyleBackColor = true;
+            this.button_cancelar.Click += new System.EventHandler(this.button_cancelar_Click);
+            // 
             // ModificarRol
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(551, 215);
+            this.ClientSize = new System.Drawing.Size(525, 221);
+            this.Controls.Add(this.button_cancelar);
             this.Controls.Add(this.checkBox_rolHabilitado);
             this.Controls.Add(this.button_modificarRol);
             this.Controls.Add(this.checkedListBox_Funcionalidades);
@@ -147,5 +159,6 @@
         private System.Windows.Forms.CheckedListBox checkedListBox_Funcionalidades;
         private System.Windows.Forms.Button button_modificarRol;
         private System.Windows.Forms.CheckBox checkBox_rolHabilitado;
+        private System.Windows.Forms.Button button_cancelar;
     }
 }

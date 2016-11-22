@@ -85,6 +85,7 @@ BEGIN
 END;
 GO
 
+
 ------------------HABILITAR_ROL------------------
 --Proposito: Habilitar un rol, para que sea útil en el sistema
 --
@@ -321,11 +322,7 @@ SELECT
           esp.espe_id
         , esp.descripcion
 FROM
-          kfc.especialidades_profesional ep
-          INNER JOIN
-                    kfc.especialidades esp
-          ON
-                    ep.espe_id= esp.espe_id
+          kfc.especialidades esp
 ;
 
 GO
@@ -357,16 +354,14 @@ GO
 
 
 ------------------ELIMINAR_ROL_USUARIO------------------
---Proposito: Quitarle un rol a un determinado usuario
+--Proposito: Quitar rol inhabilitados a los usuarios
 --
---Ingreso: un identificador de usuario
+--Ingreso: un identificador de rol inhabilitado
 --
 --Egreso: -
 ------------------ELIMINAR_ROL_USUARIO------------------
 CREATE PROCEDURE kfc.pro_eliminar_rol_usuario
           @rol_id INT
-          ,
-          @usu_id INT
 AS
 BEGIN
 	BEGIN TRY
@@ -376,9 +371,41 @@ BEGIN
 						kfc.roles_usuarios
 			WHERE
 						rol_id    = @rol_id
-						AND us_id = @usu_id
+						--Estado este Deshabilitado
+						AND 0 = 
+								(
+								SELECT TOP 1	r.habilitado
+								FROM	KFC.roles r
+								WHERE	r.rol_id = @rol_id
+								)
 			;
 		COMMIT
+	END TRY
+	BEGIN CATCH
+			IF @@trancount > 0
+			ROLLBACK TRANSACTION;
+			;THROW
+	END CATCH
+END;
+GO
+
+
+CREATE PROCEDURE kfc.pro_setear_rol_estado_habilitacion
+          @rol_id INT,
+		  @estado INT
+AS
+BEGIN
+	BEGIN TRY
+			IF (@estado!=0 AND @estado!=1)
+				RAISERROR('Estado Invalido para Setear Estado Habilitacion Rol',16,1);
+
+			BEGIN TRANSACTION
+			UPDATE kfc.roles SET habilitado = @estado WHERE rol_id = @rol_id;
+            --Si yo Queria Deshabilitar, quito Rol a los Usuarios (lo pide el enunciado)
+			IF (@estado=0)
+				EXECUTE kfc.pro_eliminar_rol_usuario @rol_id;
+			       
+			COMMIT;
 	END TRY
 	BEGIN CATCH
 			IF @@trancount > 0
@@ -818,6 +845,20 @@ WHERE
 ;
 GO
 
+CREATE FUNCTION kfc.fun_obtener_habilitacion_rol( @id_rol INT)
+returns BIT AS
+BEGIN
+			DECLARE @rol_habilit BIT;
+			SET @rol_habilit = 0;
+
+			SELECT	@rol_habilit = r.habilitado
+			FROM	KFC.roles r
+			WHERE	r.rol_id = @id_rol
+          
+          RETURN @rol_habilit;
+END;
+GO
+
 
 --Funcionalidad ABM ROLES. Asigna una 'Funcionalidad' a un rol
 CREATE PROCEDURE KFC.pro_crear_funcionalidad_de_rol(@func_desc VARCHAR(60) , @rol_id INT)
@@ -943,26 +984,30 @@ AS
     END;
 GO
 
-
 ------------------OBTENER_TURNOS_PROFESIONAL------------------
 --Proposito: Consultar los horarios disponibles para un profesional en un determinado dia (horarios dentro de rango definido para ese dia y que no estan ocupados)
 --
 --Ingreso: id del profesional a consultar horarios y la fecha (formato Año-Mes-Dia) del dia donde quiere ver que horarios hay disponibles 
 --Egreso:	Una Tabla de unica columna Horarios disponibles (formato Varchar) (multiples filas cada una con un horario disponible). Necesito que sera Varchar para evitar problemas de conversion contra la aplicacion
 ------------------OBTENER_TURNOS_PROFESIONAL------------------
-CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @fecha DATE)
+--CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @fecha_text VARCHAR(60) )
+
+CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @fecha DATE )
 returns @retorno TABLE (horario_disponible VARCHAR(60)) AS
 --Uso la Variable "@retorno" tipo Tabla para generar los Horarios Disponibles en base al Rango de Horarios Posibles
 BEGIN
 	DECLARE @hora_desde TIME
 	DECLARE	@hora_hasta	TIME
+	--DECLARE	@fecha DATE
+	--SET @fecha = CONVERT(DATE,@fecha_text,102)
 	
 	--Me traigo el Rango de Horarios Posibles
 	SELECT @hora_desde = hora_desde, @hora_hasta = hora_hasta
 	FROM	KFC.agenda
 	WHERE	DATEPART(WEEKDAY, @fecha) = dia
 	--Convierto para que solo compare por Año-Mes-Dia
-	AND		CONVERT(DATE,fecha_desde) >= @fecha
+	AND		CONVERT(DATE,fecha_desde) <= @fecha
+	AND		CONVERT(DATE,fecha_hasta) >= @fecha
 	AND		prof_id = kfc.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
 	
 
@@ -1010,7 +1055,7 @@ AS
 				DECLARE @espe_id INT;
 				DECLARE @prof_id INT;
 
-				SET @horaConvertida = CONVERT(TIME(0),@hora);
+				SET @horaConvertida = CONVERT(TIME(0),@hora, 108);
 				SET @espe_id = KFC.fun_obtener_id_especialidad(@espe_desc);
 				SET @prof_id = KFC.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
 

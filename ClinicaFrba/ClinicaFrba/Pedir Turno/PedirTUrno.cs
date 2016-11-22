@@ -44,6 +44,8 @@ namespace ClinicaFrba.Pedir_Turno
             try
             {
                 comboProfesionales.Enabled = true;
+                comboProfesionales.Items.Clear();
+
                 descripcion_especialidad = ComboData.obtener_descripcion(comboEspecialidades);
                 var lista = BD_Turnos.obtener_todos_profesionales_para_especialid(descripcion_especialidad);
 
@@ -51,6 +53,7 @@ namespace ClinicaFrba.Pedir_Turno
             }
             catch (Exception ex)
             {
+                comboProfesionales.Items.Clear();
                 MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -77,11 +80,13 @@ namespace ClinicaFrba.Pedir_Turno
                     return;
                 }
                 comboHorarios.Enabled = true;
+                comboHorarios.Items.Clear();
 
                 ComboData.llenarCombo(comboHorarios, lista);
             }
             catch (Exception ex)
             {
+                comboHorarios.Items.Clear();
                 MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -97,6 +102,7 @@ namespace ClinicaFrba.Pedir_Turno
             try
             {
                 BD_Turnos.asignar_turno(apellido_nombre_profesional, fecha, horario, descripcion_especialidad, usuario.id);
+                MessageBox.Show("Turno Asignado", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

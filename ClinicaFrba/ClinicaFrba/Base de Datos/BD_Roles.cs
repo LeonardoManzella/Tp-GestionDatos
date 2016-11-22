@@ -70,10 +70,10 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
-                //Veo si trajo datos o no
+                //Veo si trajo datos o no. No se porque siempre devuelve -1
                 if (reader.RecordsAffected != -1) throw new Exception("No se pudo asignar la Funcionalidad al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
 
-                MessageBox.Show("Insertada funcionalidad: " + descripcion_funcionalidad, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
+                MessageBox.Show("Insertada funcionalidad: " + descripcion_funcionalidad, "Crear o Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
 
                 return;
             }
@@ -84,6 +84,78 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
+
+        public static void quitar_funcionalidad(int id_rol, string descripcion_funcionalidad)
+        {
+            try
+            {
+                string procedure = "KFC.pro_quitar_funcionalidad_de_rol";
+                SqlParameter parametro1 = new SqlParameter("@func_desc", SqlDbType.Text);
+                SqlParameter parametro2 = new SqlParameter("@rol_id", SqlDbType.Int);
+
+                parametro1.Value = descripcion_funcionalidad;
+                parametro2.Value = id_rol;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+
+
+                var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
+
+                //Veo si trajo datos o no. No se porque siempre devuelve -1
+                if (reader.RecordsAffected != -1) throw new Exception("No se pudo quitar la Funcionalidad al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
+
+                MessageBox.Show("Quitada funcionalidad: " + descripcion_funcionalidad, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
+
+                return;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+
+        public static void setear_habilitacion(int id_rol, bool estado)
+        {
+            try
+            {
+                string procedure = "KFC.pro_setear_rol_estado_habilitacion";
+                SqlParameter parametro1 = new SqlParameter("@estado", SqlDbType.Int);
+                SqlParameter parametro2 = new SqlParameter("@rol_id", SqlDbType.Int);
+
+                //Por ser Bit en SQL Server 1 significa true, 0 significa false
+                if (estado == true)
+                    parametro1.Value = 1;
+                else
+                    parametro1.Value = 0;
+                parametro2.Value = id_rol;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+
+
+                var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
+
+                //Veo si trajo datos o no
+                if (reader.RecordsAffected != 1) throw new Exception("No se pudo modificar Estado al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
+
+                MessageBox.Show("Modificado Estado Habilitacion de Rol a: " + estado, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
+
+                return;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
 
         public static List<string> obtener_funcionalidades_rol(int id_rol)
         {
@@ -121,17 +193,53 @@ namespace ClinicaFrba.Base_de_Datos
                 parametros.Add(parametro);
 
                 int id = -1;
-                try {
+                try
+                {
                     var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
                     id = InteraccionDB.ObtenerIntReader(reader, 0);
                 }
-                catch
+                catch (Exception e)
                 {
-                    throw new Exception("No existe el Rol");
+                    InteraccionDB.ImprimirExcepcion(e);
+                    throw new Exception("No existe el Rol. Error: " + e.Message);
                 }
 
                 return id;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        public static bool obtener_estado_habilitado_rol(int id_rol)
+        {
+            try
+            {
+                string funcion = "SELECT KFC.fun_obtener_habilitacion_rol(@id_rol)";
+                SqlParameter parametro = new SqlParameter("@id_rol", SqlDbType.Int);
+                parametro.Value = id_rol;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
+
+                bool estado_habilitacion;
+                try
+                {
+                    var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+
+                    estado_habilitacion = InteraccionDB.ObtenerBoolReader(reader, 0);
+                }
+                catch (Exception e)
+                {
+                    InteraccionDB.ImprimirExcepcion(e);
+                    throw new Exception("No pudo Obtenerse Estado habilitacion del Rol. Error: " + e.Message);
+                }
+
+                return estado_habilitacion;
             }
             catch (Exception e)
             {

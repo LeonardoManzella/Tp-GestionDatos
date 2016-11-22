@@ -49,8 +49,8 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
                 //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
-                string nombre = apellidoConNombre.Split(',')[0];
-                string apellido = apellidoConNombre.Split(',')[1];
+                string apellido = apellidoConNombre.Split(',')[0];
+                string nombre = apellidoConNombre.Split(',')[1];
 
 
 
@@ -59,8 +59,12 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro1.Value = nombre;
                 SqlParameter parametro2 = new SqlParameter("@prof_apellido", SqlDbType.Text);
                 parametro2.Value = apellido;
-                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.Date);
+                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.DateTime);
                 parametro3.Value = fecha;
+                /*
+                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.Text);
+                parametro3.Value = "2016.01.01";
+                */
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
@@ -93,11 +97,11 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
                 //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
-                string nombre = apellidoConNombre.Split(',')[0];
-                string apellido = apellidoConNombre.Split(',')[1];
+                string apellido = apellidoConNombre.Split(',')[0];
+                string nombre = apellidoConNombre.Split(',')[1];
 
-                string procedure = "KFC.pro_asignar_turno @fecha, @hora, @afil_id, @espe_desc, @prof_nombre, @prof_apellido ";
-                SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Text);
+                string procedure = "KFC.pro_asignar_turno";
+                SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Date);
                 parametro1.Value = fecha;
                 SqlParameter parametro2 = new SqlParameter("@hora", SqlDbType.Text);
                 parametro2.Value = horario;
@@ -107,7 +111,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro4.Value = nombre;
                 SqlParameter parametro5 = new SqlParameter("@prof_apellido", SqlDbType.Text);
                 parametro5.Value = apellido;
-                SqlParameter parametro6 = new SqlParameter("@afil_id", SqlDbType.Text);
+                SqlParameter parametro6 = new SqlParameter("@afil_id", SqlDbType.Int);
                 parametro6.Value = id_afiliado;
 
                 var parametros = new List<SqlParameter>();

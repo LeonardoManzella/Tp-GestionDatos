@@ -342,7 +342,33 @@ GROUP BY
           Especialidad_Codigo
         , p.prof_id
         , DATEPART(WEEKDAY, m.Turno_Fecha)
- 
+
+--Dato Extra Nuestro para Pruebas
+INSERT INTO KFC.agenda
+          (
+                    espe_id
+                  , prof_id
+                  , dia
+                  , fecha_desde
+                  , fecha_hasta
+                  , hora_desde
+                  , hora_hasta
+          )
+SELECT DISTINCT 
+		  e.espe_id
+        , p.prof_id
+        , DATEPART(WEEKDAY,  CONVERT( DATETIME, '2016.01.01', 102) )       AS dia_semana
+        , CONVERT( DATETIME, '2016.01.01', 102)                   AS fecha_desde
+        , CONVERT( DATETIME, '2016.01.30', 102)                   AS fecha_hasta
+        , CONVERT(TIME(0), '10:00:00', 108) AS hora_desde
+        , CONVERT(TIME(0), '12:00:00', 108) AS hora_hasta
+FROM
+          KFC.especialidades	e
+        , KFC.profesionales     p
+WHERE
+          UPPER('ALERGOLOGÍA')	= UPPER(e.descripcion)
+          AND	UPPER('LARA')		=  UPPER(p.nombre)
+          AND	UPPER('GIMÉNEZ')		=  UPPER(p.apellido)
 
 
 

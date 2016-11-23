@@ -1,3 +1,5 @@
+PRINT 'POBLANDO TABLAS...'
+
 DECLARE @true BIT
 SET @true = 1
 
@@ -32,6 +34,7 @@ INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('ADMINISTRATIVO', @true)
 
 -- Insercion Funcionalidades por Roles
 --TODO!
+
 
 -- Insercion Usuarios del Enunciado
 INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('ADMIN', HASHBYTES('SHA2_256','W23E'), @true)
@@ -470,3 +473,4 @@ WHERE
 ORDER BY
           Turno_Numero
  
+ PRINT 'TABLAS POBLADAS'

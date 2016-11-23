@@ -66,6 +66,7 @@ IF OBJECT_ID('KFC.registrar_llegada_atencion') IS NOT NULL
 DROP PROCEDURE KFC.registrar_llegada_atencion;
 */
 
+PRINT 'Borrando Procedures...'
 
 IF OBJECT_ID('KFC.pro_deshabilitar_rol_usuarios') IS NOT NULL
 DROP PROCEDURE KFC.pro_deshabilitar_rol_usuarios;
@@ -149,7 +150,7 @@ DROP PROCEDURE KFC.get_cmb_prof_x_esp;
 GO
 
 IF OBJECT_ID('KFC.get_especialidades') IS NOT NULL
-DROP PROCEDURE KFC.get_especialidades;
+DROP FUNCTION KFC.get_especialidades;
 GO
 
 
@@ -162,11 +163,13 @@ DROP PROCEDURE KFC.pro_setear_rol_estado_habilitacion;
 GO
 
 
+PRINT 'Procedures Borrados'
 
 
 
 
 
+PRINT 'Borrando Funciones...'
 
 -- Ahora las Funciones
 
@@ -246,20 +249,25 @@ IF OBJECT_ID('KFC.fun_obtener_habilitacion_rol') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_habilitacion_rol;
 GO
 
-IF OBJECT_ID('KFC.top_5_cancelaciones_especialidad') IS NOT NULL
-DROP FUNCTION KFC.top_5_cancelaciones_especialidad;
+IF OBJECT_ID('KFC.fun_top_5_cancelaciones_especialidad') IS NOT NULL
+DROP FUNCTION KFC.fun_top_5_cancelaciones_especialidad;
 
-IF OBJECT_ID('KFC.top_5_profesional_popular') IS NOT NULL
-DROP FUNCTION KFC.top_5_profesional_popular;
+IF OBJECT_ID('KFC.fun_top_5_profesional_popular') IS NOT NULL
+DROP FUNCTION KFC.fun_top_5_profesional_popular;
 
 IF OBJECT_ID('KFC.obtener_titular') IS NOT NULL
 DROP FUNCTION KFC.obtener_titular;
 
-IF OBJECT_ID('KFC.top_5_compradores_bonos') IS NOT NULL
-DROP FUNCTION KFC.top_5_compradores_bonos;
+IF OBJECT_ID('KFC.fun_fun_obtener_titular') IS NOT NULL
+DROP FUNCTION KFC.fun_fun_obtener_titular;
 
-IF OBJECT_ID('KFC.top_5_especialidad_Atenciones') IS NOT NULL
-DROP FUNCTION KFC.top_5_especialidad_Atenciones;
+IF OBJECT_ID('KFC.fun_top_5_compradores_bonos') IS NOT NULL
+DROP FUNCTION KFC.fun_top_5_compradores_bonos;
 
-IF OBJECT_ID('KFC.top_5_profesional_menos_tiempo_trabajado') IS NOT NULL
-DROP FUNCTION KFC.top_5_profesional_menos_tiempo_trabajado;
+IF OBJECT_ID('KFC.fun_top_5_especialidad_Atenciones') IS NOT NULL
+DROP FUNCTION KFC.fun_top_5_especialidad_Atenciones;
+
+IF OBJECT_ID('KFC.fun_top_5_profesional_menos_tiempo_trabajado') IS NOT NULL
+DROP FUNCTION KFC.fun_top_5_profesional_menos_tiempo_trabajado;
+
+PRINT 'Funciones Borradas'

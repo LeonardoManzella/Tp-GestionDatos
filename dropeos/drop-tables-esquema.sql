@@ -1,11 +1,15 @@
 --TODO hay que limpiar Metadata que genera el sistema para las tablas e indices
 
+
+PRINT 'Borrando Tablas...'
+
+
 /* :::::: Importante :::::
 Recordar que hay que borrar las tablas en orden inverso a la creacion, por las FK
 Explicacion porque lo ha  asi: http://stackoverflow.com/questions/7887011/how-to-drop-a-table-if-it-exists-in-sql-server
 */
 
-begin
+BEGIN
 IF OBJECT_ID('kfc.atenciones', 'U') IS NOT NULL
 BEGIN
           TRUNCATE TABLE kfc.atenciones;
@@ -140,5 +144,12 @@ BEGIN
 
 END  
 
+PRINT 'Tablas Borradas'
+PRINT 'Borrando Esquema..'
+
+
 DROP SCHEMA KFC  
-end
+END
+
+
+PRINT 'Esquema Borrado'

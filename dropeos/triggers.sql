@@ -1,9 +1,11 @@
+PRINT 'Borrando Triggers...'
+
 IF OBJECT_ID('KFC.existe_afiliado_principal') IS NOT NULL
 DROP TRIGGER KFC.existe_afiliado_principal;
 GO
 
 IF OBJECT_ID('KFC.rol_nueva_funcionalidad') IS NOT NULL
-DROP TRIGGER KFC.Drol_nueva_funcionalidadDD;
+DROP TRIGGER KFC.rol_nueva_funcionalidad;
 GO
 
 IF OBJECT_ID('KFC.existe_rol_habilitar_deshabilitar') IS NOT NULL
@@ -25,3 +27,5 @@ GO
 IF OBJECT_ID('KFC.nuevo_bono') IS NOT NULL
 DROP TRIGGER KFC.nuevo_bono;
 GO
+
+PRINT 'Triggers Borrados'

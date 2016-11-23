@@ -52,3 +52,6 @@ Temporary Items
 ClinicaFrba/ClinicaFrba/bin/*
 ClinicaFrba/ClinicaFrba/obj/*
 *.suo
+
+#Script Bat
+resultado_output.txt

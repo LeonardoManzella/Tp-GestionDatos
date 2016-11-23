@@ -32,7 +32,10 @@ DROP PROCEDURE KFC.get_cmb_prof_x_esp;
 GO
 
 IF OBJECT_ID('KFC.get_especialidades') IS NOT NULL
-DROP PROCEDURE KFC.get_especialidades;
+DROP FUNCTION KFC.get_especialidades;
+GO
+
+PRINT 'Creando Funciones y Procedures Deploy...'
 GO
 
 CREATE FUNCTION kfc.get_especialidades(@id_profesional INT)
@@ -262,3 +265,7 @@ Begin
 			THROW
 			END CATCH
 end;
+
+
+PRINT 'Creadas Funciones y Procedures Deploy'
+GO

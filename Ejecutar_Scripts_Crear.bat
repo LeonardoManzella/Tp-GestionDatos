@@ -1,1 +1,1 @@
-sqlcmd -S localhost\SQLSERVER2012 -U gd -P gd2016 -i sql/prueba.sql,sql/prueba2.sql  -a 32767 -o resultado_output.txt
+sqlcmd -S localhost\SQLSERVER2012 -U gd -P gd2016 -i migracion_datos/creacion-tablas-esquema.sql,migracion_datos/funciones-y-procedimientos.sql,migracion_datos/procedures-deploy.sql,migracion_datos/poblado_tablas.sql,migracion_datos/triggers.sql -a 32767 -o resultado_output.txt

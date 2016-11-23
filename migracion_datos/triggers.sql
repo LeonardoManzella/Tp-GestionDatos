@@ -1,4 +1,5 @@
 ﻿PRINT 'CREANDO TRIGGERS...'
+GO
 
 -- Se chequea la integridad de los datos a insertar en la tabla FUNCIONALIDADES_ROLES
 CREATE TRIGGER KFC.rol_nueva_funcionalidad

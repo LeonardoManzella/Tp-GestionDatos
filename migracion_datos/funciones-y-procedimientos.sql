@@ -1080,6 +1080,35 @@ PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'
 PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA ESTADISTICAS...'
 GO
 
+------------------OBTENER TURNOS CANCELABLES------------------
+--Proposito: Busca los turnos de un afiliado que todavía pueden ser canceladas
+--
+--Ingreso: El ID del afiliado
+------------------OBTENER TURNOS CANCELABLES------------------
+CREATE FUNCTION kfc.fun_obtener_turnos_cancelables( @afil_id INT)
+RETURNS TABLE AS
+RETURN
+SELECT
+	CONCAT(P.apellido,', ', P.nombre) profesional,
+	CONVERT(date, T.fecha_hora, 3) fecha,
+	T.hora hora,
+	E.descripcion
+FROM
+	KFC.turnos T
+FULL OUTER JOIN 
+	KFC.cancelaciones C
+	ON C.turno_id = T.turno_id
+INNER JOIN
+	KFC.profesionales P
+	ON P.prof_id = T.turno_id
+INNER JOIN
+	KFC.especialidades E
+	ON E.espe_id = T.espe_id
+WHERE T.afil_id = @afil_id
+AND (T.turno_id IS NULL OR C.turno_id IS NULL)
+AND DATEDIFF(day, GETDATE(), t.fecha_hora) >= 1;
+GO
+
 
 /* RAUL TENES QUE ARREGLAR ESTO PARA QUE ANDE
 ------------------OBTENER_TITULAR------------------

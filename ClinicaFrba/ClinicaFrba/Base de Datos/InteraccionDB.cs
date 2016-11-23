@@ -228,7 +228,7 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="apellido"></param>
         /// <returns></returns>
 
-        public static int obtenerID_afiliado(string nombre, string apellido)
+        public static int obtenerID_afiliado(string nombre, string apellido, int user_id)
         {
             try
             {
@@ -237,10 +237,13 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro1.Value = nombre.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
                 parametro2.Value = apellido.ToUpper();
+                SqlParameter parametro3 = new SqlParameter("@us_id", SqlDbType.Int);
+                parametro3.Value = user_id;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
+                parametros.Add(parametro3);
 
                 var reader = ejecutar_funcion(funcion, parametros);
 

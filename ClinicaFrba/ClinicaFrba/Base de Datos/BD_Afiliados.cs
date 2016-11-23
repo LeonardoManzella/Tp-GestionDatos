@@ -13,19 +13,22 @@ namespace ClinicaFrba.Base_de_Datos
     class BD_Afiliados
     {
 
-        public static int obtenerID_afiliado(string nombre, string apellido)
+        public static int obtenerID_afiliado(string nombre, string apellido, int user_id)
         {
             try
             {
-                string funcion = "SELECT KFC.fun_retornar_id_afildo(@nombre, @apellido)";
+                string funcion = "SELECT KFC.fun_retornar_id_afildo(@nombre, @apellido, )";
                 SqlParameter parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 parametro1.Value = nombre.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
                 parametro2.Value = apellido.ToUpper();
+                SqlParameter parametro3 = new SqlParameter("@us_id", SqlDbType.Int);
+                parametro3.Value = user_id;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
+                parametros.Add(parametro3);
 
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 

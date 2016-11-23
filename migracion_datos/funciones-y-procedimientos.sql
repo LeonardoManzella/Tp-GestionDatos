@@ -513,8 +513,7 @@ GO
 
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
-CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255),
-@apellido                                      VARCHAR(255))
+CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @us_id INT)
 returns INT AS
 BEGIN
           DECLARE @Afil_id INT;
@@ -525,6 +524,7 @@ BEGIN
           WHERE
                     Afi.nombre         = UPPER(@nombre)
                     AND Afi.apellido   = UPPER(@apellido)
+					AND Afi.us_id 	   = @us_id
                     AND Afi.habilitado = 1
           ;
           

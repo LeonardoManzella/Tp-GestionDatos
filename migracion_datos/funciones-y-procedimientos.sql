@@ -1100,7 +1100,7 @@ FULL OUTER JOIN
 	ON C.turno_id = T.turno_id
 INNER JOIN
 	KFC.profesionales P
-	ON P.prof_id = T.turno_id
+	ON P.prof_id = T.prof_id
 INNER JOIN
 	KFC.especialidades E
 	ON E.espe_id = T.espe_id

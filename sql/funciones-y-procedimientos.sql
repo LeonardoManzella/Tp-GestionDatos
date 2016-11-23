@@ -1,4 +1,6 @@
-﻿------------------OBTENER_TODOS_LOS_ROLES------------------
+﻿PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA NEGOCIO...'
+
+------------------OBTENER_TODOS_LOS_ROLES------------------
 --Proposito: obtiene los roles actuales del sistema
 --
 --Ingreso: con ID 0 devuelve todos los roles
@@ -1073,8 +1075,193 @@ AS
     END;
 GO
 
+PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'
+PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA ESTADISTICAS...'
+
+
+/* RAUL TENES QUE ARREGLAR ESTO PARA QUE ANDE
+------------------OBTENER_TITULAR------------------
+--Proposito: Ser más descriptivo al momento de obtener el identificador titular de 
+--			un grupo familiar de afiliados.
+--Ingreso: el identificador del afiliado
+--
+--Egreso: el identificador del titular del beneficio
+------------------OBTENER_TITULAR------------------
+CREATE FUNCTION kfc.fun_obtener_titular(@afiliado_id INT)
+returns INT AS
+BEGIN
+          DECLARE @id_titular INT;
+          SELECT
+                    @id_titular = FLOOR(@afiliado_id / 100)* 100 + 1
+          ;
+          
+          RETURN @id_titular;
+END;
+GO
+
+CREATE FUNCTION KFC.fun_top_5_cancelaciones_especialidad (@año DATETIME)
+returns TABLE AS
+RETURN
+(
+          SELECT TOP 5 ESP.ESPE_ID
+                    id
+                  , esp.descripcion
+          FROM
+                    kfc.turnos tu
+                    INNER JOIN
+                              kfc.cancelaciones ca
+                    ON
+                              tu.turno_id = ca.turno_id
+                    INNER JOIN
+                              kfc.especialidades esp
+                    ON
+                              esp.espe_id = tu.espe_id
+          WHERE
+                    DATEPART(YEAR,ca.fecha_cancel) = DATEPART(YEAR,@año)
+          GROUP BY
+                    esp.espe_id
+                  , esp.descripcion
+          ORDER BY
+                    COUNT(*) DESC);
+GO
+CREATE FUNCTION KFC.fun_top_5_profesional_popular ( @plan_id INT ,
+@año                                                     DATETIME)
+returns TABLE AS
+RETURN
+(
+          SELECT TOP 5 PRO.PROF_ID
+                  , concat(pro.apellido,', ', pro.nombre) profesional
+                  , esp.espe_id                           id
+                  , esp.descripcion
+          FROM
+                    kfc.turnos tu
+                    INNER JOIN
+                              kfc.especialidades esp
+                    ON
+                              esp.espe_id = tu.espe_id
+                    INNER JOIN
+                              kfc.profesionales pro
+                    ON
+                              pro.prof_id = tu.prof_id
+                    INNER JOIN
+                              kfc.afiliados afi
+                    ON
+                              afi.afil_id = tu.afil_id
+          WHERE
+                    DATEPART(YEAR,tu.fecha_hora) = DATEPART(YEAR,@año)
+                    AND @plan_id                 = afi.plan_id
+          GROUP BY
+                    pro.prof_id
+                  , esp.espe_id
+                  , esp.descripcion
+          ORDER BY
+                    COUNT(*) DESC);
+GO
+CREATE FUNCTION KFC.fun_top_5_compradores_bonos ( @afil_id INT ,
+@año                                                   DATETIME)
+returns TABLE AS
+RETURN
+(
+          SELECT TOP 5 CONCAT
+                    (afi.apellido,', ', afi.nombre) titular
+                  , ISNULL(afi.personas_a_car,0)    grupo_familiar
+          FROM
+                    kfc.afiliados afi
+                    INNER JOIN
+                              kfc.bonos b
+                    ON
+                              kfc.obtener_titular(@afil_id) = kfc.obtener_titular(b.afil_id)
+          WHERE
+                    DATEPART(YEAR,b.fecha_compra) = DATEPART(YEAR,@año)
+                    AND afi.afil_id               = kfc.obtener_titular(@afil_id)
+          GROUP BY
+                    kfc.obtener_titular(b.afil_id)
+          ORDER BY
+                    COUNT(*) DESC);
+GO
+CREATE FUNCTION KFC.fun_top_5_especialidad_Atenciones (@año DATETIME)
+returns TABLE AS
+RETURN
+(
+          SELECT TOP 5 ESP.ESPE_ID
+                    id
+                  , esp.descripcion
+          FROM
+                    kfc.turnos tu
+                    INNER JOIN
+                              kfc.atenciones at
+                    ON
+                              tu.turno_id = at.turno_id
+                    INNER JOIN
+                              kfc.especialidades esp
+                    ON
+                              esp.espe_id = tu.espe_id
+          WHERE
+                    DATEPART(YEAR,tu.fecha_hora) = DATEPART(YEAR,@año)
+          GROUP BY
+                    esp.espe_id
+                  , esp.descripcion
+          ORDER BY
+                    COUNT(*) DESC);
+GO
+CREATE FUNCTION KFC.fun_top_5_profesional_menos_tiempo_trabajado (@año DATETIME)
+returns TABLE AS
+RETURN
+(
+          SELECT TOP 5 CONCAT
+                    (pro.apellido,', ', pro.nombre) profesional
+                  , esp.descripcion                 especialidad
+                  , pl.descripcion                  nombre_plan
+          FROM
+                    kfc.bonos b
+                    INNER JOIN
+                              kfc.atenciones at
+                    ON
+                              b.bono_id = at.bono_id
+                    INNER JOIN
+                              kfc.turnos tu
+                    ON
+                              tu.turno_id = at.turno_id
+                    INNER JOIN
+                              kfc.especialidades esp
+                    ON
+                              esp.espe_id = tu.espe_id
+                    INNER JOIN
+                              kfc.profesionales pro
+                    ON
+                              pro.prof_id = tu.prof_id
+                    INNER JOIN
+                              kfc.planes pl
+                    ON
+                              b.plan_id = pl.plan_id
+          WHERE
+                    DATEPART(YEAR,tu.fecha_hora) = DATEPART(YEAR,@año)
+          GROUP BY
+                    pro.prof_id
+                  , esp.descripcion
+                  , pl.descripcion
+          ORDER BY
+                    COUNT(*) ASC);
+GO
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
----Merge contra lo de Raul. Es de Raul. Estaba trabajando "temporalmente" en esto. NOTA: Hay repetidos que hay que borrar y cosas de Mas
+---Merge contra lo de Raul. Es de Raul. Estaba trabajando "temporalmente" en esto. NOTA: Hay repetidos que hay que borrar y cosas de Mas. 
 ---------------------------------------------------------------
 ---------------------------------------------------------------
 
@@ -1139,24 +1326,7 @@ AS
                     COMMIT;
           END;
 GO
-------------------OBTENER_TITULAR------------------
---Proposito: Ser más descriptivo al momento de obtener el identificador titular de 
---			un grupo familiar de afiliados.
---Ingreso: el identificador del afiliado
---
---Egreso: el identificador del titular del beneficio
-------------------OBTENER_TITULAR------------------
-CREATE FUNCTION kfc.fun_obtener_titular(@afiliado_id INT)
-returns INT AS
-BEGIN
-          DECLARE @id_titular INT;
-          SELECT
-                    @id_titular = FLOOR(@afiliado_id / 100)* 100 + 1
-          ;
-          
-          RETURN @id_titular;
-END;
-GO
+
 ------------------HABILITAR_ROL------------------
 --Proposito: Habilitar un rol, para que sea útil en el sistema
 --
@@ -1593,150 +1763,6 @@ AS
                               THROW;
                     END CATCH;
           END;
-GO
-CREATE FUNCTION KFC.fun_top_5_cancelaciones_especialidad (@año DATETIME)
-returns TABLE AS
-RETURN
-(
-          SELECT TOP 5 ESP.ESPE_ID
-                    id
-                  , esp.descripcion
-          FROM
-                    kfc.turnos tu
-                    INNER JOIN
-                              kfc.cancelaciones ca
-                    ON
-                              tu.turno_id = ca.turno_id
-                    INNER JOIN
-                              kfc.especialidades esp
-                    ON
-                              esp.espe_id = tu.espe_id
-          WHERE
-                    DATEPART(YEAR,ca.fecha_cancel) = DATEPART(YEAR,@año)
-          GROUP BY
-                    esp.espe_id
-                  , esp.descripcion
-          ORDER BY
-                    COUNT(*) DESC);
-GO
-CREATE FUNCTION KFC.fun_top_5_profesional_popular ( @plan_id INT ,
-@año                                                     DATETIME)
-returns TABLE AS
-RETURN
-(
-          SELECT TOP 5 PRO.PROF_ID
-                  , concat(pro.apellido,', ', pro.nombre) profesional
-                  , esp.espe_id                           id
-                  , esp.descripcion
-          FROM
-                    kfc.turnos tu
-                    INNER JOIN
-                              kfc.especialidades esp
-                    ON
-                              esp.espe_id = tu.espe_id
-                    INNER JOIN
-                              kfc.profesionales pro
-                    ON
-                              pro.prof_id = tu.prof_id
-                    INNER JOIN
-                              kfc.afiliados afi
-                    ON
-                              afi.afil_id = tu.afil_id
-          WHERE
-                    DATEPART(YEAR,tu.fecha_hora) = DATEPART(YEAR,@año)
-                    AND @plan_id                 = afi.plan_id
-          GROUP BY
-                    pro.prof_id
-                  , esp.espe_id
-                  , esp.descripcion
-          ORDER BY
-                    COUNT(*) DESC);
-GO
-CREATE FUNCTION KFC.fun_top_5_compradores_bonos ( @afil_id INT ,
-@año                                                   DATETIME)
-returns TABLE AS
-RETURN
-(
-          SELECT TOP 5 CONCAT
-                    (afi.apellido,', ', afi.nombre) titular
-                  , ISNULL(afi.personas_a_car,0)    grupo_familiar
-          FROM
-                    kfc.afiliados afi
-                    INNER JOIN
-                              kfc.bonos b
-                    ON
-                              kfc.obtener_titular(@afil_id) = kfc.obtener_titular(b.afil_id)
-          WHERE
-                    DATEPART(YEAR,b.fecha_compra) = DATEPART(YEAR,@año)
-                    AND afi.afil_id               = kfc.obtener_titular(@afil_id)
-          GROUP BY
-                    kfc.obtener_titular(b.afil_id)
-          ORDER BY
-                    COUNT(*) DESC);
-GO
-CREATE FUNCTION KFC.fun_top_5_especialidad_Atenciones (@año DATETIME)
-returns TABLE AS
-RETURN
-(
-          SELECT TOP 5 ESP.ESPE_ID
-                    id
-                  , esp.descripcion
-          FROM
-                    kfc.turnos tu
-                    INNER JOIN
-                              kfc.atenciones at
-                    ON
-                              tu.turno_id = at.turno_id
-                    INNER JOIN
-                              kfc.especialidades esp
-                    ON
-                              esp.espe_id = tu.espe_id
-          WHERE
-                    DATEPART(YEAR,tu.fecha_hora) = DATEPART(YEAR,@año)
-          GROUP BY
-                    esp.espe_id
-                  , esp.descripcion
-          ORDER BY
-                    COUNT(*) DESC);
-GO
-CREATE FUNCTION KFC.fun_top_5_profesional_menos_tiempo_trabajado (@año DATETIME)
-returns TABLE AS
-RETURN
-(
-          SELECT TOP 5 CONCAT
-                    (pro.apellido,', ', pro.nombre) profesional
-                  , esp.descripcion                 especialidad
-                  , pl.descripcion                  nombre_plan
-          FROM
-                    kfc.bonos b
-                    INNER JOIN
-                              kfc.atenciones at
-                    ON
-                              b.bono_id = at.bono_id
-                    INNER JOIN
-                              kfc.turnos tu
-                    ON
-                              tu.turno_id = at.turno_id
-                    INNER JOIN
-                              kfc.especialidades esp
-                    ON
-                              esp.espe_id = tu.espe_id
-                    INNER JOIN
-                              kfc.profesionales pro
-                    ON
-                              pro.prof_id = tu.prof_id
-                    INNER JOIN
-                              kfc.planes pl
-                    ON
-                              b.plan_id = pl.plan_id
-          WHERE
-                    DATEPART(YEAR,tu.fecha_hora) = DATEPART(YEAR,@año)
-          GROUP BY
-                    pro.prof_id
-                  , esp.descripcion
-                  , pl.descripcion
-          ORDER BY
-                    COUNT(*) ASC);
 GO
 -------------------------------------------------------
 -------------------------------------------------------

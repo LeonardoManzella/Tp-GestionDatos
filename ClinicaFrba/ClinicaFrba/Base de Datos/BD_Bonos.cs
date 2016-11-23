@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ClinicaFrba.Clases;
 using ClinicaFrba.Base_de_Datos;
 using System.Data;
+using System.Windows.Forms;
 
 namespace ClinicaFrba.Base_de_Datos
 {
@@ -56,6 +57,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                     //Veo si trajo datos o no
                     if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Asignar el Turno. Fallo Ejecucion Procedure");
+                    MessageBox.Show("Comprado Bono", "Comprar Bonos", MessageBoxButtons.OK, MessageBoxIcon.None);
                 }
 
                 return;

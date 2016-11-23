@@ -133,6 +133,7 @@ namespace ClinicaFrba
         {
             var form = new Compra_Bono.CompraBono();
             form.funcionalidad = Compra_Bono.CompraBono.tipos_funcionalidad.USUARIO;
+            form.usuario = this.usuario;
             form.ShowDialog();
         }
 

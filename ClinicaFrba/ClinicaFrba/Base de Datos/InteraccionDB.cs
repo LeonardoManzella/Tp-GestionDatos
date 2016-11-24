@@ -166,6 +166,35 @@ namespace ClinicaFrba.Base_de_Datos
             return valorObtener;
         }
 
+        /// <summary>
+        /// Obtenemos una Columna Entera en formato String del Reader. La 'cantidadColumnasPorObtener'es cuantas columnas queremos leer
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cantidadColumnasPorObtener"></param>
+        /// <returns></returns>
+        public static List<string> ObtenerStringDeColumnasReader(SqlDataReader reader, int cantidadColumnasPorObtener)
+        {
+            //Veo si trajo datos o no
+            if (!reader.HasRows) throw new Exception("Reader sin Filas");
+
+            var strings = new List<string>();
+
+            //Obtengo Multiples datos
+            while (reader.Read() )
+            {
+                for (int columnaActual = 0; columnaActual < cantidadColumnasPorObtener; columnaActual++)
+                {
+                    string unString = reader.GetString(columnaActual);
+                    strings.Add(unString);
+                    unString = null;
+                }
+                break;
+            }
+
+            if (strings.Count <= 0) throw new Exception("No se cargaron Strings a la Lista que Representa Columna");
+            return strings;
+        }
+
         // <summary>
         /// Obtenemos Bool del Reader. La 'columnaPorObtener' empieza 0 para la primer columna y asi..
         /// </summary>

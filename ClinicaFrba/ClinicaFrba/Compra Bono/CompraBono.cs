@@ -22,7 +22,7 @@ namespace ClinicaFrba.Compra_Bono
 
         public tipos_funcionalidad funcionalidad;
         public Usuario usuario_o_administrador;
-        private int id_usuario_que_compra;
+        private int id_afiliado_que_compra;
 
         public CompraBono()
         {
@@ -41,10 +41,13 @@ namespace ClinicaFrba.Compra_Bono
             this.textBox_Apellido.Enabled = false;
             this.textBox_Nombre.Visible = false;
             this.textBox_Apellido.Visible = false;
+            this.label_Usuario.Visible = false;
+            this.label_apellido.Visible = false;
         }
 
         private void deshabilitar_comprar()
         {
+            this.label_Id_Usuario.Text = "";
             this.textBox_Cantidad.Enabled = false;
             this.button_Comprar.Enabled = false;
         }
@@ -52,6 +55,7 @@ namespace ClinicaFrba.Compra_Bono
 
         private void habilitar_comprar()
         {
+            this.label_Id_Usuario.Text = "ID Afiliado: " + id_afiliado_que_compra.ToString();
             this.textBox_Cantidad.Enabled = true;
             this.button_Comprar.Enabled = true;
         }
@@ -63,12 +67,12 @@ namespace ClinicaFrba.Compra_Bono
                 if (this.funcionalidad == tipos_funcionalidad.USUARIO)
                 {
                     deshabilitar_busqueda();
-                    this.id_usuario_que_compra = usuario_o_administrador.id;
+                    this.id_afiliado_que_compra = InteraccionDB.obtenerID_afiliado(usuario_o_administrador.nombre, usuario_o_administrador.apellido); ;
                     mostrar_plan();
                 }
                 else
                 {
-                    this.id_usuario_que_compra = -1;
+                    this.id_afiliado_que_compra = -1;
                     deshabilitar_comprar();
                 }
             }
@@ -80,8 +84,8 @@ namespace ClinicaFrba.Compra_Bono
 
         private void mostrar_plan()
         {
-            this.textBox_Plan.Text = BD_Bonos.obtener_nombre_plan(this.id_usuario_que_compra);
-            this.textBox_precio.Text = BD_Bonos.obtener_precio_plan(this.id_usuario_que_compra).ToString();
+            this.textBox_Plan.Text = BD_Bonos.obtener_nombre_plan(this.id_afiliado_que_compra);
+            this.textBox_precio.Text = BD_Bonos.obtener_precio_plan(this.id_afiliado_que_compra).ToString();
         }
 
         private void button_Buscar_Click(object sender, EventArgs e)
@@ -93,13 +97,15 @@ namespace ClinicaFrba.Compra_Bono
 
                 try
                 {
-                    this.id_usuario_que_compra = InteraccionDB.obtenerID_afiliado(nombre, apellido);
+                    this.id_afiliado_que_compra = InteraccionDB.obtenerID_afiliado(nombre, apellido);
                 }
                 catch (Exception ex)
                 {
                     InteraccionDB.ImprimirExcepcion(ex);
+                    resetear_comprar();
                     throw new Exception("No existe el Afiliado, por favor revisar Nombre y Apellido");
                 }
+
                 mostrar_plan();
                 habilitar_comprar();
 
@@ -107,7 +113,7 @@ namespace ClinicaFrba.Compra_Bono
             catch (Exception ex)
             {
                 resetear_comprar();
-                MessageBox.Show(ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Buscar. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -116,7 +122,7 @@ namespace ClinicaFrba.Compra_Bono
         {
             try
             {
-                BD_Bonos.comprar_bono(this.id_usuario_que_compra, Convert.ToInt32(textBox_Cantidad.Text));
+                BD_Bonos.comprar_bono(this.id_afiliado_que_compra, Convert.ToInt32(textBox_Cantidad.Text));
                 MessageBox.Show("Bonos Comprados", "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox_Cantidad.Text = "";
             }

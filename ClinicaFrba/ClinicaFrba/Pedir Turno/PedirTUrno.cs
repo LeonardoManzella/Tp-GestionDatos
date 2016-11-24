@@ -29,9 +29,13 @@ namespace ClinicaFrba.Pedir_Turno
         {
             try
             {
+                this.comboEspecialidades.DropDownStyle = ComboBoxStyle.DropDownList;
+                this.comboHorarios.DropDownStyle = ComboBoxStyle.DropDownList;
+                this.comboProfesionales.DropDownStyle = ComboBoxStyle.DropDownList;
                 ComboData.llenarCombo(comboEspecialidades, InteraccionDB.obtener_todas_especialidades());
                 descripcion_especialidad = null;
                 apellido_nombre_profesional = null;
+
             }
             catch (Exception ex)
             {
@@ -103,6 +107,8 @@ namespace ClinicaFrba.Pedir_Turno
             {
                 BD_Turnos.asignar_turno(apellido_nombre_profesional, fecha, horario, descripcion_especialidad, usuario.id);
                 MessageBox.Show("Turno Asignado", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.boton_pedirTurno.Enabled = false;
+                this.comboHorarios.Enabled = false;
             }
             catch (Exception ex)
             {

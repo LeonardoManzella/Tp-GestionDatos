@@ -208,4 +208,7 @@ DROP FUNCTION KFC.fun_obtener_turnos_cancelables;
 IF OBJECT_ID('KFC.fun_obtener_funcionalidades_usuario') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_funcionalidades_usuario;
 
+IF OBJECT_ID('KFC.fun_obtener_datos_usuario') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_datos_usuario;
+
 PRINT 'Funciones Borradas'

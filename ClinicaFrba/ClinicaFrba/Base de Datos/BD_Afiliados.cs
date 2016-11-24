@@ -54,6 +54,9 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
+                throw new Exception("Raul Fijate aca con la lo de abajo, no se cual es el metodo Posta. Por favor Mergealo vos");
+
+
                 //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
                 SqlConnection conexion = Conexion.Instance.get();
 
@@ -118,6 +121,79 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
+
+        /* RAUL FIJATE SI ESTE SIRVE O NO
+         /// <summary>
+        /// Parametriza los datos y administra la conexion con la BD para el alta del afiliado
+        /// </summary>
+        /// <param name="afiliado"></param>
+        /// <returns></returns>
+        public static int alta_afiliado(Afiliado afiliado)
+        {
+            try
+            {
+                //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
+                SqlConnection conexion = Conexion.Instance.get();
+
+                SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario, @afil_id OUTPUT", conexion);
+
+                var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
+                var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
+                var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
+                var parametro3_5 = new SqlParameter("@nro_doc", SqlDbType.Int);
+                var parametro4 = new SqlParameter("@direccion", SqlDbType.Text);
+                var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
+                var parametro6 = new SqlParameter("@mail", SqlDbType.Text);
+                var parametro7 = new SqlParameter("@sexo", SqlDbType.Char);
+                var parametro8 = new SqlParameter("@fecha_nac", SqlDbType.DateTime);
+                var parametro9 = new SqlParameter("@estado", SqlDbType.Int);
+                var parametro10 = new SqlParameter("@plan", SqlDbType.Int);
+                var parametro11 = new SqlParameter("@usuario", SqlDbType.Int);
+                var parametro0 = new SqlParameter("@afil_id", SqlDbType.Int);
+
+                parametro1.Value = afiliado.nombre.ToUpper();
+                parametro2.Value = afiliado.apellido.ToUpper();
+                parametro3_5.Value = afiliado.nro_doc;
+                parametro3.Value = afiliado.tipo_doc.ToUpper();
+                parametro4.Value = afiliado.direccion.ToUpper();
+                parametro5.Value = afiliado.telefono.ToUpper();
+                parametro6.Value = afiliado.e_mail.ToUpper();
+                parametro7.Value = afiliado.sexo;
+                parametro8.Value = afiliado.fecha_nac;
+                parametro9.Value = afiliado.estado_civil;
+                parametro10.Value = afiliado.plan_id;
+                parametro11.Value = afiliado.usuario;
+                parametro0.Direction = ParameterDirection.Output;
+
+                comando_sql.Parameters.Add(parametro1);
+                comando_sql.Parameters.Add(parametro2);
+                comando_sql.Parameters.Add(parametro3);
+                comando_sql.Parameters.Add(parametro3_5);
+                comando_sql.Parameters.Add(parametro4);
+                comando_sql.Parameters.Add(parametro5);
+                comando_sql.Parameters.Add(parametro6);
+                comando_sql.Parameters.Add(parametro7);
+                comando_sql.Parameters.Add(parametro8);
+                comando_sql.Parameters.Add(parametro9);
+                comando_sql.Parameters.Add(parametro10);
+                comando_sql.Parameters.Add(parametro11);
+                comando_sql.Parameters.Add(parametro0);
+
+                comando_sql.ExecuteReader();
+
+                var id = (int)comando_sql.Parameters["@afil_id"].Value;
+                if (id <= 0) throw new Exception("No se ha podido crear el nuevo afiliado en la base");
+
+                return id;
+            }
+            catch (Exception e)
+            {
+                ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+        */
 
         /// Parametriza los datos y administra la conexion con la BD para la modificación del afiliado
         /// </summary>
@@ -234,6 +310,38 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
 
+        }
+
+        /// <summary>
+        /// Baja de afiliado si la baja ha sido exitosa,devuelve ok
+        /// </summary>
+        /// <param name="afil_id"></param>
+        /// <returns></returns>
+        public static bool baja_afiliado(int afil_id)
+        {
+            try
+            {
+
+                SqlConnection conexion = Conexion.Instance.get();
+
+                SqlCommand comando_sql = new SqlCommand("kfc.baja_afiliado @afiliado, @fecha", conexion);
+                var parametro0 = new SqlParameter("@afiliado", SqlDbType.Int);
+                var parametro1 = new SqlParameter("@fecha", SqlDbType.DateTime);
+
+                parametro0.Value = afil_id;
+                parametro1.Value = DateTime.Now;
+
+                comando_sql.Parameters.Add(parametro0);
+                comando_sql.Parameters.Add(parametro1);
+
+                comando_sql.ExecuteReader();
+                return true;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+                return false;
+            }
         }
     }
 }

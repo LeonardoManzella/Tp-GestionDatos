@@ -18,7 +18,7 @@ namespace ClinicaFrba.Negocio
         /// <param name="afil"></param>
         public static int alta_afiliado(Afiliado afil)
         {
-           return Base_de_Datos.InteraccionDB.alta_afiliado(afil);
+            return Base_de_Datos.BD_Afiliados.alta_afiliado(afil);
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace ClinicaFrba.Negocio
         /// <param name="afil"></param>
         public static void modifica_afiliado(Afiliado afil)
         {
-            Base_de_Datos.InteraccionDB.modifica_afiliado(afil);
+            Base_de_Datos.BD_Afiliados.modifica_afiliado(afil);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace ClinicaFrba.Negocio
         /// <returns></returns>
         public static bool baja_afiliado(int afil_id)
         {
-            return Base_de_Datos.InteraccionDB.baja_afiliado(afil_id);
+            return Base_de_Datos.BD_Afiliados.baja_afiliado(afil_id);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace ClinicaFrba.Negocio
 
         public static Afiliado Get_Afiliado(int afiliado_id)
         {
-            return Base_de_Datos.InteraccionDB.get_afiliado(afiliado_id);
+            return Base_de_Datos.BD_Afiliados.get_afiliado(afiliado_id);
         }
 
     }

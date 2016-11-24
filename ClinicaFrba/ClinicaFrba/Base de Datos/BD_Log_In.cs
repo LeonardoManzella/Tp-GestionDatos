@@ -68,7 +68,7 @@ namespace ClinicaFrba.Base_de_Datos
             catch (Exception e)
             {
                 InteraccionDB.ImprimirExcepcion(e);
-                throw e;
+                throw new Exception("Error al Validar Datos Logueo. Error: " + e.Message);
             }
         }
 
@@ -96,6 +96,15 @@ namespace ClinicaFrba.Base_de_Datos
                 usuario.permisos = InteraccionDB.ObtenerStringsReader(reader, 0);
 
                 //Otros valores falta ver que hacemos con eso. No es necesario Obtenerlos de la Base.
+                funcion = "SELECT * FROM KFC.fun_obtener_datos_usuario(@usuario_id)";
+                parametro1 = new SqlParameter("@usuario_id", SqlDbType.Int);
+                parametro1.Value = usuario_id;
+                parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+                var lista = InteraccionDB.ObtenerStringDeColumnasReader(reader, 2);
+                usuario.nombre = lista.ToArray()[0];
+                usuario.apellido = lista.ToArray()[1];
                 return usuario;
             }
             catch (Exception e)

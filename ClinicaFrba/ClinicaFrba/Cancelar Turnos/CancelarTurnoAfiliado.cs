@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicaFrba.Clases;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,8 @@ namespace ClinicaFrba.CancelarTurno
 {
     public partial class CancelarTurnoAfiliado : Form
     {
+        public Usuario usuario { get; set; }
+
         public CancelarTurnoAfiliado()
         {
             InitializeComponent();
@@ -19,7 +22,44 @@ namespace ClinicaFrba.CancelarTurno
 
         private void CancelarAtencion_Load(object sender, EventArgs e)
         {
+            List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
+            ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string turnoCancelar = comboCancelarTurno.SelectedItem.ToString();
+                string motivo = motivoCancelacion.Text.ToString();
+
+                if (turnoCancelar.Trim().Equals("") || motivo.Trim().Equals(""))
+                {
+                    MessageBox.Show("Debe completar todos los campos del formulario", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                string[] turno = turnoCancelar.Split('-');
+                string apellidoProfesional = turno[0].Split(',')[0].Trim();
+                string nombreProfesional = turno[0].Split(',')[1].Trim();
+                string[] fecha = turno[1].Trim().Split('/');
+                int dia = Int32.Parse(fecha[0].Trim());
+                int mes = Int32.Parse(fecha[1].Trim());
+                int anio = Int32.Parse(fecha[2].Trim());
+
+ //               Base_de_Datos.BD_Turnos.
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

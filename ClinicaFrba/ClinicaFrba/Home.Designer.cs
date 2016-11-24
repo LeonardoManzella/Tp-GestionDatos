@@ -260,7 +260,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(151, 132);
+            this.label1.Location = new System.Drawing.Point(91, 111);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 1;
@@ -269,7 +269,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(150, 178);
+            this.label2.Location = new System.Drawing.Point(90, 157);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 2;
@@ -277,7 +277,7 @@
             // 
             // textBox_usuario
             // 
-            this.textBox_usuario.Location = new System.Drawing.Point(209, 129);
+            this.textBox_usuario.Location = new System.Drawing.Point(149, 108);
             this.textBox_usuario.Name = "textBox_usuario";
             this.textBox_usuario.Size = new System.Drawing.Size(213, 20);
             this.textBox_usuario.TabIndex = 3;
@@ -285,7 +285,7 @@
             // 
             // textBox_password
             // 
-            this.textBox_password.Location = new System.Drawing.Point(209, 175);
+            this.textBox_password.Location = new System.Drawing.Point(149, 154);
             this.textBox_password.Name = "textBox_password";
             this.textBox_password.Size = new System.Drawing.Size(213, 20);
             this.textBox_password.TabIndex = 4;
@@ -295,7 +295,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(152, 74);
+            this.label3.Location = new System.Drawing.Point(92, 53);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(270, 25);
             this.label3.TabIndex = 4;
@@ -304,7 +304,7 @@
             // boton_loguear
             // 
             this.boton_loguear.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boton_loguear.Location = new System.Drawing.Point(442, 121);
+            this.boton_loguear.Location = new System.Drawing.Point(382, 100);
             this.boton_loguear.Name = "boton_loguear";
             this.boton_loguear.Size = new System.Drawing.Size(109, 74);
             this.boton_loguear.TabIndex = 7;
@@ -315,7 +315,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(146, 218);
+            this.label4.Location = new System.Drawing.Point(86, 197);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(57, 13);
             this.label4.TabIndex = 6;
@@ -323,7 +323,7 @@
             // 
             // textBox_rol
             // 
-            this.textBox_rol.Location = new System.Drawing.Point(209, 218);
+            this.textBox_rol.Location = new System.Drawing.Point(149, 197);
             this.textBox_rol.Name = "textBox_rol";
             this.textBox_rol.Size = new System.Drawing.Size(213, 20);
             this.textBox_rol.TabIndex = 5;
@@ -332,7 +332,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(242, 251);
+            this.label5.Location = new System.Drawing.Point(182, 230);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(166, 13);
             this.label5.TabIndex = 8;

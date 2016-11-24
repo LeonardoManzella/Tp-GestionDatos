@@ -28,20 +28,97 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboCancelarTurno = new System.Windows.Forms.ComboBox();
+            this.cancelarTurnoButton = new System.Windows.Forms.Button();
+            this.cancelarButton = new System.Windows.Forms.Button();
+            this.motivoCancelacion = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // CancelarAtencion
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(89, 40);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(270, 24);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Seleccione el turno a cancelar:";
+            // 
+            // comboCancelarTurno
+            // 
+            this.comboCancelarTurno.FormattingEnabled = true;
+            this.comboCancelarTurno.Location = new System.Drawing.Point(92, 78);
+            this.comboCancelarTurno.Name = "comboCancelarTurno";
+            this.comboCancelarTurno.Size = new System.Drawing.Size(267, 21);
+            this.comboCancelarTurno.TabIndex = 1;
+            // 
+            // cancelarTurnoButton
+            // 
+            this.cancelarTurnoButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.cancelarTurnoButton.Location = new System.Drawing.Point(162, 269);
+            this.cancelarTurnoButton.Name = "cancelarTurnoButton";
+            this.cancelarTurnoButton.Size = new System.Drawing.Size(130, 36);
+            this.cancelarTurnoButton.TabIndex = 2;
+            this.cancelarTurnoButton.Text = "Cancelar Turno";
+            this.cancelarTurnoButton.UseVisualStyleBackColor = true;
+            this.cancelarTurnoButton.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // cancelarButton
+            // 
+            this.cancelarButton.Location = new System.Drawing.Point(162, 311);
+            this.cancelarButton.Name = "cancelarButton";
+            this.cancelarButton.Size = new System.Drawing.Size(130, 26);
+            this.cancelarButton.TabIndex = 3;
+            this.cancelarButton.Text = "Cancelar";
+            this.cancelarButton.UseVisualStyleBackColor = true;
+            this.cancelarButton.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // motivoCancelacion
+            // 
+            this.motivoCancelacion.Location = new System.Drawing.Point(92, 145);
+            this.motivoCancelacion.Multiline = true;
+            this.motivoCancelacion.Name = "motivoCancelacion";
+            this.motivoCancelacion.Size = new System.Drawing.Size(267, 106);
+            this.motivoCancelacion.TabIndex = 4;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(89, 112);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(194, 24);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Especifique el motivo:";
+            // 
+            // CancelarTurnoAfiliado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Name = "CancelarAtencion";
+            this.ClientSize = new System.Drawing.Size(457, 369);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.motivoCancelacion);
+            this.Controls.Add(this.cancelarButton);
+            this.Controls.Add(this.cancelarTurnoButton);
+            this.Controls.Add(this.comboCancelarTurno);
+            this.Controls.Add(this.label1);
+            this.Name = "CancelarTurnoAfiliado";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.CancelarAtencion_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboCancelarTurno;
+        private System.Windows.Forms.Button cancelarTurnoButton;
+        private System.Windows.Forms.Button cancelarButton;
+        private System.Windows.Forms.TextBox motivoCancelacion;
+        private System.Windows.Forms.Label label2;
     }
 }

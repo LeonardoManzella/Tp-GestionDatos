@@ -44,6 +44,51 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
+        public static List<string> obtener_turnos_cancelables(Usuario usuario)
+        {
+            try
+            {
+                int idAfiliado = BD_Afiliados.obtenerID_afiliado(usuario.nombre, usuario.apellido, usuario.id);
+
+                string funcion = "SELECT  * FROM KFC.fun_obtener_turnos_cancelables(@afil_id)";
+                SqlParameter parametro = new SqlParameter("@afil_id", SqlDbType.Int);
+                parametro.Value = idAfiliado;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
+
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+
+                if (!reader.HasRows) throw new Exception("Reader sin filas");
+
+                List<string> turnos = new List<string>();
+
+                while (reader.Read())
+                {
+                    string profesional = reader.GetString(0);
+                    string fecha = reader.GetString(1);
+                    string hora = reader.GetString(2);
+                    string especialidad = reader.GetString(3);
+
+                    string turno = profesional + " - " + especialidad + " - " + fecha + " - " + hora;
+                    turnos.Add(turno);
+
+                }
+
+                if (turnos.Count == 0)
+                    throw new Exception("No se encontraron los turnos cancelables");
+
+                return turnos;
+
+            }
+            catch(Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+                throw e;
+            }
+        
+        }
+
         public static List<string> obtener_turnos_disponibles(string apellidoConNombre, DateTime fecha)
         {
             try

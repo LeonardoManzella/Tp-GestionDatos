@@ -1090,7 +1090,7 @@ RETURNS TABLE AS
 RETURN
 SELECT
 	CONCAT(P.apellido,', ', P.nombre) profesional,
-	CONVERT(date, T.fecha_hora, 3) fecha,
+	CONCAT(DAY(T.fecha_hora), '/', MONTH(T.fecha_hora), '/', YEAR(T.fecha_hora)) fecha,
 	T.hora hora,
 	E.descripcion
 FROM

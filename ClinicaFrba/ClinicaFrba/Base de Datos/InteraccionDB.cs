@@ -1,4 +1,4 @@
-﻿using ClinicaFrba.Clases;
+﻿﻿using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -135,16 +135,18 @@ namespace ClinicaFrba.Base_de_Datos
             //Veo si trajo datos o no
             if (!reader.HasRows) throw new Exception("Reader sin Filas");
 
-            int valorObtener = 0;
+            int valorObtener = -1;
+            bool flag_leyo_algo = false;
 
             //Obtengo Multiples datos
             while (reader.Read())
             {
                 valorObtener = reader.GetInt32(columnaPorObtener);
+                flag_leyo_algo = true;
                 break;  //Unico Valor a Obtener
 
             }
-            if (valorObtener <= 0) throw new Exception("Hubo un Problema al Obtener Dato Int");
+            if (flag_leyo_algo == false) throw new Exception("Hubo un Problema al Obtener Dato Int");
             return valorObtener;
         }
 

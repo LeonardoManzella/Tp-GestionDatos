@@ -181,6 +181,29 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
+
+        public static List<string> obtener_roles()
+        {
+            try
+            {
+                string funcion = "SELECT * FROM  KFC.fun_obtener_todas_los_roles()";
+
+                var parametros = new List<SqlParameter>();
+
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+
+                List<string> roles = InteraccionDB.ObtenerStringsReader(reader, 1);
+
+                return roles;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
         public static int obtenerID_rol(string nombre)
         {
             try

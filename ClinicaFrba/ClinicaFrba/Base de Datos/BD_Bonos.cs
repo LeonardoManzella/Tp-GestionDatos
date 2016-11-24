@@ -19,7 +19,7 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
                 string funcion = "SELECT KFC.fun_devolver_precio_bono(@afiliado_id)";
-                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Text);
+                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Int);
                 parametro.Value = id_usuario;
 
                 var parametros = new List<SqlParameter>();
@@ -39,6 +39,33 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
+        public static string obtener_nombre_plan(int id_usuario)
+        {
+            try
+            {
+                string funcion = "SELECT * FROM KFC.fun_obtener_planes_afiliado(@afiliado_id)";
+                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Int);
+                parametro.Value = id_usuario;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
+
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+
+                List<string> Multiples_Planes = InteraccionDB.ObtenerStringsReader(reader, 4);
+
+                //Obtengo solo el primer plan, si tuviera varios (no deberia pasar que tenga varios)
+                string plan_Actual = Convert.ToString(Multiples_Planes.ToArray()[0]);
+                return plan_Actual;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
         public static void comprar_bono(int id_afiliado, int cantidad_bonos)
         {
             try
@@ -46,8 +73,8 @@ namespace ClinicaFrba.Base_de_Datos
                 //Ejecuta tantas veces como Bonos Pedidos por el usuario
                 for (int i = 0; i < cantidad_bonos; i++)
                 {
-                    string procedure = "KFC.pro_comprar_bono  @afil_id";
-                    SqlParameter parametro = new SqlParameter("@afil_id", SqlDbType.Text);
+                    string procedure = "KFC.pro_comprar_bono";
+                    SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Int);
                     parametro.Value = id_afiliado;
 
                     var parametros = new List<SqlParameter>();
@@ -56,7 +83,8 @@ namespace ClinicaFrba.Base_de_Datos
                     var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                     //Veo si trajo datos o no
-                    if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Asignar el Turno. Fallo Ejecucion Procedure");
+                    if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Comprar el Bono. Fallo Ejecucion Procedure");
+
                     MessageBox.Show("Comprado Bono", "Comprar Bonos", MessageBoxButtons.OK, MessageBoxIcon.None);
                 }
 

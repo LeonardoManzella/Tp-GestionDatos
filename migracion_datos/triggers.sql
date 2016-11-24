@@ -98,6 +98,17 @@ IF ((SELECT hora_desde from inserted) > (SELECT hora_hasta from inserted))
 		RAISERROR ('La hora de inicio no puede ser mayor a la del final', 16, 1);
 		RETURN
 	END;
+
+	INSERT INTO KFC.agenda(espe_id, prof_id, dia, fecha_desde, fecha_hasta, hora_desde, hora_hasta)
+	VALUES(
+	 (SELECT espe_id FROM inserted), 
+	 (SELECT prof_id FROM inserted), 
+	 (SELECT dia FROM inserted), 
+	 (SELECT fecha_desde FROM inserted), 
+	 (SELECT fecha_hasta FROM inserted), 
+	 (SELECT hora_desde FROM inserted), 
+	 (SELECT hora_hasta FROM inserted)
+	 );
 GO
 ---------------------------------------------------------------------------
 
@@ -115,9 +126,19 @@ BEGIN
 	RAISERROR ('No existe el plan para el cual se compra el bono', 16, 1);
 	RETURN
 END;
-GO
----------------------------------------------------------------------------
 
+INSERT INTO KFC.bonos(afil_id, plan_id, consumido, fecha_compra, fecha_impresion)
+	VALUES(
+	 (SELECT afil_id FROM inserted),
+	 (SELECT plan_id FROM inserted), 
+	 (SELECT consumido FROM inserted), 
+	 (SELECT fecha_compra FROM inserted), 
+	 (SELECT fecha_impresion FROM inserted)
+	 );
+GO
+
+/* TRIGGER NO NECESARIO
+---------------------------------------------------------------------------
 -- Trigger para chequear la fecha de la impresion del bono --
 CREATE TRIGGER KFC.impresion_bono
 ON KFC.bonos
@@ -131,7 +152,10 @@ BEGIN
 		RETURN
 	END;
 END
+
+ARREGLAR
 GO
+*/
 ---------------------------------------------------------------------------
 
 -- Trigger para chequear la informacion del turno --
@@ -161,6 +185,15 @@ IF NOT EXISTS (SELECT * FROM KFC.especialidades_profesional
 		RAISERROR ('El profesional no tiene la especialidad indicada', 16, 1);
 		RETURN
 	END;
+
+INSERT INTO KFC.turnos(afil_id, espe_id, prof_id, fecha_hora, hora)
+	VALUES(
+	 (SELECT afil_id FROM inserted), 
+	 (SELECT espe_id FROM inserted), 
+	 (SELECT prof_id FROM inserted),
+	 (SELECT fecha_hora FROM inserted), 
+	 (SELECT hora FROM inserted)
+	 );
 GO
 ---------------------------------------------------------------------------
 

@@ -18,7 +18,8 @@ INSTEAD OF INSERT AS
 	END
 
 	INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
-	VALUES((SELECT rol_id FROM inserted), (SELECT func_id FROM inserted));
+	SELECT rol_id, func_id
+	FROM inserted;
 
 GO
 ---------------------------------------------------------------------------
@@ -199,3 +200,5 @@ GO
 
 
 PRINT 'TRIGGERS CREADOS'
+PRINT '------------------'
+PRINT 'Fin Script'

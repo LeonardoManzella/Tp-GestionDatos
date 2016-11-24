@@ -28,6 +28,28 @@ WHERE
 ;
 GO
 
+CREATE FUNCTION KFC.fun_obtener_funcionalidades_usuario(@usuario_id INT, @rol_descripcion VARCHAR(60) )
+returns TABLE AS
+RETURN
+SELECT DISTINCT	 f.descripcion AS fun_descripcion
+				, f.func_id
+				, r.rol_id
+				, r.descripcion AS rol_descripcion 
+FROM
+          KFC.roles_usuarios AS ru
+          INNER JOIN KFC.roles AS r
+          ON
+                    ru.rol_id = r.rol_id
+		  INNER JOIN KFC.funcionalidades_roles fr
+		  ON	fr.rol_id = r.rol_id
+		  INNER JOIN KFC.funcionalidades f
+		  ON	f.func_id = fr.func_id
+WHERE
+         ru.us_id = @usuario_id
+		 AND UPPER(r.descripcion) = UPPER(@rol_descripcion)
+;
+GO
+
 
 ------------------VALIDAR_USUARIO------------------
 --Proposito: verificar el correcto logueo en el sistema
@@ -150,11 +172,38 @@ CREATE PROCEDURE kfc.pro_aumentar_intentos
           @usu_nick VARCHAR(30)
 AS
 BEGIN
+	DECLARE @string VARCHAR(60);
+
+	--Solo veo de aumentar intentos si existe el usuario, sino no puedo hacer nada
+	IF NOT EXISTS( SELECT * FROM KFC.usuarios u WHERE u.nick = @usu_nick)
+	BEGIN
+		SET @string = 'No existe el Usuario: ' + @usu_nick;
+		RAISERROR(@string, 16, 1);
+		RETURN;
+	END
+
+	--Veo si el Usuario NO esta Habilitado para dar error. No tiene sentido aumentar intentos usuario inhabilitado
+	IF NOT EXISTS( SELECT * FROM KFC.usuarios u WHERE u.nick = @usu_nick AND u.habilitado = 1 )
+	BEGIN
+		SET @string = 'El Usuario ' + @usu_nick + ' esta Deshabilitado';
+		RAISERROR(@string, 16, 1);
+		RETURN;
+	END
+
 	BEGIN TRY
-        BEGIN TRANSACTION
-        UPDATE kfc.usuarios SET intentos = intentos +1 WHERE nick = @usu_nick;
+		BEGIN TRANSACTION
+		UPDATE kfc.usuarios SET intentos = intentos +1 WHERE nick = @usu_nick;
+
+		--Al 3er Intento Mal lo Deshabilito al Usuario
+		IF (	(	SELECT TOP 1 u.intentos 
+					FROM KFC.usuarios u 
+					WHERE UPPER(u.nick) = UPPER(@usu_nick)
+				) = 3)
+		BEGIN
+			EXECUTE KFC.pro_deshabilitar_usuario @usu_nick;
+		END
                     
-        COMMIT;
+		COMMIT;
 	END TRY
 	BEGIN CATCH
 			IF @@trancount > 0
@@ -513,7 +562,8 @@ GO
 
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
-CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @us_id INT)
+--CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @us_id INT)
+CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255))
 returns INT AS
 BEGIN
           DECLARE @Afil_id INT;
@@ -524,7 +574,7 @@ BEGIN
           WHERE
                     Afi.nombre         = UPPER(@nombre)
                     AND Afi.apellido   = UPPER(@apellido)
-					AND Afi.us_id 	   = @us_id
+					--AND Afi.us_id 	   = @us_id
                     AND Afi.habilitado = 1
           ;
           

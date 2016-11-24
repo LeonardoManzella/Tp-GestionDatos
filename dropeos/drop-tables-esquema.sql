@@ -1,6 +1,3 @@
---TODO hay que limpiar Metadata que genera el sistema para las tablas e indices
-
-
 PRINT 'Borrando Tablas...'
 
 
@@ -147,9 +144,8 @@ END
 PRINT 'Tablas Borradas'
 PRINT 'Borrando Esquema..'
 
-
-DROP SCHEMA KFC  
+DROP SCHEMA KFC;
 END
 
-
 PRINT 'Esquema Borrado'
+

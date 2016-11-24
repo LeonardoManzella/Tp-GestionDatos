@@ -4,6 +4,7 @@ DECLARE @true BIT
 SET @true = 1
 
 -- Insercion Estados Civiles del Enunciado
+PRINT '- Llenando Tabla estado_civil...'
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('SOLTERO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('CASADO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('VIUDO/A')
@@ -12,6 +13,7 @@ INSERT INTO KFC.estado_civil(descripcion) VALUES ('DIVORCIADO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('MIGRADO')			--Para los Datos de la Tabla Maestra
 
 -- Insercion Funcionalidades
+PRINT '- Llenando Tabla funcionalidades...'
 INSERT INTO KFC.funcionalidades(descripcion) VALUES ('ALTA_AFILIADO')
 INSERT INTO KFC.funcionalidades(descripcion) VALUES ('MODIFICAR_AFILIADO')
 INSERT INTO KFC.funcionalidades(descripcion) VALUES ('BAJA_AFILIADO')
@@ -28,15 +30,49 @@ INSERT INTO KFC.funcionalidades(descripcion) VALUES ('COMPRA_BONO_ADMINISTRADOR'
 INSERT INTO KFC.funcionalidades(descripcion) VALUES ('ESTADISTICAS')
 
 -- Insercion Roles del Enunciado
+PRINT '- Llenando Tabla roles...'
 INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('AFILIADO', @true)
 INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('PROFESIONAL', @true)
 INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('ADMINISTRATIVO', @true)
 
 -- Insercion Funcionalidades por Roles
---TODO!
+PRINT '- Llenando Tabla funcionalidades_roles...'
+INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+SELECT	r.rol_id, f.func_id
+FROM	KFC.roles R,
+		KFC.funcionalidades F
+WHERE	R.descripcion = 'AFILIADO'
+--Uso un OR para no crear multiples Insert
+AND		(
+		F.descripcion = 'PEDIR_TURNO'
+		OR F.descripcion = 'COMPRAR_BONO'
+		OR F.descripcion = 'CANCELAR_TURNO'
+		)
+
+INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+SELECT	r.rol_id, f.func_id
+FROM	KFC.roles R,
+		KFC.funcionalidades F
+WHERE	R.descripcion = 'PROFESIONAL'
+--Uso un OR para no crear multiples Insert
+AND		(
+		F.descripcion	= 'CREAR_AGENDA'
+		OR F.descripcion = 'CANCELAR_TURNOS_AGENDA'
+		OR F.descripcion = 'REGISTRAR_LLEGADA'
+		OR F.descripcion = 'REGISTRAR_DIAGNOSTICO'
+		)
+
+INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+(
+SELECT	r.rol_id, f.func_id
+FROM	KFC.roles R,
+		KFC.funcionalidades F		-- Trae todas las Funcionalidades
+WHERE	R.descripcion = 'ADMINISTRATIVO'
+)
 
 
 -- Insercion Usuarios del Enunciado
+PRINT '- Llenando Tabla usuarios...'
 INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('ADMIN', HASHBYTES('SHA2_256','W23E'), @true)
 
 --Agrego Usuarios para Afiliados, pedido por el Enunciado
@@ -72,6 +108,7 @@ WHERE
 
 
 -- Insercion Roles por Usuario
+PRINT '- Llenando Tabla roles_usuarios...'
 INSERT INTO KFC.roles_usuarios
           (
 			  us_id
@@ -84,8 +121,8 @@ FROM
           KFC.usuarios u
         , KFC.roles    r
 WHERE
-          r.descripcion = 'administrativo'
-          AND u.nick    = 'admin'
+        UPPER(r.descripcion) =   UPPER('ADMINISTRATIVO')
+        AND   UPPER(u.nick)    =   UPPER('ADMIN')
 
 
 -- Insercion Roles para Afiliados
@@ -101,7 +138,7 @@ FROM
           KFC.usuarios u
         , KFC.roles    r
 WHERE
-          r.descripcion = 'afiliado'
+          UPPER(r.descripcion) = UPPER('AFILIADO')
 		  -- Selecciono Solo los Afiliados
           AND u.nick IN (
 							SELECT DISTINCT Paciente_Mail
@@ -126,7 +163,7 @@ FROM
           KFC.usuarios u
         , KFC.roles    r
 WHERE
-          r.descripcion = 'profesional'
+          UPPER(r.descripcion) = UPPER('PROFESIONAL')
 		  -- Selecciono Solo los Profesionales
           AND u.nick IN (
 							SELECT DISTINCT Medico_Mail
@@ -143,6 +180,7 @@ ORDER BY
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Planes
 -- El IDENTITY_INSERT me permite introducir manualmente claves donde seria autoincrementable
 -- Link IDENTITY_INSERT: https://www.mssqltips.com/sqlservertutorial/2521/insert-into-sql-server-table-with-identity-column/
+PRINT '- Llenando Tabla planes...'
 SET IDENTITY_INSERT KFC.planes ON
 INSERT INTO KFC.planes
           (
@@ -163,6 +201,7 @@ SET IDENTITY_INSERT KFC.planes OFF
 
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Afiliados
+PRINT '- Llenando Tabla afiliados...'
 INSERT INTO KFC.afiliados
           (
                     tipo_doc
@@ -206,6 +245,7 @@ ORDER BY
 
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Profesionales
+PRINT '- Llenando Tabla profesionales...'
 INSERT INTO KFC.profesionales
           (
                     tipo_doc
@@ -242,6 +282,7 @@ ORDER BY
 
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Tipos Especialidades
+PRINT '- Llenando Tabla tipos_especialidades...'
 SET IDENTITY_INSERT KFC.tipos_especialidades ON
 INSERT INTO KFC.tipos_especialidades
           (
@@ -261,6 +302,7 @@ SET IDENTITY_INSERT KFC.tipos_especialidades OFF
 
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Especialidades
+PRINT '- Llenando Tabla especialidades...'
 SET IDENTITY_INSERT KFC.especialidades ON
 INSERT INTO KFC.especialidades
           (
@@ -284,6 +326,7 @@ SET IDENTITY_INSERT KFC.especialidades OFF
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Especialidad Profesional
 --El ID de profesional necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
+PRINT '- Llenando Tabla especialidades_profesional...'
 INSERT INTO KFC.especialidades_profesional
           (
 		     espe_id
@@ -314,6 +357,7 @@ ORDER BY
 --No se preocupen tanto por las conversiones y calculos, las hace y funciona bien. Lo comprobe manualmente.
 --Link CONVERT: https://msdn.microsoft.com/en-us/library/ms187928.aspx
 ------------------------------------------------------------------
+PRINT '- Llenando Tabla agenda...'
 INSERT INTO KFC.agenda
           (
                     espe_id
@@ -347,6 +391,7 @@ GROUP BY
         , DATEPART(WEEKDAY, m.Turno_Fecha)
 
 --Dato Extra Nuestro para Pruebas
+PRINT '- Llenando Tabla agenda...'
 INSERT INTO KFC.agenda
           (
                     espe_id
@@ -376,12 +421,14 @@ WHERE
 
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Tipos Cancelaciones
+PRINT '- Llenando Tabla tipos_cancelaciones...'
 INSERT INTO KFC.tipos_cancelaciones	Values('Por Usuario')
 INSERT INTO KFC.tipos_cancelaciones	Values('Por Medico')
 
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Turnos
 --El ID de profesional, especialidad y afiliado necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla. De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
+PRINT '- Llenando Tabla turnos...'
 SET IDENTITY_INSERT KFC.turnos ON
 INSERT INTO KFC.turnos
           (
@@ -420,6 +467,7 @@ SET IDENTITY_INSERT KFC.turnos OFF
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Bonos
 --El ID  de plan y afiliado necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.--El ID necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
+PRINT '- Llenando Tabla bonos...'
 SET IDENTITY_INSERT KFC.bonos ON
 INSERT INTO KFC.bonos
           (
@@ -452,6 +500,7 @@ SET IDENTITY_INSERT KFC.bonos OFF
 
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Atenciones
+PRINT '- Llenando Tabla atenciones...'
 INSERT INTO KFC.atenciones
           (
 			    turno_id

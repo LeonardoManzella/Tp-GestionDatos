@@ -15,7 +15,7 @@ namespace ClinicaFrba
         public List<string> permisos { get; set; }
         public int rol_seleccionado_id { get; set; }
         public string rol_seleccionado_descripcion { get; set; }
-        public string nombre_usuario { get; set; }
+        public string nick_usuario { get; set; }
         public string password { get; set; }
 
     }

@@ -69,7 +69,7 @@ namespace ClinicaFrba.AbmRol
 
                 this.checkBox_rolHabilitado.Checked = BD_Roles.obtener_estado_habilitado_rol(id_rol);
 
-                this.label3.Text = id_rol.ToString();
+                this.label3.Text = "ID Rol: " + id_rol.ToString();
                 this.checkedListBox_Funcionalidades.Enabled = true;
                 this.checkBox_rolHabilitado.Enabled         = true;
                 this.button_modificarRol.Enabled            = true;

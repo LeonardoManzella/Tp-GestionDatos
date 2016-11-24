@@ -100,7 +100,7 @@ namespace ClinicaFrba
                 this.rol_descripcion = comboBox_rol.Text.Trim();
 
                 this.usuario = Negocio.Log_In.Ingresar_App(this.user, this.password, this.rol_descripcion);
-                this.usuario.nombre_usuario = user;
+                this.usuario.nick_usuario = user;
                 this.usuario.password = this.password;
 
                 MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);

@@ -760,7 +760,8 @@ GO
 CREATE FUNCTION kfc.fun_obtener_todas_los_roles()
 returns TABLE AS
 RETURN
-SELECT * FROM kfc.roles;
+SELECT r.rol_id, r.descripcion, r.habilitado
+FROM kfc.roles r;
 
 GO
 

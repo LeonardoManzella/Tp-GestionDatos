@@ -127,10 +127,9 @@ BEGIN
 	RETURN
 END;
 
-INSERT INTO KFC.bonos(afil_id, bono_id, plan_id, consumido, fecha_compra, fecha_impresion)
+INSERT INTO KFC.bonos(afil_id, plan_id, consumido, fecha_compra, fecha_impresion)
 	VALUES(
-	 (SELECT afil_id FROM inserted), 
-	 (SELECT bono_id FROM inserted), 
+	 (SELECT afil_id FROM inserted),
 	 (SELECT plan_id FROM inserted), 
 	 (SELECT consumido FROM inserted), 
 	 (SELECT fecha_compra FROM inserted), 
@@ -187,12 +186,11 @@ IF NOT EXISTS (SELECT * FROM KFC.especialidades_profesional
 		RETURN
 	END;
 
-INSERT INTO KFC.turnos(afil_id, espe_id, prof_id, turno_id, fecha_hora, hora)
+INSERT INTO KFC.turnos(afil_id, espe_id, prof_id, fecha_hora, hora)
 	VALUES(
 	 (SELECT afil_id FROM inserted), 
 	 (SELECT espe_id FROM inserted), 
-	 (SELECT prof_id FROM inserted), 
-	 (SELECT turno_id FROM inserted), 
+	 (SELECT prof_id FROM inserted),
 	 (SELECT fecha_hora FROM inserted), 
 	 (SELECT hora FROM inserted)
 	 );

@@ -24,14 +24,10 @@ namespace ClinicaFrba.Base_de_Datos
                 SqlParameter parametroOutput = new SqlParameter("@id", SqlDbType.Int);
                 parametroOutput.DbType = DbType.Int32;
                 parametroOutput.Direction = ParameterDirection.Output;
-
-
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametroOutput);
-
                 SqlCommand procedureEjecutado = InteraccionDB.ejecutar_storedProcedureConRetorno(procedure, parametros);
-
                 int id_rol_creado = 0;
                 id_rol_creado = Convert.ToInt32(procedureEjecutado.Parameters["@id"].Value);
                 if (id_rol_creado <= 0) throw new Exception("No se creo el Rol, trajo ID invalido. Fallo Ejecucion Procedure");
@@ -59,20 +55,15 @@ namespace ClinicaFrba.Base_de_Datos
                 string procedure = "KFC.pro_crear_funcionalidad_de_rol";
                 SqlParameter parametro1 = new SqlParameter("@func_desc", SqlDbType.Text);
                 SqlParameter parametro2 = new SqlParameter("@rol_id", SqlDbType.Int);
-
                 parametro1.Value = descripcion_funcionalidad;
                 parametro2.Value = id_rol;
-
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
-
-
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                 //Veo si trajo datos o no. No se porque siempre devuelve -1
                 if (reader.RecordsAffected != -1) throw new Exception("No se pudo asignar la Funcionalidad al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
-
                 MessageBox.Show("Insertada funcionalidad: " + descripcion_funcionalidad, "Crear o Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
 
                 return;
@@ -92,15 +83,11 @@ namespace ClinicaFrba.Base_de_Datos
                 string procedure = "KFC.pro_quitar_funcionalidad_de_rol";
                 SqlParameter parametro1 = new SqlParameter("@func_desc", SqlDbType.Text);
                 SqlParameter parametro2 = new SqlParameter("@rol_id", SqlDbType.Int);
-
                 parametro1.Value = descripcion_funcionalidad;
                 parametro2.Value = id_rol;
-
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
-
-
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                 //Veo si trajo datos o no. No se porque siempre devuelve -1
@@ -142,7 +129,8 @@ namespace ClinicaFrba.Base_de_Datos
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                 //Veo si trajo datos o no
-                if (reader.RecordsAffected != 1) throw new Exception("No se pudo modificar Estado al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
+                //if (reader.RecordsAffected != 1) throw new Exception("No se pudo modificar Estado al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
+                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo modificar Estado al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
 
                 MessageBox.Show("Modificado Estado Habilitacion de Rol a: " + estado, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
 
@@ -164,12 +152,9 @@ namespace ClinicaFrba.Base_de_Datos
                 string funcion = "SELECT * FROM  KFC.fun_obtener_funcion_rol(@id_rol)";
                 SqlParameter parametro = new SqlParameter("@id_rol", SqlDbType.Int);
                 parametro.Value = id_rol;
-
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro);
-
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
-
                 List<string> funcionalidades = InteraccionDB.ObtenerStringsReader(reader, 1);
 
                 return funcionalidades;
@@ -178,7 +163,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 InteraccionDB.ImprimirExcepcion(e);
 
-                throw e;
+                throw new Exception("No Pudieron Obtenerse Funcionalidades. Error: " + e.Message);
             }
         }
 
@@ -187,11 +172,8 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
                 string funcion = "SELECT * FROM  KFC.fun_obtener_todas_los_roles()";
-
                 var parametros = new List<SqlParameter>();
-
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
-
                 List<string> roles = InteraccionDB.ObtenerStringsReader(reader, 1);
 
                 return roles;
@@ -200,7 +182,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 InteraccionDB.ImprimirExcepcion(e);
 
-                throw e;
+                throw new Exception("No Pudieron Obtenerse Todos los Roles. Error: " + e.Message);
             }
         }
 
@@ -211,7 +193,6 @@ namespace ClinicaFrba.Base_de_Datos
                 string funcion = "SELECT KFC.fun_retornar_id_rol(@rol_nombre)";
                 SqlParameter parametro = new SqlParameter("@rol_nombre", SqlDbType.Text);
                 parametro.Value = nombre.ToUpper();
-
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro);
 
@@ -219,7 +200,6 @@ namespace ClinicaFrba.Base_de_Datos
                 try
                 {
                     var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
-
                     id = InteraccionDB.ObtenerIntReader(reader, 0);
                 }
                 catch (Exception e)
@@ -234,7 +214,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 InteraccionDB.ImprimirExcepcion(e);
 
-                throw e;
+                throw new Exception("No Pudieron Obtenerse ID Rol. Error: " + e.Message);
             }
         }
 
@@ -250,17 +230,8 @@ namespace ClinicaFrba.Base_de_Datos
                 parametros.Add(parametro);
 
                 bool estado_habilitacion;
-                try
-                {
-                    var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
-
-                    estado_habilitacion = InteraccionDB.ObtenerBoolReader(reader, 0);
-                }
-                catch (Exception e)
-                {
-                    InteraccionDB.ImprimirExcepcion(e);
-                    throw new Exception("No pudo Obtenerse Estado habilitacion del Rol. Error: " + e.Message);
-                }
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+                estado_habilitacion = InteraccionDB.ObtenerBoolReader(reader, 0);
 
                 return estado_habilitacion;
             }
@@ -268,7 +239,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 InteraccionDB.ImprimirExcepcion(e);
 
-                throw e;
+                throw new Exception("No pudo Obtenerse Estado habilitacion del Rol. Error: " + e.Message);
             }
         }
     }

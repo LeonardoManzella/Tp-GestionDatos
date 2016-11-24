@@ -27,37 +27,54 @@ namespace ClinicaFrba
 
         private void deshabilitar_componentes()
         {
-            this.afiliadoToolStripMenuItem.Enabled = false;
-            this.profesionalesToolStripMenuItem.Enabled = false;
-            this.adminToolStripMenuItem.Enabled = false;
+            this.nuevoAfiliadoToolStripMenuItem.Enabled                     = false;
+            this.modificarAfiliadoToolStripMenuItem.Enabled                 = false;
+            this.bajaAfiliadoToolStripMenuItem.Enabled                      = false;
+            this.pedirTurnoToolStripMenuItem.Enabled                        = false;
+            this.cancelarTurnosProfesional_ToolStripMenuItem.Enabled        = false;
+            this.comprarBonoUsuario_ToolStripMenuItem.Enabled               = false;
+            this.agendaCrearTurnos_ToolStripMenuItem.Enabled                = false;
+            this.cancelarTurnosUsuario_ToolStripMenuItem.Enabled            = false;
+            this.registrarLlegadaToolStripMenuItem.Enabled                  = false;
+            this.registrarResultadoDiagnosticoToolStripMenuItem.Enabled     = false;
+            this.nuevRolToolStripMenuItem.Enabled                           = false;
+            this.modificarRol_ToolStripMenuItem.Enabled                     = false;
+            this.comprarBonoAdmin_ToolStripMenuItem.Enabled                 = false;
+            this.estadisticasToolStripMenuItem.Enabled                      = false;
 
         }
         private void habilitar_componentes()
         {
-            //TODO Cambiar a que use cada permiso de cada pestaña!
-            if (usuario.rol_seleccionado_descripcion.Equals("AFILIADO")) this.afiliadoToolStripMenuItem.Enabled = true;
-            if (usuario.rol_seleccionado_descripcion.Equals("PROFESIONAL")) this.profesionalesToolStripMenuItem.Enabled = true;
-            if (usuario.rol_seleccionado_descripcion.Equals("ADMINISTRATIVO"))
-            {
-                this.afiliadoToolStripMenuItem.Enabled      = true;
-                this.profesionalesToolStripMenuItem.Enabled = true;
-                this.adminToolStripMenuItem.Enabled         = true;
-            }
+            //En base a los Permisos, vemos las Pestañas a Habilitar para Usar
+            if (this.usuario.permisos.Contains("ALTA_AFILIADO"))                this.nuevoAfiliadoToolStripMenuItem.Enabled                     = true;
+            if (this.usuario.permisos.Contains("MODIFICAR_AFILIADO"))           this.modificarAfiliadoToolStripMenuItem.Enabled                 = true;
+            if (this.usuario.permisos.Contains("BAJA_AFILIADO"))                this.bajaAfiliadoToolStripMenuItem.Enabled                      = true;
+            if (this.usuario.permisos.Contains("PEDIR_TURNO"))                  this.pedirTurnoToolStripMenuItem.Enabled                        = true;
+            if (this.usuario.permisos.Contains("CANCELAR_TURNO"))               this.cancelarTurnosUsuario_ToolStripMenuItem.Enabled            = true;
+            if (this.usuario.permisos.Contains("COMPRAR_BONO"))                 this.comprarBonoUsuario_ToolStripMenuItem.Enabled               = true;
+            if (this.usuario.permisos.Contains("CREAR_AGENDA"))                 this.agendaCrearTurnos_ToolStripMenuItem.Enabled                = true;
+            if (this.usuario.permisos.Contains("CANCELAR_TURNOS_AGENDA"))       this.cancelarTurnosProfesional_ToolStripMenuItem.Enabled        = true;
+            if (this.usuario.permisos.Contains("REGISTRAR_LLEGADA"))            this.registrarLlegadaToolStripMenuItem.Enabled                  = true;
+            if (this.usuario.permisos.Contains("REGISTRAR_DIAGNOSTICO"))        this.registrarResultadoDiagnosticoToolStripMenuItem.Enabled     = true;
+            if (this.usuario.permisos.Contains("CREAR_ROL"))                    this.nuevRolToolStripMenuItem.Enabled                           = true;
+            if (this.usuario.permisos.Contains("MODIFICAR_ROL"))                this.modificarRol_ToolStripMenuItem.Enabled                     = true;
+            if (this.usuario.permisos.Contains("COMPRA_BONO_ADMINISTRADOR"))    this.comprarBonoAdmin_ToolStripMenuItem.Enabled                 = true;
+            if (this.usuario.permisos.Contains("ESTADISTICAS"))                 this.estadisticasToolStripMenuItem.Enabled                      = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //TODO restablecer
             deshabilitar_componentes();
             this.AcceptButton = boton_loguear;
-            try {
+            try
+            {
                 var lista = BD_Roles.obtener_roles();
                 ComboData.llenarCombo(this.comboBox_rol, lista);
             }
             catch (Exception ex)
             {
                 InteraccionDB.ImprimirExcepcion(ex);
-                MessageBox.Show("Error al Pedir Roles contra la Base. ERROR: " + ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Pedir Roles contra la Base. Compruebe que la Base de Datos este Poblada. ERROR: " + ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -78,15 +95,15 @@ namespace ClinicaFrba
         {
             try
             {
-                this.user               = textBox_usuario.Text.Trim();
-                this.password           = textBox_password.Text.Trim();
-                this.rol_descripcion    = comboBox_rol.Text.Trim();
+                this.user = textBox_usuario.Text.Trim();
+                this.password = textBox_password.Text.Trim();
+                this.rol_descripcion = comboBox_rol.Text.Trim();
 
                 this.usuario = Negocio.Log_In.Ingresar_App(this.user, this.password, this.rol_descripcion);
                 this.usuario.nombre_usuario = user;
                 this.usuario.password = this.password;
 
-               MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 habilitar_componentes();
             }

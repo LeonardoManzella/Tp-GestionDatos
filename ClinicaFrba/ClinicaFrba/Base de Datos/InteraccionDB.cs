@@ -1,8 +1,9 @@
-﻿﻿using ClinicaFrba.Clases;
+﻿using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Windows.Forms;
 
 namespace ClinicaFrba.Base_de_Datos
 {
@@ -79,7 +80,6 @@ namespace ClinicaFrba.Base_de_Datos
             return comando_sql;
         }
 
-
         public static void ImprimirExcepcion(Exception e)
         {
             //Imprimir para DEBUG
@@ -94,6 +94,22 @@ namespace ClinicaFrba.Base_de_Datos
             Console.WriteLine(e.InnerException);
             Console.WriteLine(e.HelpLink);
             Console.Write(e.StackTrace);
+        }
+
+
+        public static void comprobarConexionBaseDatos()
+        {
+            SqlConnection conexion = null;
+            try
+            {
+                conexion = Conexion.Instance.get();
+                if (conexion == null) throw new Exception("No se pueden Obtener Conexiones de la Base de Datos. Devuelve Null");
+            }
+            catch (Exception ex)
+            {
+                ImprimirExcepcion(ex);
+                throw new Exception("Error al Conectar con la Base de Datos. Compruebe que exista la Base, el Esquema y las Tablas. Error: " + ex.Message);
+            }
         }
 
         /// <summary>
@@ -172,56 +188,12 @@ namespace ClinicaFrba.Base_de_Datos
                 break;  //Unico Valor a Obtener
 
             }
-            if (flag_leyo_algo==false) throw new Exception("Hubo un Problema al Obtener Dato Booleano");
+            if (flag_leyo_algo == false) throw new Exception("Hubo un Problema al Obtener Dato Booleano");
             return valorObtener;
         }
 
 
-        public static Usuario log_in(string usuario, string password, string rol_descripcion)
-        {
-            try
-            {
-                string funcion = "SELECT KFC.fun_validar_usuario(@user, @contrasenia, @rol_desc)";
-                SqlParameter parametro1 = new SqlParameter("@user", SqlDbType.Text);
-                parametro1.Value = usuario.ToUpper();
-                SqlParameter parametro2 = new SqlParameter("@contrasenia", SqlDbType.Text);
-                parametro2.Value = password.ToUpper();
-                SqlParameter parametro3 = new SqlParameter("@rol_desc", SqlDbType.Text);
-                parametro3.Value = rol_descripcion.ToUpper();
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro1);
-                parametros.Add(parametro2);
-                parametros.Add(parametro3);
-
-                var reader = ejecutar_funcion(funcion, parametros);
-
-
-                int id = -1;
-                try
-                {
-                    id = ObtenerIntReader(reader, 0);
-                }
-                catch (Exception e)
-                {
-                    ImprimirExcepcion(e);
-                    throw new Exception("Fallo Obtener Datos: Usuario Inexistente, Esta mal la Contraseña, el Rol o no esta habilitado el Usuario");
-                }
-
-                if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta habilitado el Usuario");
-
-                Usuario user = cargar_datos(id, rol_descripcion);
-
-                return user;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-
-                throw e;
-            }
-        }
+      
 
         /// <summary>
         /// Obtiene el id de un afiliado a partir de su nombre y apellido
@@ -230,7 +202,8 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="apellido"></param>
         /// <returns></returns>
 
-        public static int obtenerID_afiliado(string nombre, string apellido, int user_id)
+        //public static int obtenerID_afiliado(string nombre, string apellido, int user_id)
+        public static int obtenerID_afiliado(string nombre, string apellido)
         {
             try
             {
@@ -239,13 +212,13 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro1.Value = nombre.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
                 parametro2.Value = apellido.ToUpper();
-                SqlParameter parametro3 = new SqlParameter("@us_id", SqlDbType.Int);
-                parametro3.Value = user_id;
+                //SqlParameter parametro3 = new SqlParameter("@us_id", SqlDbType.Int);
+                // parametro3.Value = user_id;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
-                parametros.Add(parametro2);
-                parametros.Add(parametro3);
+                //parametros.Add(parametro2);
+                //parametros.Add(parametro3);
 
                 var reader = ejecutar_funcion(funcion, parametros);
 
@@ -398,36 +371,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        private static Usuario cargar_datos(int usuario_id, string rol_descripcion)
-        {
-            try
-            {
-
-                var usuario = new Usuario();
-                usuario.id = usuario_id;
-                usuario.rol_seleccionado_descripcion = rol_descripcion;
-
-                string funcion = "SELECT * FROM KFC.fun_obtener_roles_usuario(@usuario_id)";
-                SqlParameter parametro = new SqlParameter("@usuario_id", SqlDbType.Int);
-                parametro.Value = usuario_id;
-
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro);
-
-                var reader = ejecutar_funcion(funcion, parametros);
-                usuario.permisos = ObtenerStringsReader(reader, 1);
-
-                //Otros valores falta ver que hacemos con eso. No es necesario Obtenerlos de la Base.
-                return usuario;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
+        
 
         /// <summary>
         /// Baja de afiliado si la baja ha sido exitosa,devuelve ok
@@ -637,7 +581,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 SqlConnection conexion = Conexion.Instance.get();
 
-                string sql = "kfc.get_cmb_estado_civil" ;
+                string sql = "kfc.get_cmb_estado_civil";
 
                 SqlCommand cmd = new SqlCommand(sql, conexion);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -678,7 +622,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 SqlConnection conexion = Conexion.Instance.get();
 
-                string sql = "kfc.get_cmb_planes_sociales" ;
+                string sql = "kfc.get_cmb_planes_sociales";
 
                 SqlCommand cmd = new SqlCommand(sql, conexion);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);

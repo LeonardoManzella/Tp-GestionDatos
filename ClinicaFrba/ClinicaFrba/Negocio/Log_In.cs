@@ -16,7 +16,7 @@ namespace ClinicaFrba.Negocio
             {
                 var valido = validar_datos_login(usuario, password, rol_descripcion);
                 if (valido)
-                    return InteraccionDB.log_in(usuario, password, rol_descripcion);
+                    return BD_Log_In.validar_obtener_usuario(usuario, password, rol_descripcion);
                 else
                     throw new  Exception("Ha ocurrido un problema, ni el usuario ni la contraseña ni el rol pueden estar en blanco");
 

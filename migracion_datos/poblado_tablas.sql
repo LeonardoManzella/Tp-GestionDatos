@@ -44,7 +44,7 @@ FROM	KFC.roles R,
 WHERE	R.descripcion = 'AFILIADO'
 --Uso un OR para no crear multiples Insert
 AND		(
-		F.descripcion = 'PEDIR_TURNO'
+		F.descripcion    = 'PEDIR_TURNO'
 		OR F.descripcion = 'COMPRAR_BONO'
 		OR F.descripcion = 'CANCELAR_TURNO'
 		)
@@ -56,19 +56,28 @@ FROM	KFC.roles R,
 WHERE	R.descripcion = 'PROFESIONAL'
 --Uso un OR para no crear multiples Insert
 AND		(
-		F.descripcion	= 'CREAR_AGENDA'
+		F.descripcion	 = 'CREAR_AGENDA'
 		OR F.descripcion = 'CANCELAR_TURNOS_AGENDA'
 		OR F.descripcion = 'REGISTRAR_LLEGADA'
 		OR F.descripcion = 'REGISTRAR_DIAGNOSTICO'
 		)
 
 INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
-(
 SELECT	r.rol_id, f.func_id
 FROM	KFC.roles R,
-		KFC.funcionalidades F		-- Trae todas las Funcionalidades
+		KFC.funcionalidades F
 WHERE	R.descripcion = 'ADMINISTRATIVO'
-)
+--Uso un OR para no crear multiples Insert
+AND		(
+		F.descripcion	 = 'ALTA_AFILIADO'
+		OR F.descripcion = 'MODIFICAR_AFILIADO'
+		OR F.descripcion = 'BAJA_AFILIADO'
+		OR F.descripcion = 'CREAR_ROL'
+		OR F.descripcion = 'MODIFICAR_ROL'
+		OR F.descripcion = 'COMPRA_BONO_ADMINISTRADOR'
+		OR F.descripcion = 'ESTADISTICAS'
+		)
+
 
 
 -- Insercion Usuarios del Enunciado

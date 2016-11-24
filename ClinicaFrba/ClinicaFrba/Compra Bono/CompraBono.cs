@@ -91,7 +91,15 @@ namespace ClinicaFrba.Compra_Bono
                 string nombre = this.textBox_Nombre.Text;
                 string apellido = this.textBox_Apellido.Text;
 
-                this.id_usuario_que_compra = InteraccionDB.obtenerID_afiliado(nombre, apellido);
+                try
+                {
+                    this.id_usuario_que_compra = InteraccionDB.obtenerID_afiliado(nombre, apellido);
+                }
+                catch (Exception ex)
+                {
+                    InteraccionDB.ImprimirExcepcion(ex);
+                    throw new Exception("No existe el Afiliado, por favor revisar Nombre y Apellido");
+                }
                 mostrar_plan();
                 habilitar_comprar();
 
@@ -102,17 +110,19 @@ namespace ClinicaFrba.Compra_Bono
                 MessageBox.Show(ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-    
+
 
         private void button_Comprar_Click(object sender, EventArgs e)
         {
             try
             {
-                BD_Bonos.comprar_bono(this.id_usuario_que_compra, Convert.ToInt32(textBox_Cantidad.Text) );
+                BD_Bonos.comprar_bono(this.id_usuario_que_compra, Convert.ToInt32(textBox_Cantidad.Text));
                 MessageBox.Show("Bonos Comprados", "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.textBox_Cantidad.Text = "";
             }
             catch (Exception ex)
             {
+                this.textBox_Cantidad.Text = "";
                 MessageBox.Show(ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

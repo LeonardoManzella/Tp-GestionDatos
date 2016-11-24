@@ -84,6 +84,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                     //Veo si trajo datos o no
                     if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Comprar el Bono. Fallo Ejecucion Procedure");
+
                     MessageBox.Show("Comprado Bono", "Comprar Bonos", MessageBoxButtons.OK, MessageBoxIcon.None);
                 }
 

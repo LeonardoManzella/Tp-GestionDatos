@@ -1,4 +1,6 @@
 ﻿using ClinicaFrba.Abm_Afiliado;
+using ClinicaFrba.Base_de_Datos;
+using ClinicaFrba.Clases;
 using ClinicaFrba.Pedir_Turno;
 using System;
 using System.Windows.Forms;
@@ -46,8 +48,17 @@ namespace ClinicaFrba
         private void Form1_Load(object sender, EventArgs e)
         {
             //TODO restablecer
-            //deshabilitar_componentes();
+            deshabilitar_componentes();
             this.AcceptButton = boton_loguear;
+            try {
+                var lista = BD_Roles.obtener_roles();
+                ComboData.llenarCombo(this.comboBox_rol, lista);
+            }
+            catch (Exception ex)
+            {
+                InteraccionDB.ImprimirExcepcion(ex);
+                MessageBox.Show("Error al Pedir Roles contra la Base. ERROR: " + ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
@@ -69,17 +80,19 @@ namespace ClinicaFrba
             {
                 this.user               = textBox_usuario.Text.Trim();
                 this.password           = textBox_password.Text.Trim();
-                this.rol_descripcion    = textBox_rol.Text.Trim();
+                this.rol_descripcion    = comboBox_rol.Text.Trim();
 
                 this.usuario = Negocio.Log_In.Ingresar_App(this.user, this.password, this.rol_descripcion);
+                this.usuario.nombre_usuario = user;
+                this.usuario.password = this.password;
 
-                MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 habilitar_componentes();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Ingresar Datos para Loguear. ERROR: " + ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

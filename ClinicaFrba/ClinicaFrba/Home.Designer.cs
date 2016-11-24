@@ -59,8 +59,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.boton_loguear = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox_rol = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.comboBox_rol = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -321,30 +320,21 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "Rol a Usar";
             // 
-            // textBox_rol
+            // comboBox_rol
             // 
-            this.textBox_rol.Location = new System.Drawing.Point(209, 218);
-            this.textBox_rol.Name = "textBox_rol";
-            this.textBox_rol.Size = new System.Drawing.Size(213, 20);
-            this.textBox_rol.TabIndex = 5;
-            this.textBox_rol.Text = "ADMINISTRATIVO";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(242, 251);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(166, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "TODO cambiar roles a ComboBox";
+            this.comboBox_rol.FormattingEnabled = true;
+            this.comboBox_rol.Location = new System.Drawing.Point(210, 218);
+            this.comboBox_rol.Name = "comboBox_rol";
+            this.comboBox_rol.Size = new System.Drawing.Size(212, 21);
+            this.comboBox_rol.TabIndex = 9;
+            this.comboBox_rol.Text = "ADMINISTRATIVO";
             // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(563, 294);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBox_rol);
+            this.Controls.Add(this.comboBox_rol);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.boton_loguear);
             this.Controls.Add(this.label3);
@@ -397,8 +387,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button boton_loguear;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox_rol;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox comboBox_rol;
     }
 }
 

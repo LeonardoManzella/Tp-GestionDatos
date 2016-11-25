@@ -88,12 +88,13 @@ namespace ClinicaFrba.Compra_Bono
         {
             try
             {
-                string nombre = this.textBox_Nombre.Text;
-                string apellido = this.textBox_Apellido.Text;
+                string nombre = this.textBox_Nombre.Text.Trim();
+                string apellido = this.textBox_Apellido.Text.Trim();
+                string documento = this.textBox_Documento.Text.Trim();
 
                 try
                 {
-                    this.id_usuario_que_compra = InteraccionDB.obtenerID_afiliado(nombre, apellido);
+                    this.id_usuario_que_compra = InteraccionDB.obtenerID_afiliado(nombre, apellido, documento);
                 }
                 catch (Exception ex)
                 {

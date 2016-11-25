@@ -17,7 +17,7 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
-                string funcion = "SELECT KFC.fun_retornar_id_afildo(@nombre, @apellido, )";
+                string funcion = "SELECT KFC.fun_retornar_id_afildo_por_id(@nombre, @apellido,@us_id)";
                 SqlParameter parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 parametro1.Value = nombre.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);

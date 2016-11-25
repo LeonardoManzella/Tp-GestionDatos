@@ -89,7 +89,7 @@ namespace ClinicaFrba.Base_de_Datos
         
         }
 
-        public static void cancelar_turno(string nombreProfesional, string apellidoProfesional, string especialidad, DateTime fecha, string hora)
+        public static void cancelar_turno(string nombreProfesional, string apellidoProfesional, string especialidad, DateTime fecha, string hora, string motivo, string tipo)
         {
             try
             {
@@ -105,6 +105,10 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro4.Value = nombreProfesional;
                 SqlParameter parametro5 = new SqlParameter("@prof_apellido", SqlDbType.Text);
                 parametro5.Value = apellidoProfesional;
+                SqlParameter parametro6 = new SqlParameter("@motivo", SqlDbType.Text);
+                parametro6.Value = motivo;
+                SqlParameter parametro7 = new SqlParameter("@tipo", SqlDbType.Text);
+                parametro7.Value = tipo;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
@@ -112,6 +116,8 @@ namespace ClinicaFrba.Base_de_Datos
                 parametros.Add(parametro3);
                 parametros.Add(parametro4);
                 parametros.Add(parametro5);
+                parametros.Add(parametro6);
+                parametros.Add(parametro7);
 
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 

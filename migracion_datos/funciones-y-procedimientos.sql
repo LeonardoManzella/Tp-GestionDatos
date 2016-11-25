@@ -513,7 +513,47 @@ GO
 
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
-CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @us_id INT)
+CREATE FUNCTION KFC.fun_retornar_id_afildo_por_id(@nombre VARCHAR(255), @apellido VARCHAR(255), @us_id INT)
+returns INT AS
+BEGIN
+          DECLARE @Afil_id INT;
+          SELECT TOP 1
+                    @Afil_id = ISNULL(Afil_id,0)
+          FROM
+                    KFC.afiliados Afi
+          WHERE
+                    Afi.nombre         = UPPER(@nombre)
+                    AND Afi.apellido   = UPPER(@apellido)
+					AND Afi.us_id 	   = @us_id
+                    AND Afi.habilitado = 1
+          ;
+          
+          RETURN @Afil_id;
+END;
+GO
+
+
+CREATE FUNCTION KFC.fun_retornar_id_afildo_por_doc(@nombre VARCHAR(255), @apellido VARCHAR(255), @documento NUMERIC(18,0))
+returns INT AS
+BEGIN
+          DECLARE @Afil_id INT;
+          SELECT TOP 1
+                    @Afil_id = ISNULL(Afil_id,0)
+          FROM
+                    KFC.afiliados Afi
+          WHERE
+                    Afi.nombre         = UPPER(@nombre)
+                    AND Afi.apellido   = UPPER(@apellido)
+					AND Afi.numero_doc = @documento
+                    AND Afi.habilitado = 1
+          ;
+          
+          RETURN @Afil_id;
+END;
+GO
+
+--Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
+CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @dni INT)
 returns INT AS
 BEGIN
           DECLARE @Afil_id INT;
@@ -1047,6 +1087,7 @@ AS
 				DECLARE @prof_id INT;
 
 				SET @horaConvertida = CONVERT(TIME(0),@hora, 108);
+
 				SET @espe_id = KFC.fun_obtener_id_especialidad(@espe_desc);
 				SET @prof_id = KFC.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
 
@@ -1064,8 +1105,46 @@ AS
     END;
 GO
 
-PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'
-PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA ESTADISTICAS...'
+------------------CANCELAR_TURNO------------------
+--Proposito: Cancelar el turno de un afiliado
+--
+--Ingreso: datos necesarios para cancelar un turno
+------------------CANCELAR_TURNO------------------
+CREATE PROCEDURE KFC.pro_cancelar_turno
+          @fecha DATETIME
+		, @hora	   VARCHAR(60)
+		, @espe_desc  VARCHAR(60)
+		, @prof_nombre VARCHAR(60) 
+		, @prof_apellido VARCHAR(60)
+		, @tipo VARCHAR(15)
+		, @motivo VARCHAR(255)
+AS
+    BEGIN
+		BEGIN TRY
+			BEGIN TRANSACTION
+				DECLARE @horaConvertida TIME(0);
+				DECLARE @espe_id INT;
+				DECLARE @prof_id INT;
+				DECLARE @turno_id INT;
+
+				SET @horaConvertida = CONVERT(TIME(0),@hora, 108);
+				SET @espe_id = KFC.fun_obtener_id_especialidad(@espe_desc);
+				SET @prof_id = KFC.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
+				SET @turno_id = (SELECT turno_id FROM KFC.turnos WHERE espe_id = @espe_id AND prof_id = @prof_id AND fecha_hora = @fecha + CAST(@horaConvertida as DATETIME))
+
+				INSERT INTO KFC.cancelaciones
+				SELECT @turno_id, @motivo, GETDATE(), CASE WHEN @tipo = 'USUARIO' THEN 1 ELSE 2 END
+
+			COMMIT;
+		END TRY
+		BEGIN CATCH
+                    IF @@trancount > 0
+                    ROLLBACK TRANSACTION;
+
+					PRINT 'Turno no cancelado. Fecha ' + CONVERT(varchar,@fecha,102)
+                    ;THROW
+        END CATCH
+    END;
 GO
 
 ------------------OBTENER TURNOS CANCELABLES------------------
@@ -1095,6 +1174,10 @@ INNER JOIN
 WHERE T.afil_id = @afil_id
 AND (T.turno_id IS NULL OR C.turno_id IS NULL)
 AND DATEDIFF(day, GETDATE(), t.fecha_hora) >= 1;
+GO
+
+PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'
+PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA ESTADISTICAS...'
 GO
 
 

@@ -223,24 +223,18 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        /// <summary>
-        /// Obtiene el id de un afiliado a partir de su nombre y apellido
-        /// </summary>
-        /// <param name="nombre"></param>
-        /// <param name="apellido"></param>
-        /// <returns></returns>
-
-        public static int obtenerID_afiliado(string nombre, string apellido, int user_id)
+        // Metodo sobrecargado
+        public static int obtenerID_afiliado(string nombre, string apellido, string documento)
         {
             try
             {
-                string funcion = "SELECT KFC.fun_retornar_id_afildo(@nombre, @apellido)";
+                string funcion = "SELECT KFC.fun_retornar_id_afildo_por_doc(@nombre, @apellido,@documento)";
                 SqlParameter parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 parametro1.Value = nombre.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
                 parametro2.Value = apellido.ToUpper();
-                SqlParameter parametro3 = new SqlParameter("@us_id", SqlDbType.Int);
-                parametro3.Value = user_id;
+                SqlParameter parametro3 = new SqlParameter("@documento", SqlDbType.Decimal);
+                parametro3.Value = Convert.ToDecimal(documento);
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);

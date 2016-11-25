@@ -47,7 +47,11 @@ namespace ClinicaFrba.CancelarTurno
                 DateTime fecha = DateTime.Parse(turno[2].Trim());;
                 string hora = turno[3].Trim();
 
-                Base_de_Datos.BD_Turnos.cancelar_turno(nombreProfesional, apellidoProfesional, especialidad, fecha, hora);
+                Base_de_Datos.BD_Turnos.cancelar_turno(nombreProfesional, apellidoProfesional, especialidad, fecha, hora, motivo, "USUARIO");
+
+                List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
+                comboCancelarTurno.Items.Clear();
+                ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
 
             }
             catch (Exception ex)

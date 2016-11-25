@@ -41,6 +41,8 @@
             this.textBox_precio = new System.Windows.Forms.TextBox();
             this.label_precio = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.textBox_Documento = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label_plan
@@ -89,7 +91,7 @@
             // label_Usuario
             // 
             this.label_Usuario.AutoSize = true;
-            this.label_Usuario.Location = new System.Drawing.Point(35, 62);
+            this.label_Usuario.Location = new System.Drawing.Point(34, 29);
             this.label_Usuario.Name = "label_Usuario";
             this.label_Usuario.Size = new System.Drawing.Size(83, 13);
             this.label_Usuario.TabIndex = 5;
@@ -97,14 +99,14 @@
             // 
             // textBox_Nombre
             // 
-            this.textBox_Nombre.Location = new System.Drawing.Point(124, 59);
+            this.textBox_Nombre.Location = new System.Drawing.Point(123, 26);
             this.textBox_Nombre.Name = "textBox_Nombre";
             this.textBox_Nombre.Size = new System.Drawing.Size(100, 20);
             this.textBox_Nombre.TabIndex = 6;
             // 
             // textBox_Apellido
             // 
-            this.textBox_Apellido.Location = new System.Drawing.Point(124, 99);
+            this.textBox_Apellido.Location = new System.Drawing.Point(123, 66);
             this.textBox_Apellido.Name = "textBox_Apellido";
             this.textBox_Apellido.Size = new System.Drawing.Size(100, 20);
             this.textBox_Apellido.TabIndex = 8;
@@ -112,7 +114,7 @@
             // label_apellido
             // 
             this.label_apellido.AutoSize = true;
-            this.label_apellido.Location = new System.Drawing.Point(35, 102);
+            this.label_apellido.Location = new System.Drawing.Point(34, 69);
             this.label_apellido.Name = "label_apellido";
             this.label_apellido.Size = new System.Drawing.Size(83, 13);
             this.label_apellido.TabIndex = 7;
@@ -156,11 +158,29 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // textBox_Documento
+            // 
+            this.textBox_Documento.Location = new System.Drawing.Point(123, 102);
+            this.textBox_Documento.Name = "textBox_Documento";
+            this.textBox_Documento.Size = new System.Drawing.Size(100, 20);
+            this.textBox_Documento.TabIndex = 14;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(34, 105);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(62, 13);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Documento";
+            // 
             // CompraBono
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(550, 220);
+            this.Controls.Add(this.textBox_Documento);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox_precio);
             this.Controls.Add(this.label_precio);
@@ -197,5 +217,7 @@
         private System.Windows.Forms.TextBox textBox_precio;
         private System.Windows.Forms.Label label_precio;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBox_Documento;
+        private System.Windows.Forms.Label label1;
     }
 }

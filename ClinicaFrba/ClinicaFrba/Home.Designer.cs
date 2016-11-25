@@ -322,29 +322,12 @@
             // 
             // comboBox_rol
             // 
-<<<<<<< HEAD
-            this.textBox_rol.Location = new System.Drawing.Point(149, 197);
-            this.textBox_rol.Name = "textBox_rol";
-            this.textBox_rol.Size = new System.Drawing.Size(213, 20);
-            this.textBox_rol.TabIndex = 5;
-            this.textBox_rol.Text = "ADMINISTRATIVO";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(182, 230);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(166, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "TODO cambiar roles a ComboBox";
-=======
             this.comboBox_rol.FormattingEnabled = true;
             this.comboBox_rol.Location = new System.Drawing.Point(210, 218);
             this.comboBox_rol.Name = "comboBox_rol";
             this.comboBox_rol.Size = new System.Drawing.Size(212, 21);
             this.comboBox_rol.TabIndex = 9;
             this.comboBox_rol.Text = "ADMINISTRATIVO";
->>>>>>> a7ea30803864b76c7ad148399783447cfb689966
             // 
             // Home
             // 

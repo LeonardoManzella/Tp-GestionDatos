@@ -222,51 +222,7 @@ namespace ClinicaFrba.Base_de_Datos
         }
 
 
-      
-
-        /// <summary>
-        /// Obtiene el id de un afiliado a partir de su nombre y apellido
-        /// </summary>
-        /// <param name="nombre"></param>
-        /// <param name="apellido"></param>
-        /// <returns></returns>
-
-        //public static int obtenerID_afiliado(string nombre, string apellido, int user_id)
-        public static int obtenerID_afiliado(string nombre, string apellido)
-        {
-            try
-            {
-                string funcion = "SELECT KFC.fun_retornar_id_afildo(@nombre, @apellido)";
-                SqlParameter parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
-                parametro1.Value = nombre.ToUpper();
-                SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
-                parametro2.Value = apellido.ToUpper();
-                //SqlParameter parametro3 = new SqlParameter("@us_id", SqlDbType.Int);
-                // parametro3.Value = user_id;
-
-                var parametros = new List<SqlParameter>();
-                parametros.Add(parametro1);
-                parametros.Add(parametro2);
-                //parametros.Add(parametro3);
-
-                var reader = ejecutar_funcion(funcion, parametros);
-
-                int id = ObtenerIntReader(reader, 0);
-
-                return id;
-            }
-            catch (Exception e)
-            {
-                ImprimirExcepcion(e);
-
-                throw e;
-            }
-        }
-       
-
         
-
-
         public static List<string> obtener_todas_especialidades()
         {
             try

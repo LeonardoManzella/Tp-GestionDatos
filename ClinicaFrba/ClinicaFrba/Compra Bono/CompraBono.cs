@@ -67,7 +67,7 @@ namespace ClinicaFrba.Compra_Bono
                 if (this.funcionalidad == tipos_funcionalidad.USUARIO)
                 {
                     deshabilitar_busqueda();
-                    this.id_afiliado_que_compra = InteraccionDB.obtenerID_afiliado(usuario_o_administrador.nombre, usuario_o_administrador.apellido); ;
+                    this.id_afiliado_que_compra = BD_Afiliados.obtenerID_afiliado(usuario_o_administrador.nombre, usuario_o_administrador.apellido, usuario_o_administrador.id); ;
                     mostrar_plan();
                 }
                 else
@@ -92,12 +92,13 @@ namespace ClinicaFrba.Compra_Bono
         {
             try
             {
-                string nombre = this.textBox_Nombre.Text;
-                string apellido = this.textBox_Apellido.Text;
+                string nombre = this.textBox_Nombre.Text.Trim();
+                string apellido = this.textBox_Apellido.Text.Trim();
+                string documento = this.textBox_Documento.Text.Trim();
 
                 try
                 {
-                    this.id_afiliado_que_compra = InteraccionDB.obtenerID_afiliado(nombre, apellido);
+                    this.id_afiliado_que_compra = BD_Afiliados.obtenerID_afiliado(nombre, apellido, documento);
                 }
                 catch (Exception ex)
                 {

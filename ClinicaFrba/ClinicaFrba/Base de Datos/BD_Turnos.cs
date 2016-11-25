@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -87,6 +87,49 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         
+        }
+
+        public static void cancelar_turno(string nombreProfesional, string apellidoProfesional, string especialidad, DateTime fecha, string hora, string motivo, string tipo)
+        {
+            try
+            {
+
+                string procedure = "KFC.pro_cancelar_turno";
+                SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Date);
+                parametro1.Value = fecha;
+                SqlParameter parametro2 = new SqlParameter("@hora", SqlDbType.Text);
+                parametro2.Value = hora;
+                SqlParameter parametro3 = new SqlParameter("@espe_desc", SqlDbType.Text);
+                parametro3.Value = especialidad;
+                SqlParameter parametro4 = new SqlParameter("@prof_nombre", SqlDbType.Text);
+                parametro4.Value = nombreProfesional;
+                SqlParameter parametro5 = new SqlParameter("@prof_apellido", SqlDbType.Text);
+                parametro5.Value = apellidoProfesional;
+                SqlParameter parametro6 = new SqlParameter("@motivo", SqlDbType.Text);
+                parametro6.Value = motivo;
+                SqlParameter parametro7 = new SqlParameter("@tipo", SqlDbType.Text);
+                parametro7.Value = tipo;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                parametros.Add(parametro3);
+                parametros.Add(parametro4);
+                parametros.Add(parametro5);
+                parametros.Add(parametro6);
+                parametros.Add(parametro7);
+
+                var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
+
+                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo cancelar el turno. Fallo la ejecucion del procedure");
+
+                return;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+                throw e;
+            }
         }
 
         public static List<string> obtener_turnos_disponibles(string apellidoConNombre, DateTime fecha)

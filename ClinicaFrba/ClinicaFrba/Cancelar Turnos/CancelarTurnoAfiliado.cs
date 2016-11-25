@@ -1,4 +1,4 @@
-﻿using ClinicaFrba.Clases;
+using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -40,14 +40,18 @@ namespace ClinicaFrba.CancelarTurno
                 }
 
                 string[] turno = turnoCancelar.Split('-');
+
                 string apellidoProfesional = turno[0].Split(',')[0].Trim();
                 string nombreProfesional = turno[0].Split(',')[1].Trim();
-                string[] fecha = turno[1].Trim().Split('/');
-                int dia = Int32.Parse(fecha[0].Trim());
-                int mes = Int32.Parse(fecha[1].Trim());
-                int anio = Int32.Parse(fecha[2].Trim());
+                string especialidad = turno[1].Trim();
+                DateTime fecha = DateTime.Parse(turno[2].Trim());;
+                string hora = turno[3].Trim();
 
- //               Base_de_Datos.BD_Turnos.
+                Base_de_Datos.BD_Turnos.cancelar_turno(nombreProfesional, apellidoProfesional, especialidad, fecha, hora, motivo, "USUARIO");
+
+                List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
+                comboCancelarTurno.Items.Clear();
+                ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
 
             }
             catch (Exception ex)

@@ -390,4 +390,3 @@
         private System.Windows.Forms.ComboBox comboBox_rol;
     }
 }
-

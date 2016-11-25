@@ -211,4 +211,7 @@ DROP FUNCTION KFC.fun_obtener_funcionalidades_usuario;
 IF OBJECT_ID('KFC.fun_obtener_datos_usuario') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_datos_usuario;
 
+IF OBJECT_ID('KFC.fun_retornar_id_afildo_por_doc') IS NOT NULL
+DROP FUNCTION KFC.fun_retornar_id_afildo_por_doc;
+
 PRINT 'Funciones Borradas'

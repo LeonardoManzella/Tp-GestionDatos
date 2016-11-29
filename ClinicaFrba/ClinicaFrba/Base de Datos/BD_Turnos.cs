@@ -89,6 +89,11 @@ namespace ClinicaFrba.Base_de_Datos
         
         }
 
+        internal static void cancelar_turnos_pro(DateTime fechaDesde, DateTime fechaHasta, string motivo, int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public static void cancelar_turno(string nombreProfesional, string apellidoProfesional, string especialidad, DateTime fecha, string hora, string motivo, string tipo)
         {
             try

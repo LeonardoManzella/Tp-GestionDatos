@@ -87,6 +87,30 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
+        
+        public static int obtenerID_profesional(int user_id)
+        {
+            try
+            {
+                string funcion = "SELECT KFC.fun_obtener_id_profesional_x_user_id(@us_id)";
+                SqlParameter parametro1 = new SqlParameter("@us_id", SqlDbType.Int);
+                parametro1.Value = user_id;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+
+                int id = InteraccionDB.ObtenerIntReader(reader, 0);
+
+                return id;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+                throw e;
+            }
+        }
 
 
         /// <summary>

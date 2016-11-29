@@ -6,7 +6,6 @@ using System;
 using System.Windows.Forms;
 
 
-
 namespace ClinicaFrba
 {
     public partial class Home : Form
@@ -66,6 +65,9 @@ namespace ClinicaFrba
         {
             deshabilitar_componentes();
             this.AcceptButton = boton_loguear;
+
+            Configuracion_Global.cargar_archivo_configuracion();
+
             try
             {
                 var lista = BD_Roles.obtener_roles();
@@ -77,6 +79,8 @@ namespace ClinicaFrba
                 MessageBox.Show("Error al Pedir Roles contra la Base. Compruebe que la Base de Datos este Poblada. ERROR: " + ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+       
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {

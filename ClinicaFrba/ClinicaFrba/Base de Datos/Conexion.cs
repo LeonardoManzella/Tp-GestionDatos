@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicaFrba.Clases;
+using System;
 using System.Data.SqlClient;
 
 namespace ClinicaFrba.Base_de_Datos
@@ -25,7 +26,13 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
-                conexion_interna = new SqlConnection("Password=gd2016;Persist Security Info=True;User ID=gd;Initial Catalog=GD2C2016;MultipleActiveResultSets=True;Data Source=.\\SQLSERVER2012");
+                string usuario = Configuracion_Global.base_datos_usuario;
+                string password = Configuracion_Global.base_datos_password;
+                string catalogo = Configuracion_Global.base_datos_catalogo;
+                string source = Configuracion_Global.base_datos_source;
+                string conexion_string = "Password=" + password + ";Persist Security Info=True;User ID=" + usuario + ";Initial Catalog=" + catalogo + ";MultipleActiveResultSets=True;Data Source=" + source;
+
+                conexion_interna = new SqlConnection(conexion_string);
 
                 conexion_interna.Open();
 

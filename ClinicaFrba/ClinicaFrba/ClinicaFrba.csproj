@@ -73,9 +73,11 @@
     </Compile>
     <Compile Include="Base de Datos\BD_Afiliados.cs" />
     <Compile Include="Base de Datos\BD_Bonos.cs" />
+    <Compile Include="Base de Datos\BD_LLegada.cs" />
     <Compile Include="Base de Datos\Conexion.cs" />
     <Compile Include="Base de Datos\BD_Roles.cs" />
     <Compile Include="Base de Datos\BD_Turnos.cs" />
+    <Compile Include="Base de Datos\BD_Estadisticas.cs" />
     <Compile Include="Base de Datos\InteraccionDB.cs" />
     <Compile Include="Base de Datos\BD_Log_In.cs" />
     <Compile Include="Cancelar Turnos\CancelarTurnoAfiliado.cs">
@@ -111,6 +113,7 @@
       <DependentUpon>Estadisticas.cs</DependentUpon>
     </Compile>
     <Compile Include="Negocio\ABMAFIL.cs" />
+    <Compile Include="Negocio\Estadisticas.cs" />
     <Compile Include="Negocio\Llegada_At_Med.cs" />
     <Compile Include="Negocio\Log_In.cs" />
     <Compile Include="Pedir Turno\PedirTurno.cs">

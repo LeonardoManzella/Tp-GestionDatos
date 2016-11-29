@@ -541,6 +541,20 @@ BEGIN
 END;
 GO
 
+CREATE FUNCTION KFC.fun_obtener_id_profesional_x_user_id(@us_id INT)
+RETURNS INT AS
+BEGIN
+	DECLARE @id INT;
+	SET @id = 0;
+
+	SELECT TOP 1	@id = prof_id
+	FROM	KFC.profesionales
+	WHERE	us_id = @us_id
+
+	return	@id
+END;
+GO
+
 ------------------OBTENER_TURNOS_DEL_DIA------------------
 --Proposito: Obtener los turnos "ocupados" de un dia
 --

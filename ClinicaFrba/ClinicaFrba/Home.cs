@@ -144,7 +144,9 @@ namespace ClinicaFrba
 
         private void cancelarTurnosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new CancelarTurno.CancelarTurnoProfesional().ShowDialog();
+            var cancelarTurnoPro = new CancelarTurno.CancelarTurnoProfesional();
+            cancelarTurnoPro.usuario = this.usuario;
+            cancelarTurnoPro.ShowDialog();
         }
 
         private void cancelarTurnosToolStripMenuItem1_Click(object sender, EventArgs e)

@@ -74,11 +74,14 @@ namespace ClinicaFrba.Base_de_Datos
                 for (int i = 0; i < cantidad_bonos; i++)
                 {
                     string procedure = "KFC.pro_comprar_bono";
-                    SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Int);
-                    parametro.Value = id_afiliado;
+                    SqlParameter parametro1 = new SqlParameter("@afiliado_id", SqlDbType.Int);
+                    parametro1.Value = id_afiliado;
+                    SqlParameter parametro2 = new SqlParameter("@fecha_formato_string", SqlDbType.Text);
+                    parametro2.Value = Configuracion_Global.fecha_actual;
 
                     var parametros = new List<SqlParameter>();
-                    parametros.Add(parametro);
+                    parametros.Add(parametro1);
+                    parametros.Add(parametro2);
 
                     var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 

@@ -1,3 +1,4 @@
+using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -50,12 +51,15 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 int idAfiliado = BD_Afiliados.obtenerID_afiliado(usuario.nombre, usuario.apellido, usuario.id);
 
-                string funcion = "SELECT  * FROM KFC.fun_obtener_turnos_cancelables(@afil_id)";
-                SqlParameter parametro = new SqlParameter("@afil_id", SqlDbType.Int);
-                parametro.Value = idAfiliado;
+                string funcion = "SELECT  * FROM KFC.fun_obtener_turnos_cancelables(@afil_id, @fecha_formato_string )";
+                SqlParameter parametro1 = new SqlParameter("@afil_id", SqlDbType.Int);
+                parametro1.Value = idAfiliado;
+                SqlParameter parametro2 = new SqlParameter("@fecha_formato_string", SqlDbType.Text);
+                parametro2.Value = Configuracion_Global.fecha_actual;
 
                 var parametros = new List<SqlParameter>();
-                parametros.Add(parametro);
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
 
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
@@ -114,6 +118,8 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro6.Value = motivo;
                 SqlParameter parametro7 = new SqlParameter("@tipo", SqlDbType.Text);
                 parametro7.Value = tipo;
+                SqlParameter parametro8 = new SqlParameter("@fecha_formato_string", SqlDbType.Text);
+                parametro8.Value = Configuracion_Global.fecha_actual;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
@@ -123,6 +129,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametros.Add(parametro5);
                 parametros.Add(parametro6);
                 parametros.Add(parametro7);
+                parametros.Add(parametro8);
 
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 

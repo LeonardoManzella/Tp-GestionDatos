@@ -94,9 +94,9 @@
             this.label_Usuario.AutoSize = true;
             this.label_Usuario.Location = new System.Drawing.Point(34, 29);
             this.label_Usuario.Name = "label_Usuario";
-            this.label_Usuario.Size = new System.Drawing.Size(83, 13);
+            this.label_Usuario.Size = new System.Drawing.Size(81, 13);
             this.label_Usuario.TabIndex = 5;
-            this.label_Usuario.Text = "Nombre Usuario";
+            this.label_Usuario.Text = "Nombre Afiliado";
             // 
             // textBox_Nombre
             // 
@@ -117,9 +117,9 @@
             this.label_apellido.AutoSize = true;
             this.label_apellido.Location = new System.Drawing.Point(34, 69);
             this.label_apellido.Name = "label_apellido";
-            this.label_apellido.Size = new System.Drawing.Size(83, 13);
+            this.label_apellido.Size = new System.Drawing.Size(81, 13);
             this.label_apellido.TabIndex = 7;
-            this.label_apellido.Text = "Apellido Usuario";
+            this.label_apellido.Text = "Apellido Afiliado";
             // 
             // button_Buscar
             // 
@@ -163,10 +163,11 @@
             // 
             this.label_Id_Usuario.AutoSize = true;
             this.label_Id_Usuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Id_Usuario.Location = new System.Drawing.Point(73, 26);
+            this.label_Id_Usuario.Location = new System.Drawing.Point(28, 11);
             this.label_Id_Usuario.Name = "label_Id_Usuario";
             this.label_Id_Usuario.Size = new System.Drawing.Size(0, 18);
             this.label_Id_Usuario.TabIndex = 13;
+            // 
             // textBox_Documento
             // 
             this.textBox_Documento.Location = new System.Drawing.Point(123, 102);

@@ -93,9 +93,18 @@ namespace ClinicaFrba.Base_de_Datos
         
         }
 
-        internal static void cancelar_turnos_pro(DateTime fechaDesde, DateTime fechaHasta, string motivo, int id)
+        private static void cancelar_turnos_pro(DateTime fechaDesde, DateTime fechaHasta, string motivo, int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                string procedure = "KFC.pro_cancelar_turno_profesional";
+            }
+            catch(Exception ex)
+            {
+                InteraccionDB.ImprimirExcepcion(ex);
+                throw ex;
+            }
         }
 
         public static void cancelar_turno(string nombreProfesional, string apellidoProfesional, string especialidad, DateTime fecha, string hora, string motivo, string tipo)

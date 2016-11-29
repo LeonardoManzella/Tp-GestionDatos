@@ -81,11 +81,6 @@ IF OBJECT_ID('KFC.get_cmb_prof_x_esp') IS NOT NULL
 DROP PROCEDURE KFC.get_cmb_prof_x_esp;
 GO
 
-IF OBJECT_ID('KFC.get_especialidades') IS NOT NULL
-DROP FUNCTION KFC.get_especialidades;
-GO
-
-
 IF OBJECT_ID('KFC.get_afiliado') IS NOT NULL
 DROP PROCEDURE KFC.get_afiliado;
 GO
@@ -94,6 +89,8 @@ IF OBJECT_ID('KFC.pro_setear_rol_estado_habilitacion') IS NOT NULL
 DROP PROCEDURE KFC.pro_setear_rol_estado_habilitacion;
 GO
 
+IF OBJECT_ID('KFC.pro_cancelar_turno') IS NOT NULL
+DROP PROCEDURE KFC.pro_cancelar_turno;
 
 PRINT 'Procedures Borrados'
 
@@ -213,5 +210,13 @@ DROP FUNCTION KFC.fun_obtener_datos_usuario;
 
 IF OBJECT_ID('KFC.fun_retornar_id_afildo_por_doc') IS NOT NULL
 DROP FUNCTION KFC.fun_retornar_id_afildo_por_doc;
+
+IF OBJECT_ID('KFC.get_especialidades') IS NOT NULL
+DROP FUNCTION KFC.get_especialidades;
+GO
+
+IF OBJECT_ID('KFC.fun_retornar_id_afildo_por_id') IS NOT NULL
+DROP FUNCTION KFC.fun_retornar_id_afildo_por_id;
+GO
 
 PRINT 'Funciones Borradas'

@@ -734,13 +734,13 @@ END;
 GO
 
 --Funcionalidad COMPRAR BONOS. Crea 'Bono' comprado por el afiliado (bono del mismo plan que tiene el afiliado).
-CREATE PROCEDURE KFC.pro_comprar_bono(@afiliado_id INT)
+CREATE PROCEDURE KFC.pro_comprar_bono(@afiliado_id INT, @fecha_formato_string VARCHAR(30) )
 AS
 BEGIN
 	DECLARE @PlanUsuario INT;
 	DECLARE @fecha DATETIME;
 		
-	SET @fecha = getdate();
+	SET @fecha = CONVERT(DATETIME, @fecha_formato_string, 102);
 
 	SELECT @PlanUsuario = Plan_id
 	FROM   KFC.Afiliados
@@ -865,10 +865,8 @@ AS
     BEGIN
 
 		DECLARE @Habilitado BIT;
-		DECLARE @fecha DATETIME;
 		
 		SET @Habilitado = 1;
-		SET @fecha = getdate();
 
 		BEGIN TRY
 			BEGIN TRANSACTION
@@ -883,7 +881,7 @@ AS
                     IF @@trancount > 0
                     ROLLBACK TRANSACTION;
 
-					PRINT 'Rol No Ingresado. Fecha ' + CONVERT(varchar,@fecha,102)
+					PRINT 'Rol No Ingresado'
                     ;THROW
         END CATCH
     END;
@@ -989,9 +987,6 @@ CREATE PROCEDURE KFC.pro_crear_funcionalidad_de_rol(@func_desc VARCHAR(60) , @ro
 AS
 BEGIN
 
-	DECLARE @fecha DATETIME;
-	SET @fecha = getdate();
-
 	DECLARE @func_id INT;
 	SELECT @func_id = KFC.fun_retornar_id_funcionalidad(@func_desc);
 
@@ -1009,7 +1004,7 @@ BEGIN
 			IF @@trancount > 0
 			ROLLBACK TRANSACTION;
 
-			PRINT 'Funcionalidad_Rol No Ingresado. Fecha ' + CONVERT(varchar,@fecha,102)
+			PRINT 'Funcionalidad_Rol No Ingresada';
 			;THROW
 	END CATCH
 END;
@@ -1019,9 +1014,6 @@ GO
 CREATE PROCEDURE KFC.pro_quitar_funcionalidad_de_rol(@func_desc VARCHAR(60), @rol_id INT)
 AS
 BEGIN
-
-	DECLARE @fecha DATETIME;
-	SET @fecha = getdate();
 
 	DECLARE @func_id INT;
 	SELECT @func_id = KFC.fun_retornar_id_funcionalidad(@func_desc);
@@ -1048,8 +1040,7 @@ BEGIN
 				;THROW
 		END CATCH
 	ELSE
-		DECLARE @string VARCHAR(50) = 'No existe Funcionalidad_Rol. Fecha' + CONVERT(VARCHAR,@fecha,102);
-		RAISERROR(@string,16,1);
+		RAISERROR('No existe Funcionalidad_Rol',16,1);
 END;
 GO
 
@@ -1211,6 +1202,7 @@ CREATE PROCEDURE KFC.pro_cancelar_turno
 		, @prof_apellido VARCHAR(60)
 		, @tipo VARCHAR(15)
 		, @motivo VARCHAR(255)
+		, @fecha_formato_string VARCHAR(30)
 AS
     BEGIN
 		BEGIN TRY
@@ -1219,6 +1211,8 @@ AS
 				DECLARE @espe_id INT;
 				DECLARE @prof_id INT;
 				DECLARE @turno_id INT;
+				DECLARE @fecha_actual DATETIME;
+				SET @fecha_actual = CONVERT(DATETIME, @fecha_formato_string, 102);
 
 				SET @horaConvertida = CONVERT(TIME(0),@hora, 108);
 				SET @espe_id = KFC.fun_obtener_id_especialidad(@espe_desc);
@@ -1226,7 +1220,7 @@ AS
 				SET @turno_id = (SELECT turno_id FROM KFC.turnos WHERE espe_id = @espe_id AND prof_id = @prof_id AND fecha_hora = @fecha + CAST(@horaConvertida as DATETIME))
 
 				INSERT INTO KFC.cancelaciones
-				SELECT @turno_id, @motivo, GETDATE(), CASE WHEN @tipo = 'USUARIO' THEN 1 ELSE 2 END
+				SELECT @turno_id, @motivo, @fecha_actual, CASE WHEN @tipo = 'USUARIO' THEN 1 ELSE 2 END
 
 			COMMIT;
 		END TRY
@@ -1245,7 +1239,7 @@ GO
 --
 --Ingreso: El ID del afiliado
 ------------------OBTENER TURNOS CANCELABLES------------------
-CREATE FUNCTION kfc.fun_obtener_turnos_cancelables( @afil_id INT)
+CREATE FUNCTION kfc.fun_obtener_turnos_cancelables( @afil_id INT, @fecha_formato_string VARCHAR(30))
 RETURNS TABLE AS
 RETURN
 SELECT
@@ -1266,7 +1260,7 @@ INNER JOIN
 	ON E.espe_id = T.espe_id
 WHERE T.afil_id = @afil_id
 AND (T.turno_id IS NULL OR C.turno_id IS NULL)
-AND DATEDIFF(day, GETDATE(), t.fecha_hora) >= 1;
+AND DATEDIFF(day, CONVERT(DATETIME, @fecha_formato_string, 102), t.fecha_hora) >= 1;
 GO
 
 PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'

@@ -1248,6 +1248,48 @@ AS
     END;
 GO
 
+CREATE PROCEDURE KFC.pro_cancelar_turno_profesional
+          @fechaDesde DATETIME
+        , @fechaHasta DATETIME
+        , @motivo VARCHAR(255)
+        , @prof_id INT
+        , @fecha_formato_string VARCHAR(30)
+AS
+    BEGIN
+		BEGIN TRY
+			BEGIN TRANSACTION
+
+				DECLARE @fecha_actual DATETIME;
+				SET @fecha_actual = CONVERT(DATETIME, @fecha_formato_string, 102);
+
+				INSERT INTO KFC.cancelaciones
+				SELECT T.turno_id, @motivo, @fecha_actual, 2
+				FROM KFC.turnos T
+				FULL OUTER JOIN 
+					KFC.cancelaciones C
+					ON C.turno_id = T.turno_id
+				INNER JOIN
+					KFC.profesionales P
+					ON P.prof_id = T.prof_id
+				WHERE P.prof_id = @prof_id
+				AND T.fecha_hora BETWEEN @fechaDesde AND @fechaHasta
+				AND (T.turno_id IS NULL OR C.turno_id IS NULL)
+
+				IF @@ROWCOUNT = 0			
+                    RAISERROR ('No hay turnos a cancelar',16,1);
+
+			COMMIT;
+		END TRY
+		BEGIN CATCH
+                    IF @@trancount > 0
+                    ROLLBACK TRANSACTION;
+
+					PRINT 'Turnos no cancelados. Fechas ' + CONVERT(varchar,@fechaDesde,102) + ' - ' + CONVERT(varchar,@fechaHasta,102)
+                    ;THROW
+        END CATCH
+    END;
+GO
+
 ------------------OBTENER TURNOS CANCELABLES------------------
 --Proposito: Busca los turnos de un afiliado que todavía pueden ser canceladas
 --

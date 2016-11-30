@@ -93,7 +93,7 @@ namespace ClinicaFrba.Base_de_Datos
         
         }
 
-        private static void cancelar_turnos_pro(DateTime fechaDesde, DateTime fechaHasta, string motivo, int id)
+        public static void cancelar_turnos_pro(DateTime fechaDesde, DateTime fechaHasta, string motivo, int id)
         {
             try
             {

@@ -96,6 +96,9 @@ namespace ClinicaFrba.Compra_Bono
                 string apellido = this.textBox_Apellido.Text.Trim();
                 string documento = this.textBox_Documento.Text.Trim();
 
+                if (String.IsNullOrEmpty(nombre)  || String.IsNullOrEmpty(apellido) || String.IsNullOrEmpty(documento)) throw new Exception("Estan Vacio el Nombre, Apellido o DNI");
+
+
                 try
                 {
                     this.id_afiliado_que_compra = BD_Afiliados.obtenerID_afiliado(nombre, apellido, documento);
@@ -104,7 +107,7 @@ namespace ClinicaFrba.Compra_Bono
                 {
                     InteraccionDB.ImprimirExcepcion(ex);
                     resetear_comprar();
-                    throw new Exception("No existe el Afiliado, por favor revisar Nombre y Apellido");
+                    throw new Exception("No existe el Afiliado, por favor revisar Nombre, Apellido y DNi");
                 }
 
                 mostrar_plan();
@@ -123,7 +126,14 @@ namespace ClinicaFrba.Compra_Bono
         {
             try
             {
-                BD_Bonos.comprar_bono(this.id_afiliado_que_compra, Convert.ToInt32(textBox_Cantidad.Text));
+               
+                if (String.IsNullOrEmpty(textBox_Cantidad.Text)) throw new Exception("No puede estar Vacio la Cantidad a Comprar");
+
+                int cantidad = Convert.ToInt32(textBox_Cantidad.Text);
+
+                if (cantidad <= 0) throw new Exception("No puede Ser negativa o cero la Cantidad a Comprar");
+
+                BD_Bonos.comprar_bono(this.id_afiliado_que_compra, cantidad);
                 MessageBox.Show("Bonos Comprados", "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.textBox_Cantidad.Text = "";
             }

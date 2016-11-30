@@ -68,7 +68,7 @@
             this.textBox_Cantidad.Location = new System.Drawing.Point(354, 102);
             this.textBox_Cantidad.Name = "textBox_Cantidad";
             this.textBox_Cantidad.Size = new System.Drawing.Size(177, 20);
-            this.textBox_Cantidad.TabIndex = 3;
+            this.textBox_Cantidad.TabIndex = 11;
             // 
             // label_Cantidad
             // 
@@ -84,7 +84,7 @@
             this.button_Comprar.Location = new System.Drawing.Point(455, 140);
             this.button_Comprar.Name = "button_Comprar";
             this.button_Comprar.Size = new System.Drawing.Size(76, 63);
-            this.button_Comprar.TabIndex = 4;
+            this.button_Comprar.TabIndex = 12;
             this.button_Comprar.Text = "Comprar Bonos";
             this.button_Comprar.UseVisualStyleBackColor = true;
             this.button_Comprar.Click += new System.EventHandler(this.button_Comprar_Click);
@@ -126,7 +126,7 @@
             this.button_Buscar.Location = new System.Drawing.Point(163, 140);
             this.button_Buscar.Name = "button_Buscar";
             this.button_Buscar.Size = new System.Drawing.Size(105, 63);
-            this.button_Buscar.TabIndex = 9;
+            this.button_Buscar.TabIndex = 10;
             this.button_Buscar.Text = "Buscar Usuario";
             this.button_Buscar.UseVisualStyleBackColor = true;
             this.button_Buscar.Click += new System.EventHandler(this.button_Buscar_Click);
@@ -154,7 +154,7 @@
             this.button1.Location = new System.Drawing.Point(12, 140);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(93, 63);
-            this.button1.TabIndex = 12;
+            this.button1.TabIndex = 13;
             this.button1.Text = "Cerrar";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -173,7 +173,7 @@
             this.textBox_Documento.Location = new System.Drawing.Point(123, 102);
             this.textBox_Documento.Name = "textBox_Documento";
             this.textBox_Documento.Size = new System.Drawing.Size(100, 20);
-            this.textBox_Documento.TabIndex = 14;
+            this.textBox_Documento.TabIndex = 9;
             // 
             // label1
             // 

@@ -65,34 +65,7 @@ namespace ClinicaFrba.Pedir_Turno
         private void comboProfesionales_SelectedIndexChanged(object sender, EventArgs e)
         {
             datePicker_fecha.Enabled = true;
-        }
-
-        private void datePicker_fecha_ValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                apellido_nombre_profesional = ComboData.obtener_descripcion(comboProfesionales);
-                fecha = datePicker_fecha.Value.Date;
-                List<string> lista = null;
-                try
-                {
-                    lista = BD_Turnos.obtener_turnos_disponibles(apellido_nombre_profesional, fecha);
-                }
-                catch
-                {
-                    MessageBox.Show("No hay Turnos Disponibles ese Dia", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                comboHorarios.Enabled = true;
-                comboHorarios.Items.Clear();
-
-                ComboData.llenarCombo(comboHorarios, lista);
-            }
-            catch (Exception ex)
-            {
-                comboHorarios.Items.Clear();
-                MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            button_horarios.Enabled = true;
         }
 
         private void comboHorarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -119,6 +92,34 @@ namespace ClinicaFrba.Pedir_Turno
         private void boton_salir_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void button_horarios_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                apellido_nombre_profesional = ComboData.obtener_descripcion(comboProfesionales);
+                fecha = datePicker_fecha.Value.Date;
+                List<string> lista = null;
+                try
+                {
+                    lista = BD_Turnos.obtener_turnos_disponibles(apellido_nombre_profesional, fecha);
+                }
+                catch
+                {
+                    MessageBox.Show("No hay Turnos Disponibles ese Dia", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                comboHorarios.Enabled = true;
+                comboHorarios.Items.Clear();
+
+                ComboData.llenarCombo(comboHorarios, lista);
+            }
+            catch (Exception ex)
+            {
+                comboHorarios.Items.Clear();
+                MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

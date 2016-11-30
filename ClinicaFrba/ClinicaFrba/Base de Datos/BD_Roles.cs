@@ -201,6 +201,7 @@ namespace ClinicaFrba.Base_de_Datos
                 {
                     var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
                     id = InteraccionDB.ObtenerIntReader(reader, 0);
+                    if (id == -1) throw new Exception("No Se encuentra al ROL");
                 }
                 catch (Exception e)
                 {

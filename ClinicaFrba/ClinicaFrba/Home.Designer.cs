@@ -88,14 +88,14 @@
             // logInToolStripMenuItem
             // 
             this.logInToolStripMenuItem.Name = "logInToolStripMenuItem";
-            this.logInToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.logInToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.logInToolStripMenuItem.Text = "&Log In";
             this.logInToolStripMenuItem.Click += new System.EventHandler(this.logInToolStripMenuItem_Click);
             // 
             // salirToolStripMenuItem
             // 
             this.salirToolStripMenuItem.Name = "salirToolStripMenuItem";
-            this.salirToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.salirToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.salirToolStripMenuItem.Text = "&Salir";
             this.salirToolStripMenuItem.Click += new System.EventHandler(this.salirToolStripMenuItem_Click);
             // 
@@ -279,7 +279,7 @@
             this.textBox_usuario.Location = new System.Drawing.Point(149, 108);
             this.textBox_usuario.Name = "textBox_usuario";
             this.textBox_usuario.Size = new System.Drawing.Size(213, 20);
-            this.textBox_usuario.TabIndex = 3;
+            this.textBox_usuario.TabIndex = 1;
             this.textBox_usuario.Text = "ADMIN";
             // 
             // textBox_password
@@ -287,7 +287,7 @@
             this.textBox_password.Location = new System.Drawing.Point(149, 154);
             this.textBox_password.Name = "textBox_password";
             this.textBox_password.Size = new System.Drawing.Size(213, 20);
-            this.textBox_password.TabIndex = 4;
+            this.textBox_password.TabIndex = 2;
             this.textBox_password.Text = "W23E";
             // 
             // label3
@@ -306,7 +306,7 @@
             this.boton_loguear.Location = new System.Drawing.Point(382, 100);
             this.boton_loguear.Name = "boton_loguear";
             this.boton_loguear.Size = new System.Drawing.Size(109, 74);
-            this.boton_loguear.TabIndex = 7;
+            this.boton_loguear.TabIndex = 4;
             this.boton_loguear.Text = "Loguear";
             this.boton_loguear.UseVisualStyleBackColor = true;
             this.boton_loguear.Click += new System.EventHandler(this.button1_Click);
@@ -326,7 +326,7 @@
             this.comboBox_rol.Location = new System.Drawing.Point(149, 194);
             this.comboBox_rol.Name = "comboBox_rol";
             this.comboBox_rol.Size = new System.Drawing.Size(212, 21);
-            this.comboBox_rol.TabIndex = 9;
+            this.comboBox_rol.TabIndex = 3;
             this.comboBox_rol.Text = "ADMINISTRATIVO";
             // 
             // Home

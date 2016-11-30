@@ -87,16 +87,20 @@ namespace ClinicaFrba
             this.Close();
         }
 
-        /// <summary>
-        /// Log In de cualquier Usuario en la Base Datos
-        /// </summary>
+        
         private void logInToolStripMenuItem_Click(object sender, EventArgs e)
         {
             loguear();
         }
 
+        /// <summary>
+        /// Log In de cualquier Usuario en la Base Datos
+        /// </summary>
         private void loguear()
         {
+            //Evitamos Cosas Raras de Doble Logueo
+            deshabilitar_componentes();
+
             try
             {
                 this.user = textBox_usuario.Text.Trim();

@@ -43,6 +43,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.boton_salir = new System.Windows.Forms.Button();
+            this.button_horarios = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // boton_pedirTurno
@@ -51,7 +52,7 @@
             this.boton_pedirTurno.Location = new System.Drawing.Point(225, 196);
             this.boton_pedirTurno.Name = "boton_pedirTurno";
             this.boton_pedirTurno.Size = new System.Drawing.Size(106, 64);
-            this.boton_pedirTurno.TabIndex = 0;
+            this.boton_pedirTurno.TabIndex = 6;
             this.boton_pedirTurno.Text = "Pedir Turno";
             this.boton_pedirTurno.UseVisualStyleBackColor = true;
             this.boton_pedirTurno.Click += new System.EventHandler(this.boton_pedirTurno_Click);
@@ -63,7 +64,7 @@
             this.comboHorarios.Location = new System.Drawing.Point(18, 219);
             this.comboHorarios.Name = "comboHorarios";
             this.comboHorarios.Size = new System.Drawing.Size(166, 21);
-            this.comboHorarios.TabIndex = 1;
+            this.comboHorarios.TabIndex = 5;
             this.comboHorarios.SelectedIndexChanged += new System.EventHandler(this.comboHorarios_SelectedIndexChanged);
             // 
             // comboProfesionales
@@ -82,7 +83,7 @@
             this.comboEspecialidades.Location = new System.Drawing.Point(19, 94);
             this.comboEspecialidades.Name = "comboEspecialidades";
             this.comboEspecialidades.Size = new System.Drawing.Size(150, 21);
-            this.comboEspecialidades.TabIndex = 3;
+            this.comboEspecialidades.TabIndex = 1;
             this.comboEspecialidades.SelectedIndexChanged += new System.EventHandler(this.comboEspecialidades_SelectedIndexChanged);
             // 
             // label1
@@ -118,8 +119,7 @@
             this.datePicker_fecha.Location = new System.Drawing.Point(367, 94);
             this.datePicker_fecha.Name = "datePicker_fecha";
             this.datePicker_fecha.Size = new System.Drawing.Size(200, 20);
-            this.datePicker_fecha.TabIndex = 7;
-            this.datePicker_fecha.ValueChanged += new System.EventHandler(this.datePicker_fecha_ValueChanged);
+            this.datePicker_fecha.TabIndex = 3;
             // 
             // label4
             // 
@@ -195,16 +195,28 @@
             this.boton_salir.Location = new System.Drawing.Point(470, 196);
             this.boton_salir.Name = "boton_salir";
             this.boton_salir.Size = new System.Drawing.Size(106, 64);
-            this.boton_salir.TabIndex = 14;
+            this.boton_salir.TabIndex = 7;
             this.boton_salir.Text = "Cancelar";
             this.boton_salir.UseVisualStyleBackColor = true;
             this.boton_salir.Click += new System.EventHandler(this.boton_salir_Click);
+            // 
+            // button_horarios
+            // 
+            this.button_horarios.Enabled = false;
+            this.button_horarios.Location = new System.Drawing.Point(367, 120);
+            this.button_horarios.Name = "button_horarios";
+            this.button_horarios.Size = new System.Drawing.Size(118, 29);
+            this.button_horarios.TabIndex = 4;
+            this.button_horarios.Text = "Ver Horarios";
+            this.button_horarios.UseVisualStyleBackColor = true;
+            this.button_horarios.Click += new System.EventHandler(this.button_horarios_Click);
             // 
             // PedirTurno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(588, 298);
+            this.Controls.Add(this.button_horarios);
             this.Controls.Add(this.boton_salir);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
@@ -245,5 +257,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button boton_salir;
+        private System.Windows.Forms.Button button_horarios;
     }
 }

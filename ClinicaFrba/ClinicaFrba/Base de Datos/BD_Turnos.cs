@@ -97,8 +97,26 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
-
                 string procedure = "KFC.pro_cancelar_turno_profesional";
+                int prof_id = BD_Afiliados.obtenerID_profesional(id);
+                SqlParameter parametro1 = new SqlParameter("@fechaDesde", SqlDbType.Date);
+                parametro1.Value = fechaDesde;
+                SqlParameter parametro2 = new SqlParameter("@fechaHasta", SqlDbType.Date);
+                parametro2.Value = fechaHasta;
+                SqlParameter parametro3 = new SqlParameter("@prof_id", SqlDbType.Int);
+                parametro3.Value = prof_id;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                parametros.Add(parametro3);
+
+                var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
+
+                if (reader.RecordsAffected <= 0) throw new Exception("No se pudieron cancelar los turnos. Fallo la ejecucion del procedure");
+
+                return;
+
             }
             catch(Exception ex)
             {

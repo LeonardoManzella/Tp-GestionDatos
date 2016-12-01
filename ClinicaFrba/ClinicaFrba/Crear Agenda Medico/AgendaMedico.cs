@@ -18,6 +18,7 @@ namespace ClinicaFrba.AgendaMedico
         private List<HorariosDia> diasAgenda;
         List<string> horariosComun = new List<string>();
         List<string> horariosSabado = new List<string>();
+        public Usuario usuario;
 
         public AgendaMedico()
         {
@@ -107,6 +108,18 @@ namespace ClinicaFrba.AgendaMedico
 
             List<string> keyList = new List<string>(this.diasSemana.Keys);
             ComboData.llenarCombo(diasSemanaCombo, keyList);
+
+            try
+            {
+                int profID = Base_de_Datos.BD_Profesional.obtenerID_profesional(usuario.id);
+                List<string> especialidades = Base_de_Datos.BD_Profesional.getEspecialidadesProfesional(profID);
+                ComboData.llenarCombo(especialidadCombo, especialidades);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("No se obtuvieron las especialidades del profesional", "Registrar Agenda", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             
         }
 
@@ -164,6 +177,11 @@ namespace ClinicaFrba.AgendaMedico
                 diasAgenda.Remove(diaHorarioBorrar);
             }
 
+        }
+
+        private void cancelarAgendaMedicaButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

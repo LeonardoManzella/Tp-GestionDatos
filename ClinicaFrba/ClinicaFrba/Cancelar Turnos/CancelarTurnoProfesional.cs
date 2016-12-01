@@ -53,7 +53,7 @@ namespace ClinicaFrba.CancelarTurno
             }
             catch(Exception ex)
             {
-
+                MessageBox.Show("No se pudo cancelar los turnos", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
         }

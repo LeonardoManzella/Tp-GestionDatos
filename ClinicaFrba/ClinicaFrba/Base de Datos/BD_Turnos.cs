@@ -98,7 +98,7 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
                 string procedure = "KFC.pro_cancelar_turno_profesional";
-                int prof_id = BD_Afiliados.obtenerID_profesional(id);
+                int prof_id = BD_Profesional.obtenerID_profesional(id);
                 SqlParameter parametro1 = new SqlParameter("@fechaDesde", SqlDbType.Date);
                 parametro1.Value = fechaDesde;
                 SqlParameter parametro2 = new SqlParameter("@fechaHasta", SqlDbType.Date);

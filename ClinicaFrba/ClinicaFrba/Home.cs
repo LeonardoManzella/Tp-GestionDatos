@@ -147,7 +147,9 @@ namespace ClinicaFrba
 
         private void agendaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AgendaMedico.AgendaMedico().ShowDialog();
+            var agendaMedico = new AgendaMedico.AgendaMedico();
+            agendaMedico.usuario = this.usuario;
+            agendaMedico.ShowDialog();
         }
 
         private void cancelarTurnosToolStripMenuItem_Click(object sender, EventArgs e)

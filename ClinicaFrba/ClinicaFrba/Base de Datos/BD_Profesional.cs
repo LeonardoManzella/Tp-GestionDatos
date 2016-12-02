@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ClinicaFrba.AgendaMedico;
 
 namespace ClinicaFrba.Base_de_Datos
 {
@@ -59,7 +60,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        public static List<DateTime> getRangoOcupadoAgenda(int profID)
+        public static DateTime getUltimaFechaAgenda(int profID)
         {
             try
             {
@@ -73,26 +74,31 @@ namespace ClinicaFrba.Base_de_Datos
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
                 if (!reader.HasRows)
-                    throw new Exception("Reader sin filas");
+                    throw new Exception("Reader sin Filas");
 
-                var rango = new List<DateTime>();
+                DateTime maxFecha = DateTime.Now;
+                bool flag_leyo_algo = false;
 
-                int i = 0;
                 while (reader.Read())
                 {
-                    DateTime min = reader.GetDateTime(i);
-                    rango.Add(min);
-                    i++;
+                    maxFecha = reader.GetDateTime(0);
+                    flag_leyo_algo = true;
+                    break;
                 }
-
-                if (rango.Count <= 0) throw new Exception("No se cargaron las fechas a la lista");
-                return rango;
+                if (flag_leyo_algo == false)
+                    throw new Exception("Hubo un problema al obtener la maxima fecha de la agenda");
+                return maxFecha;
             }
             catch (Exception e)
             {
                 InteraccionDB.ImprimirExcepcion(e);
                 throw e;
             }
+        }
+
+        internal static void crearAgenda(int idProfesional, DateTime fechaDesde, DateTime fechaHasta, List<HorariosDia> diasAgenda)
+        {
+            throw new NotImplementedException();
         }
     }
 }

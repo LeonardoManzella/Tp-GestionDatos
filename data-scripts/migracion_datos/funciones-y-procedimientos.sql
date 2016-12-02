@@ -1320,9 +1320,9 @@ AND DATEDIFF(day, CONVERT(DATETIME, @fecha_formato_string, 102), t.fecha_hora) >
 GO
 
 CREATE FUNCTION kfc.fun_obtener_rango_agenda(@prof_id INT)
-RETURNS TABLE AS
+RETURNS DATETIME AS
 RETURN
-	SELECT MAX(fecha_desde), MAX(fecha_hasta)
+	SELECT MAX(fecha_hasta)
 	FROM KFC.agenda
 	WHERE prof_id = @prof_id
 GO

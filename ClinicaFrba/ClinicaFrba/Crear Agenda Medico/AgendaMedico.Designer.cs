@@ -190,6 +190,7 @@
             this.aceptarAgendaMedicaButton.TabIndex = 19;
             this.aceptarAgendaMedicaButton.Text = "Aceptar";
             this.aceptarAgendaMedicaButton.UseVisualStyleBackColor = true;
+            this.aceptarAgendaMedicaButton.Click += new System.EventHandler(this.aceptarAgendaMedicaButton_Click);
             // 
             // cancelarAgendaMedicaButton
             // 

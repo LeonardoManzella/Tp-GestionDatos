@@ -19,6 +19,7 @@ namespace ClinicaFrba.AgendaMedico
         List<string> horariosComun = new List<string>();
         List<string> horariosSabado = new List<string>();
         public Usuario usuario;
+        private int idProfesional;
 
         public AgendaMedico()
         {
@@ -111,9 +112,14 @@ namespace ClinicaFrba.AgendaMedico
 
             try
             {
-                int profID = Base_de_Datos.BD_Profesional.obtenerID_profesional(usuario.id);
-                List<string> especialidades = Base_de_Datos.BD_Profesional.getEspecialidadesProfesional(profID);
+                this.idProfesional = Base_de_Datos.BD_Profesional.obtenerID_profesional(usuario.id);
+                List<string> especialidades = Base_de_Datos.BD_Profesional.getEspecialidadesProfesional(this.idProfesional);
                 ComboData.llenarCombo(especialidadCombo, especialidades);
+
+
+                DateTime maxFechaAgendaExistente = Base_de_Datos.BD_Profesional.getUltimaFechaAgenda(this.idProfesional);
+                fechaDesdePicker.MinDate = maxFechaAgendaExistente;
+                fechaHastaPicker.MinDate = maxFechaAgendaExistente;
             }
             catch(Exception ex)
             {
@@ -148,8 +154,17 @@ namespace ClinicaFrba.AgendaMedico
             diasSemanaCombo.Items.Remove(nombreDiaSemana);
             string horaDesde = horarioDesdeCombo.SelectedValue.ToString();
             string horaHasta = horarioHastaCombo.SelectedValue.ToString();
+            HorariosDia diaNuevo = new HorariosDia(diaSemana, horaDesde, horaHasta, nombreDiaSemana);
 
-            if(Int32.Parse(horaDesde.Substring(0,2)) > Int32.Parse(horaHasta.Substring(0,2)) ||
+            if((diaNuevo.getCantidadHoras() + this.horasSumadas()) > 48)
+            {
+                MessageBox.Show("El profesional no puede sumar mas de 48 horas semanales", "Registrar Agenda", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                diasSemanaCombo.Items.Add(nombreDiaSemana);
+                return;
+            }
+
+
+            if (Int32.Parse(horaDesde.Substring(0,2)) > Int32.Parse(horaHasta.Substring(0,2)) ||
                 (Int32.Parse(horaDesde.Substring(0, 2)) == Int32.Parse(horaHasta.Substring(0, 2)) &&
                 Int32.Parse(horaDesde.Substring(3, 2)) >= Int32.Parse(horaHasta.Substring(3, 2)))) {
                 MessageBox.Show("El horario final no puede ser menor o igual al inicial", "Registrar Agenda", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -157,9 +172,17 @@ namespace ClinicaFrba.AgendaMedico
                 return;
             }
 
-            HorariosDia diaNuevo = new HorariosDia(diaSemana, horaDesde, horaHasta, nombreDiaSemana);
             diasAgenda.Add(diaNuevo);
             horariosPorDiaList.Items.Add(diaNuevo);
+        }
+
+        private double horasSumadas()
+        {
+            double horasSumadas = 0;
+            foreach (HorariosDia dia in diasAgenda)
+                horasSumadas += dia.getCantidadHoras();
+
+            return horasSumadas;
         }
 
         private void borrarHorarioButton_Click(object sender, EventArgs e)
@@ -182,6 +205,19 @@ namespace ClinicaFrba.AgendaMedico
         private void cancelarAgendaMedicaButton_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void aceptarAgendaMedicaButton_Click(object sender, EventArgs e)
+        {
+            DateTime fechaDesde = fechaDesdePicker.Value;
+            DateTime fechaHasta = fechaHastaPicker.Value;
+            if (diasAgenda.Count() == 0 || fechaDesde < fechaHasta)
+            {
+                MessageBox.Show("Verifique los datos seleccionados", "Registrar Agenda", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            Base_de_Datos.BD_Profesional.crearAgenda(this.idProfesional, fechaDesde, fechaHasta, diasAgenda);
         }
     }
 }

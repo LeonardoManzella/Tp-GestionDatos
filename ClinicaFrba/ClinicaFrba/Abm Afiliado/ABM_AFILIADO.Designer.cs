@@ -66,6 +66,7 @@
             this.txtNroDoc.Name = "txtNroDoc";
             this.txtNroDoc.Size = new System.Drawing.Size(94, 20);
             this.txtNroDoc.TabIndex = 5;
+            this.txtNroDoc.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtNroDoc_KeyPress);
             // 
             // label3
             // 
@@ -119,10 +120,12 @@
             // 
             // TxtMail
             // 
+            this.TxtMail.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.TxtMail.Location = new System.Drawing.Point(198, 89);
             this.TxtMail.Name = "TxtMail";
             this.TxtMail.Size = new System.Drawing.Size(215, 20);
             this.TxtMail.TabIndex = 9;
+            this.TxtMail.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TxtMail_KeyPress);
             // 
             // label9
             // 
@@ -139,6 +142,7 @@
             this.txtNroTelefono.Name = "txtNroTelefono";
             this.txtNroTelefono.Size = new System.Drawing.Size(143, 20);
             this.txtNroTelefono.TabIndex = 7;
+            this.txtNroTelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtNroTelefono_KeyPress);
             // 
             // label7
             // 
@@ -151,10 +155,12 @@
             // 
             // txtDireccion
             // 
+            this.txtDireccion.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtDireccion.Location = new System.Drawing.Point(40, 46);
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(373, 20);
             this.txtDireccion.TabIndex = 5;
+            this.txtDireccion.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDireccion_KeyPress);
             // 
             // label8
             // 
@@ -237,10 +243,12 @@
             // 
             // txtApellido
             // 
+            this.txtApellido.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtApellido.Location = new System.Drawing.Point(118, 48);
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(94, 20);
             this.txtApellido.TabIndex = 17;
+            this.txtApellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtApellido_KeyPress);
             // 
             // label2
             // 
@@ -253,10 +261,12 @@
             // 
             // txtNombre
             // 
+            this.txtNombre.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtNombre.Location = new System.Drawing.Point(12, 48);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(94, 20);
             this.txtNombre.TabIndex = 15;
+            this.txtNombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtNombre_KeyPress);
             // 
             // label1
             // 

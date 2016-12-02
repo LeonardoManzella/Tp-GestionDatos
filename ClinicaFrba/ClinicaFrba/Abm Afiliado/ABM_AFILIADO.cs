@@ -199,5 +199,35 @@ namespace ClinicaFrba.Abm_Afiliado
         {
             this.Close();
         }
+
+        private void txtNombre_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras(e);
+        }
+
+        private void txtApellido_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras(e);
+        }
+
+        private void txtNroDoc_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_numeros(e);
+        }
+
+        private void txtDireccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras_y_numeros(e);
+        }
+
+        private void txtNroTelefono_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_numeros(e);
+        }
+
+        private void TxtMail_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras_y_arroba(e);
+        }
     }
 }

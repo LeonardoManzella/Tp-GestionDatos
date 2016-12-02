@@ -100,7 +100,16 @@ AS
                               @especialidad = 0
                               OR t.espe_id  = @especialidad
                     )
-                    AND CONVERT (DATE,t.fecha_hora) = @fecha;
+					AND
+                    (
+                              @afiliado_id = 0
+                              OR t.afil_id  = @afiliado_id
+                    )
+                    AND (
+		  DATEPART(YEAR, t.fecha_hora) = DATEPART(Year, @fecha) 
+	           AND DATEPART(DAYOFYEAR, t.fecha_hora) =DATEPART(DAYOFYEAR, @fecha)
+	           AND t.fecha_hora >= @fecha 
+						   );
 GO
 
 CREATE PROCEDURE kfc.get_bonos_afiliado(@afiliado_id INT, @plan_id INT)

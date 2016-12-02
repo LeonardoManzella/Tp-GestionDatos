@@ -33,6 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic.Compatibility" />
+    <Reference Include="Microsoft.VisualBasic.Compatibility.Data" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -96,6 +98,7 @@
     <Compile Include="Clases\Afiliado.cs" />
     <Compile Include="Clases\ComboData.cs" />
     <Compile Include="Clases\Configuracion_Global.cs" />
+    <Compile Include="Clases\Helper.cs" />
     <Compile Include="Compra Bono\CompraBono.cs">
       <SubType>Form</SubType>
     </Compile>

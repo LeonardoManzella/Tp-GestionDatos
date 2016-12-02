@@ -98,7 +98,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro1.Value = afiliado_id;
                 parametro2.Value = especialidad_id;
                 parametro3.Value = profesional_id;
-                parametro4.Value = DateTime.Now.TimeOfDay;
+                parametro4.Value = DateTime.Parse(Configuracion_Global.fecha_actual);
                 cmd.Parameters.Add(parametro1);
                 cmd.Parameters.Add(parametro2);
                 cmd.Parameters.Add(parametro3);
@@ -137,7 +137,7 @@ namespace ClinicaFrba.Base_de_Datos
                 string sql = "kfc.registrar_llegada @id_afiliado , @id_turno, @id_bono, @fecha";
 
                 SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Time);
-                parametro1.Value = DateTime.Now.TimeOfDay;
+                parametro1.Value = DateTime.Parse(Configuracion_Global.fecha_actual).TimeOfDay;
                 SqlParameter parametro2 = new SqlParameter("@id_turno", SqlDbType.Int);
                 parametro2.Value = id_turno;
                 SqlParameter parametro3 = new SqlParameter("@id_afiliado", SqlDbType.Int);

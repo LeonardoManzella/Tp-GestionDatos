@@ -1321,10 +1321,15 @@ GO
 
 CREATE FUNCTION kfc.fun_obtener_rango_agenda(@prof_id INT)
 RETURNS DATETIME AS
-RETURN
-	SELECT MAX(fecha_hasta)
+BEGIN
+	DECLARE @fecha_maxima DATETIME
+
+	SELECT @fecha_maxima = MAX(fecha_hasta)
 	FROM KFC.agenda
 	WHERE prof_id = @prof_id
+
+	RETURN @fecha_maxima
+END
 GO
 
 PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'

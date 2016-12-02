@@ -219,4 +219,7 @@ IF OBJECT_ID('KFC.fun_retornar_id_afildo_por_id') IS NOT NULL
 DROP FUNCTION KFC.fun_retornar_id_afildo_por_id;
 GO
 
+IF OBJECT_ID('KFC.fun_obtener_rango_agenda') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_rango_agenda;
+GO
 PRINT 'Funciones Borradas'

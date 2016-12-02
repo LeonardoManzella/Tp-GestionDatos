@@ -31,28 +31,35 @@ namespace ClinicaFrba.Estadisticas
 
         private void Estadisticas_Load(object sender, EventArgs e)
         {
-            var vacio = new ComboData(null,"Sin Elegir");
-            
-            this.comboEspec.DisplayMember = "descripcion";
-            this.comboEspec.ValueMember = "identificador";
-            var estados = Llegada_At_Med.obtenerEspecialidades();
-            this.comboEspec.Items.Add(vacio);
-            this.comboEspec.Items.AddRange(estados.ToArray());
+            try
+            {
+                var vacio = new ComboData(null, "Sin Elegir");
 
-            this.comboBox3.DisplayMember = "descripcion";
-            this.comboBox3.ValueMember = "identificador";
-            var planes = ABMAFIL.get_Planes_Sociales();
-            this.comboEspec.Items.Add(vacio);
-            this.comboEspec.Items.AddRange(planes.ToArray());
+                this.comboEspec.DisplayMember = "descripcion";
+                this.comboEspec.ValueMember = "identificador";
+                var estados = Llegada_At_Med.obtenerEspecialidades();
+                this.comboEspec.Items.Add(vacio);
+                this.comboEspec.Items.AddRange(estados.ToArray());
 
-            this.comboTop5.Items.Add(new ComboData(1, "Especialidades más canceladas"));
-            this.comboTop5.Items.Add(new ComboData(2, "Profesionales más consultados"));
-            this.comboTop5.Items.Add(new ComboData(3, "Profesionales que menos trabajaron"));
-            this.comboTop5.Items.Add(new ComboData(4, "Afiliado que más bonos compró"));
-            this.comboTop5.Items.Add(new ComboData(5, "Especialidades más concurridas"));
+                this.comboBox3.DisplayMember = "descripcion";
+                this.comboBox3.ValueMember = "identificador";
+                var planes = ABMAFIL.get_Planes_Sociales();
+                this.comboEspec.Items.Add(vacio);
+                this.comboEspec.Items.AddRange(planes.ToArray());
 
-            this.comboSemestre.Items.Add(new ComboData(1, "Primer"));
-            this.comboSemestre.Items.Add(new ComboData(2, "Segundo"));
+                this.comboTop5.Items.Add(new ComboData(1, "Especialidades más canceladas"));
+                this.comboTop5.Items.Add(new ComboData(2, "Profesionales más consultados"));
+                this.comboTop5.Items.Add(new ComboData(3, "Profesionales que menos trabajaron"));
+                this.comboTop5.Items.Add(new ComboData(4, "Afiliado que más bonos compró"));
+                this.comboTop5.Items.Add(new ComboData(5, "Especialidades más concurridas"));
+
+                this.comboSemestre.Items.Add(new ComboData(1, "Primer"));
+                this.comboSemestre.Items.Add(new ComboData(2, "Segundo"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al Cargar Form: ERROR: " + ex.Message, "Estadisticas", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

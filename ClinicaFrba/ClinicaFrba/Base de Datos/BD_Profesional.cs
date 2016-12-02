@@ -41,7 +41,7 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
                 string funcion = "SELECT * FROM  KFC.fun_obtener_especialidades_prof(@id_profesional)";
-                SqlParameter parametro = new SqlParameter("@id_profesional", SqlDbType.Text);
+                SqlParameter parametro = new SqlParameter("@id_profesional", SqlDbType.Int);
                 parametro.Value = profID;
 
                 var parametros = new List<SqlParameter>();
@@ -64,8 +64,8 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
-                string funcion = "SELECT * FROM  KFC.fun_obtener_rango_agenda(@prof_id)";
-                SqlParameter parametro = new SqlParameter("@id_profesional", SqlDbType.Text);
+                string funcion = "SELECT KFC.fun_obtener_rango_agenda(@prof_id)";
+                SqlParameter parametro = new SqlParameter("@prof_id", SqlDbType.Int);
                 parametro.Value = profID;
 
                 var parametros = new List<SqlParameter>();

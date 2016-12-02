@@ -21,26 +21,34 @@ namespace ClinicaFrba.AtencionesMedicas
 
         private void RegistrarAtencion_Load(object sender, EventArgs e)
         {
-            this.comboBox1.DisplayMember = "descripcion";
-            this.comboBox1.ValueMember = "identificador";
-            this.comboEspecialidades.DisplayMember = "descripcion";
-            this.comboEspecialidades.ValueMember = "identificador";
-            this.cmb_turnos.DisplayMember = "descripcion";
-            this.cmb_turnos.ValueMember = "identificador";
-            this.cmbBono.DisplayMember = "descripcion";
-            this.cmbBono.ValueMember = "identificador";
-            this.cmbPlan.DisplayMember = "descripcion";
-            this.cmbPlan.ValueMember = "identificador";
+            try
+            {
+                this.comboBox1.DisplayMember = "descripcion";
+                this.comboBox1.ValueMember = "identificador";
+                this.comboEspecialidades.DisplayMember = "descripcion";
+                this.comboEspecialidades.ValueMember = "identificador";
+                this.cmb_turnos.DisplayMember = "descripcion";
+                this.cmb_turnos.ValueMember = "identificador";
+                this.cmbBono.DisplayMember = "descripcion";
+                this.cmbBono.ValueMember = "identificador";
+                this.cmbPlan.DisplayMember = "descripcion";
+                this.cmbPlan.ValueMember = "identificador";
 
-            limpiar();          
-            
-            var profesionales = Llegada_At_Med.obtener_profesionales(0) ;
-            this.comboBox1.Items.AddRange(profesionales.ToArray());
-            
-            var especialidades = Llegada_At_Med.obtenerEspecialidades();
-            this.comboEspecialidades.Items.AddRange(profesionales.ToArray());
-            
+                limpiar();
+
+                var profesionales = Llegada_At_Med.obtener_profesionales(0);
+                this.comboBox1.Items.AddRange(profesionales.ToArray());
+
+                var especialidades = Llegada_At_Med.obtenerEspecialidades();
+                this.comboEspecialidades.Items.AddRange(profesionales.ToArray());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al Cargar Form: ERROR: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
+
 
         private void limpiar()
         {

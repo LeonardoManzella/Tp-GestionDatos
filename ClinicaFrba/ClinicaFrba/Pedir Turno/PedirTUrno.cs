@@ -15,10 +15,9 @@ namespace ClinicaFrba.Pedir_Turno
     public partial class PedirTurno : Form
     {
         public Usuario usuario { get; set; }
-        private string descripcion_especialidad;
-        private string apellido_nombre_profesional;
         private DateTime fecha;
-        private string horario;
+        private string nombre_boton_datagrid = "boton_pedir_turno";
+        private bool eligioFecha = false;
 
         public PedirTurno()
         {
@@ -30,12 +29,7 @@ namespace ClinicaFrba.Pedir_Turno
             try
             {
                 this.comboEspecialidades.DropDownStyle = ComboBoxStyle.DropDownList;
-                this.comboHorarios.DropDownStyle = ComboBoxStyle.DropDownList;
-                this.comboProfesionales.DropDownStyle = ComboBoxStyle.DropDownList;
                 ComboData.llenarCombo(comboEspecialidades, InteraccionDB.obtener_todas_especialidades());
-                descripcion_especialidad = null;
-                apellido_nombre_profesional = null;
-
             }
             catch (Exception ex)
             {
@@ -43,51 +37,6 @@ namespace ClinicaFrba.Pedir_Turno
             }
         }
 
-        private void comboEspecialidades_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                comboProfesionales.Enabled = true;
-                comboProfesionales.Items.Clear();
-
-                descripcion_especialidad = ComboData.obtener_descripcion(comboEspecialidades);
-                var lista = BD_Turnos.obtener_todos_profesionales_para_especialid(descripcion_especialidad);
-
-                ComboData.llenarCombo(comboProfesionales, lista);
-            }
-            catch (Exception ex)
-            {
-                comboProfesionales.Items.Clear();
-                MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void comboProfesionales_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            datePicker_fecha.Enabled = true;
-            button_horarios.Enabled = true;
-        }
-
-        private void comboHorarios_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            boton_pedirTurno.Enabled = true;
-            horario = ComboData.obtener_descripcion(comboHorarios);
-        }
-
-        private void boton_pedirTurno_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                BD_Turnos.asignar_turno(apellido_nombre_profesional, fecha, horario, descripcion_especialidad, usuario.id);
-                MessageBox.Show("Turno Asignado", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.boton_pedirTurno.Enabled = false;
-                this.comboHorarios.Enabled = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
         private void boton_salir_Click(object sender, EventArgs e)
         {
@@ -98,28 +47,82 @@ namespace ClinicaFrba.Pedir_Turno
         {
             try
             {
-                apellido_nombre_profesional = ComboData.obtener_descripcion(comboProfesionales);
-                fecha = datePicker_fecha.Value.Date;
-                List<string> lista = null;
-                try
+                if (eligioFecha == false)
                 {
-                    lista = BD_Turnos.obtener_turnos_disponibles(apellido_nombre_profesional, fecha);
-                }
-                catch
-                {
-                    MessageBox.Show("No hay Turnos Disponibles ese Dia", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Por Favor Elija una Fecha, es Obligatorio", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                comboHorarios.Enabled = true;
-                comboHorarios.Items.Clear();
 
-                ComboData.llenarCombo(comboHorarios, lista);
+                actualizar_datagrid();
             }
             catch (Exception ex)
             {
-                comboHorarios.Items.Clear();
                 MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void actualizar_datagrid()
+        {
+            var descripcion_especialidad = comboEspecialidades.Text.Trim();
+            var profesional_nombre = textBox_nombre.Text.Trim();
+            var profesional_apellido = textBox_apellido.Text.Trim();
+            fecha = datePicker_fecha.Value.Date;
+
+
+            DataTable datos = BD_Turnos.obtener_turnos_disponibles(profesional_nombre, profesional_apellido, descripcion_especialidad, fecha);
+            if (datos.Rows.Count <= 0) throw new Exception("No hay Turnos Disponibles ese Dia para los Filtros Seleccionados");
+
+            Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
+
+            Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, "Pedir Turno", nombre_boton_datagrid);
+        }
+
+        private void datePicker_fecha_ValueChanged(object sender, EventArgs e)
+        {
+            this.eligioFecha = true;
+        }
+
+        //Handler para Cuando se Selecciona un Boton del DataGrid
+        //IMPORTANTE: Se genera haciendo doble click en el DataGrid
+        private void dataGridView_resultados_filtros_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+
+                if (dataGridView_resultados_filtros.Columns[e.ColumnIndex].Name == nombre_boton_datagrid)
+                {
+                    //Hago cosas con los valores de la fila seleccionada
+                    string horario = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 0);
+                    string nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
+                    string apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
+                    string especialidad = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 3);
+
+                    BD_Turnos.asignar_turno(nombre, apellido, fecha, horario, especialidad, usuario.id);
+
+                    MessageBox.Show("Turno Asignado.   Seleccionado Profesional: " + nombre + " " + apellido + "   Especialidad: " + especialidad, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    button_limpiar_Click(null,null);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al obtener Datos Columna. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void datePicker_fecha_ValueChanged_1(object sender, EventArgs e)
+        {
+            eligioFecha = true;
+        }
+
+        private void button_limpiar_Click(object sender, EventArgs e)
+        {
+            //Truco para Limpiar ComboBox
+            comboEspecialidades.Items.Add("");
+            comboEspecialidades.Text = "";
+            textBox_nombre.Text = "";
+            textBox_apellido.Text = "";
+            actualizar_datagrid();
+        }
+
     }
 }

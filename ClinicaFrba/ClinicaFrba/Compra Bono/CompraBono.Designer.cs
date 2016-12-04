@@ -173,7 +173,7 @@
             // 
             this.label_Id_Usuario.AutoSize = true;
             this.label_Id_Usuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_Id_Usuario.Location = new System.Drawing.Point(25, 22);
+            this.label_Id_Usuario.Location = new System.Drawing.Point(311, 314);
             this.label_Id_Usuario.Name = "label_Id_Usuario";
             this.label_Id_Usuario.Size = new System.Drawing.Size(0, 18);
             this.label_Id_Usuario.TabIndex = 13;
@@ -197,7 +197,6 @@
             // groupBox_filtros
             // 
             this.groupBox_filtros.Controls.Add(this.label_Usuario);
-            this.groupBox_filtros.Controls.Add(this.label_Id_Usuario);
             this.groupBox_filtros.Controls.Add(this.textBox_Nombre);
             this.groupBox_filtros.Controls.Add(this.textBox_Documento);
             this.groupBox_filtros.Controls.Add(this.label_apellido);
@@ -243,7 +242,7 @@
             this.dataGridView_resultados_filtros.Name = "dataGridView_resultados_filtros";
             this.dataGridView_resultados_filtros.Size = new System.Drawing.Size(740, 181);
             this.dataGridView_resultados_filtros.TabIndex = 17;
-            this.dataGridView_resultados_filtros.CellClick += dataGridView_resultados_filtros_CellClick;
+            this.dataGridView_resultados_filtros.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_resultados_filtros_CellContentClick);
             // 
             // label2
             // 
@@ -261,6 +260,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(765, 476);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.label_Id_Usuario);
             this.Controls.Add(this.dataGridView_resultados_filtros);
             this.Controls.Add(this.groupBox_plan);
             this.Controls.Add(this.button_limpiar);

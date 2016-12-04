@@ -177,38 +177,29 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        public static List<string> obtener_turnos_disponibles(string apellidoConNombre, DateTime fecha)
+        public static DataTable obtener_turnos_disponibles(string nombre, string apellido, string descripcion_especialidad, DateTime fecha)
         {
             try
             {
-                //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
-                string apellido = apellidoConNombre.Split(',')[0];
-                string nombre = apellidoConNombre.Split(',')[1];
-
-
-
-                string funcion = "SELECT  * FROM KFC.fun_obtener_turnos_profesional(@prof_nombre, @prof_apellido, @fecha)";
+                string funcion = "SELECT  * FROM KFC.fun_obtener_turnos_profesional(@prof_nombre, @prof_apellido,@desc_esp,  @fecha)";
                 SqlParameter parametro1 = new SqlParameter("@prof_nombre", SqlDbType.Text);
                 parametro1.Value = nombre;
                 SqlParameter parametro2 = new SqlParameter("@prof_apellido", SqlDbType.Text);
                 parametro2.Value = apellido;
-                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.DateTime);
-                parametro3.Value = fecha;
-                /*
-                SqlParameter parametro3 = new SqlParameter("@fecha", SqlDbType.Text);
-                parametro3.Value = "2016.01.01";
-                */
+                SqlParameter parametro3 = new SqlParameter("@desc_esp", SqlDbType.Text);
+                parametro3.Value = descripcion_especialidad;
+                SqlParameter parametro4 = new SqlParameter("@fecha", SqlDbType.DateTime);
+                parametro4.Value = fecha;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
                 parametros.Add(parametro3);
+                parametros.Add(parametro4);
 
-                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+                var turnos = InteraccionDB.ejecutar_funcion_table(funcion, parametros);
 
-                List<string> especialidades = InteraccionDB.ObtenerStringsReader(reader, 0);
-
-                return especialidades;
+                return turnos;
             }
             catch (Exception e)
             {
@@ -225,14 +216,10 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="fecha"></param>
         /// <param name="descripcionEspecialidad"></param>
         /// <param name="id_afiliado"></param>
-        public static void asignar_turno(string apellidoConNombre, DateTime fecha, string horario, string descripcionEspecialidad, int id_afiliado)
+        public static void asignar_turno(string nombre , string apellido, DateTime fecha, string horario, string descripcionEspecialidad, int id_afiliado)
         {
             try
             {
-                //Debo hacer la separacion aca en C# porque no puedo hacerla facilmente en SQL
-                string apellido = apellidoConNombre.Split(',')[0];
-                string nombre = apellidoConNombre.Split(',')[1];
-
                 string procedure = "KFC.pro_asignar_turno";
                 SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Date);
                 parametro1.Value = fecha;

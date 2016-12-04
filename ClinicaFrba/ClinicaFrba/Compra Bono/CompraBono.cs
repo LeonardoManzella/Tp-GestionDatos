@@ -167,14 +167,11 @@ namespace ClinicaFrba.Compra_Bono
         }
 
         //Handler para Cuando se Selecciona un Boton del DataGrid
-        private void dataGridView_resultados_filtros_CellClick(object sender, DataGridViewCellEventArgs e)
+        //IMPORTANTE: Se genera haciendo doble click en el DataGrid
+        private void dataGridView_resultados_filtros_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
-                /*
-                IMPORTANTE: Hay que agregar a mano al Designer esta linea:
-                this.dataGridView_resultados_filtros.CellClick += dataGridView_resultados_filtros_CellClick;
-                */
 
                 if (dataGridView_resultados_filtros.Columns[e.ColumnIndex].Name == nombre_boton_datagrid)
                 {

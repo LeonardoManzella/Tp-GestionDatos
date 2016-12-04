@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Clases\Afiliado.cs" />
     <Compile Include="Clases\ComboData.cs" />
+    <Compile Include="Clases\Comunes.cs" />
     <Compile Include="Clases\Configuracion_Global.cs" />
     <Compile Include="Clases\Helper.cs" />
     <Compile Include="Compra Bono\CompraBono.cs">

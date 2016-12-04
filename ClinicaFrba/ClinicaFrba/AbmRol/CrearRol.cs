@@ -23,16 +23,22 @@ namespace ClinicaFrba.AbmRol
         {
             try
             {
-                List<string> funcionalidades = InteraccionDB.obtener_todas_funcionalidades();
-
-                foreach (string funcionalidad in funcionalidades)
-                {
-                    checkBox_funcionalidades.Items.Add(funcionalidad, false);
-                }
+                llenar_funcionalidades();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void llenar_funcionalidades()
+        {
+            checkBox_funcionalidades.Items.Clear();
+            List<string> funcionalidades = InteraccionDB.obtener_todas_funcionalidades();
+
+            foreach (string funcionalidad in funcionalidades)
+            {
+                checkBox_funcionalidades.Items.Add(funcionalidad, false);
             }
         }
 
@@ -67,6 +73,12 @@ namespace ClinicaFrba.AbmRol
             {
                 MessageBox.Show(ex.Message, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void button_limpiar_Click(object sender, EventArgs e)
+        {
+            textBox_nombre_rol.Text = "";
+            llenar_funcionalidades();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ClinicaFrba.Base_de_Datos;
+using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,11 +34,15 @@ namespace ClinicaFrba.AbmRol
                 funcionalidades_del_rol = new List<string>();
                 funcionalidades_posibles = InteraccionDB.obtener_todas_funcionalidades();
 
+                var lista = BD_Roles.obtener_roles();
+                ComboData.llenarCombo(this.comboBox_rol, lista);
+                this.comboBox_rol.DropDownStyle = ComboBoxStyle.DropDownList;
+
                 resetear_botones();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Datos del Form. ERROR: " + ex.Message, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -48,7 +53,7 @@ namespace ClinicaFrba.AbmRol
                 resetear_botones();
 
 
-                this.nombreRol = textBox_nombreRol.Text.Trim();
+                this.nombreRol = comboBox_rol.Text.Trim();
                 if (String.IsNullOrEmpty(nombreRol)) throw new Exception("Nombre Vacio");
 
                 id_rol = BD_Roles.obtenerID_rol(nombreRol);
@@ -88,6 +93,8 @@ namespace ClinicaFrba.AbmRol
             this.checkedListBox_Funcionalidades.Enabled = false;
             this.checkBox_rolHabilitado.Enabled = false;
             this.button_modificarRol.Enabled = false;
+            this.comboBox_rol.Text = "";
+
         }
 
         private List<string> funcionalidadesSinSeleccionar()
@@ -161,9 +168,9 @@ namespace ClinicaFrba.AbmRol
             this.Close();
         }
 
-        private void button_eliminar_Click(object sender, EventArgs e)
+        private void button_limpiar_Click(object sender, EventArgs e)
         {
-
+            resetear_botones();
         }
     }
 }

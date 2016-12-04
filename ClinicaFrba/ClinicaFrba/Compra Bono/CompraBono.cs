@@ -1,4 +1,5 @@
 ﻿using ClinicaFrba.Base_de_Datos;
+using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,6 +24,7 @@ namespace ClinicaFrba.Compra_Bono
         public tipos_funcionalidad funcionalidad;
         public Usuario usuario_o_administrador;
         private int id_afiliado_que_compra;
+        private string nombre_boton_datagrid = "boton_seleccionar";
 
         public CompraBono()
         {
@@ -32,6 +34,7 @@ namespace ClinicaFrba.Compra_Bono
         private void resetear_comprar()
         {
             this.textBox_Plan.Text = "";
+            this.textBox_precio.Text = "";
             this.textBox_Cantidad.Text = "";
         }
 
@@ -96,37 +99,33 @@ namespace ClinicaFrba.Compra_Bono
                 string apellido = this.textBox_Apellido.Text.Trim();
                 string documento = this.textBox_Documento.Text.Trim();
 
-                if (String.IsNullOrEmpty(nombre)  || String.IsNullOrEmpty(apellido) || String.IsNullOrEmpty(documento)) throw new Exception("Estan Vacio el Nombre, Apellido o DNI");
 
+                //DATAGRID
+                DataTable datos = BD_Afiliados.obtener_afiliados_filtros(nombre, apellido, documento);
 
-                try
-                {
-                    this.id_afiliado_que_compra = BD_Afiliados.obtenerID_afiliado(nombre, apellido, documento);
-                }
-                catch (Exception ex)
-                {
-                    InteraccionDB.ImprimirExcepcion(ex);
-                    resetear_comprar();
-                    throw new Exception("No existe el Afiliado, por favor revisar Nombre, Apellido y DNi");
-                }
+                if (datos.Rows.Count <= 0) throw new Exception("No hay Afiliados para Estos Filtros");
 
-                mostrar_plan();
-                habilitar_comprar();
+                //Lleno el DataGrid
+                Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
+
+                //Agrego Boton
+                Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, "Seleccionar", nombre_boton_datagrid);
 
             }
             catch (Exception ex)
             {
                 resetear_comprar();
-                MessageBox.Show("Error al Buscar. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Buscar Afiliado con Filtros. ERROR:  " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
         private void button_Comprar_Click(object sender, EventArgs e)
         {
             try
             {
-               
+
                 if (String.IsNullOrEmpty(textBox_Cantidad.Text)) throw new Exception("No puede estar Vacio la Cantidad a Comprar");
 
                 int cantidad = Convert.ToInt32(textBox_Cantidad.Text);
@@ -140,13 +139,60 @@ namespace ClinicaFrba.Compra_Bono
             catch (Exception ex)
             {
                 this.textBox_Cantidad.Text = "";
-                MessageBox.Show(ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Comprar. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void button_limpiar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                textBox_Nombre.Text = "";
+                textBox_Apellido.Text = "";
+                textBox_Documento.Text = "";
+                resetear_comprar();
+                deshabilitar_comprar();
+
+                button_Buscar_Click(null, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        //Handler para Cuando se Selecciona un Boton del DataGrid
+        private void dataGridView_resultados_filtros_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                /*
+                IMPORTANTE: Hay que agregar a mano al Designer esta linea:
+                this.dataGridView_resultados_filtros.CellClick += dataGridView_resultados_filtros_CellClick;
+                */
+
+                if (dataGridView_resultados_filtros.Columns[e.ColumnIndex].Name == nombre_boton_datagrid)
+                {
+                    //Hago cosas con los valores de la fila seleccionada
+                    this.id_afiliado_que_compra = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 0);
+                    string nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
+                    string apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
+
+
+                    mostrar_plan();
+                    habilitar_comprar();
+                    MessageBox.Show("Seleccionado Afiliado: " + nombre + " " + apellido, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al obtener Datos Columna. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

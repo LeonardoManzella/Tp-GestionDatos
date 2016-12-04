@@ -213,8 +213,8 @@ DROP FUNCTION KFC.fun_obtener_funcionalidades_usuario;
 IF OBJECT_ID('KFC.fun_obtener_datos_usuario') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_datos_usuario;
 
-IF OBJECT_ID('KFC.fun_retornar_id_afildo_por_doc') IS NOT NULL
-DROP FUNCTION KFC.fun_retornar_id_afildo_por_doc;
+IF OBJECT_ID('KFC.obtener_afiliados_filtros') IS NOT NULL
+DROP FUNCTION KFC.obtener_afiliados_filtros;
 
 IF OBJECT_ID('KFC.get_especialidades') IS NOT NULL
 DROP FUNCTION KFC.get_especialidades;

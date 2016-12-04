@@ -72,6 +72,8 @@ namespace ClinicaFrba
             {
                 var lista = BD_Roles.obtener_roles();
                 ComboData.llenarCombo(this.comboBox_rol, lista);
+                this.comboBox_rol.DropDownStyle = ComboBoxStyle.DropDownList;
+                this.comboBox_rol.Text = "ADMINISTRATIVO";
             }
             catch (Exception ex)
             {

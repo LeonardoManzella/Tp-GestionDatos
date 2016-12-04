@@ -74,7 +74,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
                 if (!reader.HasRows)
-                    throw new Exception("Reader sin Filas");
+                    throw new Exception("Reader sin filas");
 
                 DateTime maxFecha = DateTime.Now;
                 bool flag_leyo_algo = false;
@@ -96,9 +96,40 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        internal static void crearAgenda(int idProfesional, DateTime fechaDesde, DateTime fechaHasta, List<HorariosDia> diasAgenda)
+        public static void crearAgenda(int idProfesional, DateTime fechaDesde, DateTime fechaHasta, List<HorariosDia> diasAgenda, string especialidad)
         {
-            throw new NotImplementedException();
+            try
+            {
+                foreach(HorariosDia dia in diasAgenda)
+                {
+                    string sql = "kfc.pro_crear_agenda_profesional @especialidad, @prof_id, @dia, @fecha_desde, @fecha_hasta";
+
+                    SqlParameter parametro1 = new SqlParameter("@especialidad", SqlDbType.VarChar);
+                    parametro1.Value = especialidad;
+                    SqlParameter parametro2 = new SqlParameter("@prof_id", SqlDbType.Int);
+                    parametro2.Value = idProfesional;
+                    SqlParameter parametro3 = new SqlParameter("@dia", SqlDbType.Int);
+                    parametro3.Value = dia.diaSemana;
+                    SqlParameter parametro4 = new SqlParameter("@fecha_desde", SqlDbType.DateTime);
+                    parametro4.Value = fechaDesde.Add(TimeSpan.Parse(dia.horaDesde));
+                    SqlParameter parametro5 = new SqlParameter("@fecha_hasta", SqlDbType.DateTime);
+                    parametro5.Value = fechaHasta.Add(TimeSpan.Parse(dia.horaHasta));
+
+                    var parametros = new List<SqlParameter>();
+                    parametros.Add(parametro1);
+                    parametros.Add(parametro2);
+                    parametros.Add(parametro3);
+                    parametros.Add(parametro4);
+                    parametros.Add(parametro5);
+
+                    InteraccionDB.ejecutar_storedProcedureConRetorno(sql, parametros);
+                }
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+                throw e;
+            }
         }
     }
 }

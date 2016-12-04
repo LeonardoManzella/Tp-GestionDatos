@@ -1332,6 +1332,45 @@ BEGIN
 END
 GO
 
+CREATE PROCEDURE kfc.pro_crear_agenda_profesional
+          @especialidad VARCHAR(255)
+          ,
+          @prof_id INT
+          ,
+          @dia INT
+          ,
+          @fecha_desde DATETIME
+          ,
+          @fecha_hasta DATETIME
+AS
+          BEGIN
+                    BEGIN TRANSACTION
+                    INSERT INTO KFC.agenda
+                              (
+                                        espe_id
+                                      , prof_id
+                                      , dia
+                                      , fecha_desde
+                                      , fecha_hasta
+                                      , hora_desde
+                                      , hora_hasta
+                              )
+                              VALUES
+                              (
+                                        KFC.fun_obtener_id_especialidad(@especialidad)
+                                      , @prof_id
+                                      , @dia
+                                      , @fecha_desde
+                                      , @fecha_hasta
+                                      , CONVERT(TIME(0), @fecha_desde)
+                                      , CONVERT(TIME(0), @fecha_hasta)
+                              )
+                    ;
+                    
+                    COMMIT;
+          END;
+GO
+
 PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'
 PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA ESTADISTICAS...'
 GO
@@ -1908,48 +1947,6 @@ RETURN
                     b.afil_id       = @afiliado_id
                     AND b.consumido = 0
           ;
-GO
-CREATE PROCEDURE kfc.pro_crear_agenda_profesional
-          @espe_id INT
-          ,
-          @prof_id INT
-          ,
-          @dia INT
-          ,
-          @fecha_desde DATETIME
-          ,
-          @fecha_hasta DATETIME
-          ,
-          @hora_desde TIME
-          ,
-          @hora_hasta TIME
-AS
-          BEGIN
-                    BEGIN TRANSACTION
-                    INSERT INTO KFC.agenda
-                              (
-                                        espe_id
-                                      , prof_id
-                                      , dia
-                                      , fecha_desde
-                                      , fecha_hasta
-                                      , hora_desde
-                                      , hora_hasta
-                              )
-                              VALUES
-                              (
-                                        @espe_id
-                                      , @prof_id
-                                      , @dia
-                                      , @fecha_desde
-                                      , @fecha_hasta
-                                      , @hora_desde
-                                      , @hora_hasta
-                              )
-                    ;
-                    
-                    COMMIT;
-          END;
 GO
 CREATE PROCEDURE kfc.pro_baja_afiliado
           @afiliado_id INT

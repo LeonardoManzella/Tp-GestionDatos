@@ -248,8 +248,9 @@ namespace ClinicaFrba.AgendaMedico
                 MessageBox.Show("Verifique los datos seleccionados", "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            string especialidad = especialidadCombo.SelectedValue.ToString();
 
-            Base_de_Datos.BD_Profesional.crearAgenda(this.idProfesional, fechaDesde, fechaHasta, diasAgenda);
+            Base_de_Datos.BD_Profesional.crearAgenda(this.idProfesional, fechaDesde, fechaHasta, diasAgenda, especialidad);
         }
     }
 }

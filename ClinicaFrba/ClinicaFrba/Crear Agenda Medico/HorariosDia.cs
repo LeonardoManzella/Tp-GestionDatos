@@ -2,7 +2,7 @@
 
 namespace ClinicaFrba.AgendaMedico
 {
-    internal class HorariosDia
+    public class HorariosDia
     {
         public HorariosDia(int diaSemana, string horaDesde, string horaHasta, string nombreDiaSemana)
         {
@@ -27,9 +27,9 @@ namespace ClinicaFrba.AgendaMedico
             return resultado;
         }
 
-        private string horaDesde { get; set; }
-        private string horaHasta { get; set; }
-        private int diaSemana { get; set; }
+        public string horaDesde { get; set; }
+        public string horaHasta { get; set; }
+        public int diaSemana { get; set; }
         public string nombreDiaSemana { get; set; }
     }
 }

@@ -11,9 +11,11 @@ namespace ClinicaFrba.Clases
 {
     class Comunes
     {
+
         public static void agregar_boton_dataGrid(DataGridView dataGrid, string texto_mostrar_boton, string nombre_boton)
         {
-            try {
+            try
+            {
                 DataGridViewButtonColumn boton = new DataGridViewButtonColumn();
                 boton.UseColumnTextForButtonValue = true;
                 boton.Text = texto_mostrar_boton;
@@ -29,9 +31,13 @@ namespace ClinicaFrba.Clases
 
         public static void llenar_dataGrid(DataGridView dataGrid, DataTable datos)
         {
-            try { 
-            dataGrid.ReadOnly = true;
-            dataGrid.DataSource = datos;
+            try
+            {
+                //Reseteo Columnas a 0
+                dataGrid.Columns.Clear();
+
+                dataGrid.ReadOnly = true;
+                dataGrid.DataSource = datos;
             }
             catch (Exception ex)
             {
@@ -47,7 +53,7 @@ namespace ClinicaFrba.Clases
         /// <param name="dataGrid"></param>
         /// <param name="numero_columa"></param>
         /// <returns></returns>
-        public static string obtenerStringDataGrid(DataGridView dataGrid,int numero_fila, int numero_columa)
+        public static string obtenerStringDataGrid(DataGridView dataGrid, int numero_fila, int numero_columa)
         {
             return dataGrid.Rows[numero_fila].Cells[numero_columa].FormattedValue.ToString();
         }

@@ -34,6 +34,7 @@ namespace ClinicaFrba.Compra_Bono
         private void resetear_comprar()
         {
             this.textBox_Plan.Text = "";
+            this.textBox_precio.Text = "";
             this.textBox_Cantidad.Text = "";
         }
 
@@ -98,27 +99,23 @@ namespace ClinicaFrba.Compra_Bono
                 string apellido = this.textBox_Apellido.Text.Trim();
                 string documento = this.textBox_Documento.Text.Trim();
 
-                try
-                {
-                    //DATAGRID
-                    DataTable datos = BD_Afiliados.obtener_afiliados_filtros(nombre, apellido, documento);
-                    //Lleno el DataGrid
-                    Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
 
-                    //Agrego Boton
-                    Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, "Seleccionar", nombre_boton_datagrid);
-                }
-                catch (Exception ex)
-                {
-                    InteraccionDB.ImprimirExcepcion(ex);
-                    resetear_comprar();
-                    throw new Exception("Error al Buscar Afiliado con Filtros. ERROR: " + ex.Message);
-                }
+                //DATAGRID
+                DataTable datos = BD_Afiliados.obtener_afiliados_filtros(nombre, apellido, documento);
+
+                if (datos.Rows.Count <= 0) throw new Exception("No hay Afiliados para Estos Filtros");
+
+                //Lleno el DataGrid
+                Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
+
+                //Agrego Boton
+                Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, "Seleccionar", nombre_boton_datagrid);
+
             }
             catch (Exception ex)
             {
                 resetear_comprar();
-                MessageBox.Show("Error al Buscar. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Buscar Afiliado con Filtros. ERROR:  " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -159,8 +156,9 @@ namespace ClinicaFrba.Compra_Bono
                 textBox_Apellido.Text = "";
                 textBox_Documento.Text = "";
                 resetear_comprar();
+                deshabilitar_comprar();
 
-                throw new Exception("Limpiar Data Grid");
+                button_Buscar_Click(null, null);
             }
             catch (Exception ex)
             {

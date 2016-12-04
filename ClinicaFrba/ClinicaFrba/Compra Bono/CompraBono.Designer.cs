@@ -48,6 +48,7 @@
             this.button_limpiar = new System.Windows.Forms.Button();
             this.groupBox_plan = new System.Windows.Forms.GroupBox();
             this.dataGridView_resultados_filtros = new System.Windows.Forms.DataGridView();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox_filtros.SuspendLayout();
             this.groupBox_plan.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).BeginInit();
@@ -244,11 +245,22 @@
             this.dataGridView_resultados_filtros.TabIndex = 17;
             this.dataGridView_resultados_filtros.CellClick += dataGridView_resultados_filtros_CellClick;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(288, 83);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(78, 20);
+            this.label2.TabIndex = 18;
+            this.label2.Text = "Afiliados";
+            // 
             // CompraBono
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(765, 476);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.dataGridView_resultados_filtros);
             this.Controls.Add(this.groupBox_plan);
             this.Controls.Add(this.button_limpiar);
@@ -265,6 +277,7 @@
             this.groupBox_plan.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -290,5 +303,6 @@
         private System.Windows.Forms.Button button_limpiar;
         private System.Windows.Forms.GroupBox groupBox_plan;
         private System.Windows.Forms.DataGridView dataGridView_resultados_filtros;
+        private System.Windows.Forms.Label label2;
     }
 }

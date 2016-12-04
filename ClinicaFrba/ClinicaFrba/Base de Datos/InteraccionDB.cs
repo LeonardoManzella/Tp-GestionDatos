@@ -79,6 +79,32 @@ namespace ClinicaFrba.Base_de_Datos
             return comando_sql;
         }
 
+        /// <summary>
+        /// Trae Multiples Valores al ejecutar una Funcion de Tipo Table
+        /// <para>Recordar usar "SELECT * FROM KFC.funcion" </para>
+        /// </summary>
+        /// <param name="funcion"></param>
+        /// <param name="parametros"></param>
+        /// <returns></returns>
+        public static DataTable ejecutar_funcion_table(string funcion, List<SqlParameter> parametros)
+        {
+            SqlConnection conexion = Conexion.Instance.get();
+            SqlCommand comando_sql = new SqlCommand(funcion, conexion);
+
+            foreach (var parametro in parametros)
+            {
+                comando_sql.Parameters.Add(parametro);
+            }
+
+            SqlDataAdapter adaptador = new SqlDataAdapter(comando_sql);
+
+            DataTable tabla_datos = new DataTable();
+            //Lleno los Datos en la Tabla
+            adaptador.Fill(tabla_datos);
+
+            return tabla_datos;
+        }
+
         public static void ImprimirExcepcion(Exception e)
         {
             //Imprimir para DEBUG

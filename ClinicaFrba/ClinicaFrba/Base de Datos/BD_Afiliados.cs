@@ -51,17 +51,20 @@ namespace ClinicaFrba.Base_de_Datos
         }
 
         /// <summary>
-        /// Metodo Sobrecargado: Obtiene el id de un afiliado a partir de su nombre y apellido y documento.
+        /// Obtiene los afiliados a partir de filtros Like de nombre y apellido y documento.
         /// </summary>
         /// <param name="nombre"></param>
         /// <param name="apellido"></param>
         /// <param name="documento"></param>
         /// <returns></returns>
-        public static int obtenerID_afiliado(string nombre, string apellido, string documento)
+        public static DataTable obtener_afiliados_filtros(string nombre, string apellido, string documento)
         {
             try
             {
-                string funcion = "SELECT KFC.fun_retornar_id_afildo_por_doc(@nombre, @apellido, @documento)";
+                if (String.IsNullOrEmpty(documento)) documento = "0";
+
+
+                    string funcion = "SELECT * FROM KFC.obtener_afiliados_filtros(@nombre, @apellido, @documento)";
                 SqlParameter parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 parametro1.Value = nombre.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
@@ -69,16 +72,14 @@ namespace ClinicaFrba.Base_de_Datos
                 SqlParameter parametro3 = new SqlParameter("@documento", SqlDbType.Decimal);
                 parametro3.Value = Convert.ToDecimal(documento);
 
-                var parametros = new List<SqlParameter>();
+               var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
                 parametros.Add(parametro3);
 
-                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+                var tabla_datos = InteraccionDB.ejecutar_funcion_table(funcion, parametros);
 
-                int id = InteraccionDB.ObtenerIntReader(reader, 0);
-
-                return id;
+                return tabla_datos;
             }
             catch (Exception e)
             {

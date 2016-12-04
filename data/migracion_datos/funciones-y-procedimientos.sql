@@ -639,24 +639,28 @@ BEGIN
 END;
 GO
 
-
-CREATE FUNCTION KFC.fun_retornar_id_afildo_por_doc(@nombre VARCHAR(255), @apellido VARCHAR(255), @documento NUMERIC(18,0))
-returns INT AS
-BEGIN
-          DECLARE @Afil_id INT;
-          SELECT TOP 1
-                    @Afil_id = ISNULL(Afil_id,0)
+--Con Valor 0 de Documento Trae a Todos
+CREATE FUNCTION KFC.obtener_afiliados_filtros(@nombre VARCHAR(255), @apellido VARCHAR(255), @documento NUMERIC(18,0))
+returns TABLE
+RETURN
+(
+          SELECT
+                    Afi.afil_id, Afi.nombre, Afi.apellido, Afi.numero_doc, Afi.mail
+					
           FROM
                     KFC.afiliados Afi
           WHERE
-                    Afi.nombre         = UPPER(@nombre)
-                    AND Afi.apellido   = UPPER(@apellido)
-					AND Afi.numero_doc = @documento
+		  
+                    Afi.nombre         LIKE '%' + UPPER(@nombre) + '%'
+                    AND Afi.apellido   LIKE '%' + UPPER(@apellido) + '%'
+					AND (
+						@documento = 0
+						OR
+						--Permito Buscar parcialmente por el DNI
+						CONVERT(VARCHAR, Afi.numero_doc) LIKE '%' + CONVERT(VARCHAR, @documento) + '%'
+						)
                     AND Afi.habilitado = 1
-          ;
-          
-          RETURN @Afil_id;
-END;
+);
 GO
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).

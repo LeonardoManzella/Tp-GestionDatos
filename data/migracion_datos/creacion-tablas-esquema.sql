@@ -220,9 +220,10 @@ CREATE TABLE KFC.atenciones
           (
                     atencion_id  INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id     INT NOT NULL REFERENCES KFC.turnos
-                  , hora_llegada TIME(0) NOT NULL -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
-                  , sintomas     VARCHAR(255) NOT NULL
-                  , diagnostico  VARCHAR(255) NOT NULL
+                  , hora_llegada	DATETIME NOT NULL
+				  , hora_atencion	DATETIME NOT NULL
+                  , sintomas     VARCHAR(255)
+                  , diagnostico  VARCHAR(255)
                   , bono_id      INT NOT NULL REFERENCES KFC.bonos
           )
 PRINT '- Creada Tabla atenciones'	

@@ -48,8 +48,6 @@ namespace ClinicaFrba.AtencionesMedicas
             }
         }
 
-
-
         private void limpiar()
         {
             var cero = new ComboData(0, "Sin elegir");

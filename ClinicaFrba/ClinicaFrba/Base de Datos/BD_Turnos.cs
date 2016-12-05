@@ -71,7 +71,7 @@ namespace ClinicaFrba.Base_de_Datos
                 {
                     string profesional = reader.GetString(0);
                     string fecha = reader.GetString(1);
-                    string hora = reader.GetString(2);
+                    string hora = reader.GetTimeSpan(2).ToString();
                     string especialidad = reader.GetString(3);
 
                     string turno = profesional + " - " + especialidad + " - " + fecha + " - " + hora;

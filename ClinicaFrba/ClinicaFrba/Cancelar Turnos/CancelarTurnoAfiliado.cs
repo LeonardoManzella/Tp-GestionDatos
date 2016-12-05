@@ -22,15 +22,23 @@ namespace ClinicaFrba.CancelarTurno
 
         private void CancelarAtencion_Load(object sender, EventArgs e)
         {
-            List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
-            ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
+            try
+            {
+                List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
+                ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                string turnoCancelar = comboCancelarTurno.SelectedItem.ToString();
+                string turnoCancelar = comboCancelarTurno.Text;
                 string motivo = motivoCancelacion.Text.ToString();
 
                 if (turnoCancelar.Trim().Equals("") || motivo.Trim().Equals(""))
@@ -52,6 +60,9 @@ namespace ClinicaFrba.CancelarTurno
                 List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
                 comboCancelarTurno.Items.Clear();
                 ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
+                motivoCancelacion.Clear();
+
+                MessageBox.Show("El turno se cancelo exitosamente.", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             catch (Exception ex)

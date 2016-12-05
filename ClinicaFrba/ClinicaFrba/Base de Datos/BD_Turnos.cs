@@ -105,7 +105,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro2.Value = fechaHasta;
                 SqlParameter parametro3 = new SqlParameter("@prof_id", SqlDbType.Int);
                 parametro3.Value = prof_id;
-                SqlParameter parametro4 = new SqlParameter("@prof_id", SqlDbType.Int);
+                SqlParameter parametro4 = new SqlParameter("@motivo", SqlDbType.VarChar);
                 parametro4.Value = motivo;
                 SqlParameter parametro5 = new SqlParameter("@fecha_formato_string", SqlDbType.Text);
                 parametro5.Value = Configuracion_Global.fecha_actual;
@@ -119,7 +119,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
-                if (reader.RecordsAffected <= 0) throw new Exception("No se pudieron cancelar los turnos. Fallo la ejecucion del procedure");
+                if (reader.RecordsAffected <= 0) throw new Exception("No existen turnos en este rango de fechas");
 
                 return;
 

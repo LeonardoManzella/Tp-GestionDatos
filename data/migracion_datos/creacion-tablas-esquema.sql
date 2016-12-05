@@ -199,7 +199,7 @@ CREATE TABLE KFC.cancelaciones
           (
                     cancel_id      INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id       INT NOT NULL REFERENCES KFC.turnos
-                  , detalle_cancel VARCHAR(255) UNIQUE NOT NULL
+                  , detalle_cancel VARCHAR(255) NOT NULL
 				  , fecha_cancel   DATETIME
                   , tipo_cancel_id INT NOT NULL REFERENCES KFC.tipos_cancelaciones
           )

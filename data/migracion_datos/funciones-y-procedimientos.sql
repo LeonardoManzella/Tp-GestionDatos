@@ -330,33 +330,28 @@ GO
 
 --Obtiene los datos no importa si es profesional o afiliado
 CREATE FUNCTION kfc.fun_obtener_datos_usuario(@usuario_id INT)
-returns @retorno TABLE( nombre VARCHAR, apellido VARCHAR ) AS
-BEGIN
-
-	INSERT INTO	@retorno VALUES ( '', '' )
-	
-	/* LEO: tengo que arreglarlo esto. no se porque devuelve vacio
+returns @retorno TABLE( nombre VARCHAR(255), apellido VARCHAR(255) ) AS
+BEGIN	
 	--Veo si hay Algun Profesional, sino voy a buscar Afiliados
-	IF EXISTS	( SELECT * FROM KFC.profesionales p WHERE p.us_id = 121 )
+	IF EXISTS	( SELECT * FROM KFC.profesionales p WHERE p.us_id = @usuario_id )
 	BEGIN
 		INSERT INTO	@retorno
-		SELECT TOP 1 p.nombre, p.apellido--, p.prof_id 
+		SELECT TOP 1 p.nombre, p.apellido
 		FROM KFC.profesionales p 
-		WHERE p.us_id = 121
+		WHERE p.us_id = @usuario_id
 	END
 
 	--Ahora voy a ver Afiliados
 	ELSE 
 	BEGIN
-		IF	EXISTS	( SELECT * FROM KFC.afiliados a WHERE a.us_id = 121 )
+		IF	EXISTS	( SELECT * FROM KFC.afiliados a WHERE a.us_id = @usuario_id )
 		BEGIN
 			INSERT INTO	@retorno
-			SELECT TOP 1 a.nombre, a.apellido--, a.afil_id 
+			SELECT TOP 1 a.nombre, a.apellido
 			FROM KFC.afiliados a 
-			WHERE a.us_id = 121
+			WHERE a.us_id = @usuario_id
 		END
 	
-
 		--Si no es ninguno, lleno con Vacio
 		ELSE
 		BEGIN
@@ -364,13 +359,10 @@ BEGIN
 			VALUES ( '', '' )
 		END
 	END
-	*/
 	
-		
 	RETURN; 
 END
 GO
-
 
 ------------------------------------------
 

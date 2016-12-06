@@ -76,7 +76,7 @@ namespace ClinicaFrba.AgendaMedico
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Llenar Clase del Form: ERROR: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Llenar Clase del Form: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -135,13 +135,13 @@ namespace ClinicaFrba.AgendaMedico
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("No se obtuvieron las especialidades del profesional. ERROR: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("No se obtuvieron las especialidades del profesional. " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Cargar Form: ERROR: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Form: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -167,7 +167,7 @@ namespace ClinicaFrba.AgendaMedico
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Seleccionar Dia Semana: ERROR: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Seleccionar Dia Semana: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -204,7 +204,7 @@ namespace ClinicaFrba.AgendaMedico
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Agregar Horario: ERROR: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Agregar Horario: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

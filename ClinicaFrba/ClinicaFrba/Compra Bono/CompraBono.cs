@@ -46,6 +46,11 @@ namespace ClinicaFrba.Compra_Bono
             this.textBox_Apellido.Visible = false;
             this.label_Usuario.Visible = false;
             this.label_apellido.Visible = false;
+            this.groupBox_filtros.Enabled = false;
+            this.groupBox_filtros.Visible = false;
+            this.dataGridView_resultados_filtros.Visible = false;
+            this.button_Buscar.Visible = false;
+            this.label_afiliados.Visible = false;
         }
 
         private void deshabilitar_comprar()
@@ -115,7 +120,7 @@ namespace ClinicaFrba.Compra_Bono
             catch (Exception ex)
             {
                 resetear_comprar();
-                MessageBox.Show("Error al Buscar Afiliado con Filtros. ERROR:  " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Buscar Afiliado con Filtros.  " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -139,7 +144,7 @@ namespace ClinicaFrba.Compra_Bono
             catch (Exception ex)
             {
                 this.textBox_Cantidad.Text = "";
-                MessageBox.Show("Error al Comprar. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Comprar. " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -183,12 +188,12 @@ namespace ClinicaFrba.Compra_Bono
 
                     mostrar_plan();
                     habilitar_comprar();
-                    MessageBox.Show("Seleccionado Afiliado: " + nombre + " " + apellido, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //MessageBox.Show("Seleccionado Afiliado: " + nombre + " " + apellido, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al obtener Datos Columna. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al obtener Datos Columna. " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

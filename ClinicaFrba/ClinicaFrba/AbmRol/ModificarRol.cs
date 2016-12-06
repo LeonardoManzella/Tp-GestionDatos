@@ -42,7 +42,7 @@ namespace ClinicaFrba.AbmRol
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Cargar Datos del Form. ERROR: " + ex.Message, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Datos del Form. " + ex.Message, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

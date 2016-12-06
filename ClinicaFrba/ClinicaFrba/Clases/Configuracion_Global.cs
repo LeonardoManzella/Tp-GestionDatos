@@ -87,7 +87,7 @@ namespace ClinicaFrba.Clases
             catch (Exception ex)
             {
                 InteraccionDB.ImprimirExcepcion(ex);
-                MessageBox.Show("Error con Archivo Configuracion. ERROR: " + ex.Message, "Configuracion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error con Archivo Configuracion. " + ex.Message, "Configuracion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

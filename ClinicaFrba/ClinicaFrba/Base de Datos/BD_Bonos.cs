@@ -86,7 +86,7 @@ namespace ClinicaFrba.Base_de_Datos
                     var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                     //Veo si trajo datos o no
-                    if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Comprar el Bono. Fallo Ejecucion Procedure");
+                    if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Comprar el Bono.");
 
                     //MessageBox.Show("Comprado Bono", "Comprar Bonos", MessageBoxButtons.OK, MessageBoxIcon.None);
                 }

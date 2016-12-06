@@ -46,7 +46,7 @@ namespace ClinicaFrba.Clases
 
         public static void permitir_letras_y_arroba(KeyPressEventArgs evt)
         {
-            if (Char.IsLetter(evt.KeyChar) || Char.IsControl(evt.KeyChar) || Char.IsWhiteSpace(evt.KeyChar) || evt.KeyChar == '@')
+            if (Char.IsLetter(evt.KeyChar) || Char.IsControl(evt.KeyChar) || Char.IsWhiteSpace(evt.KeyChar) || evt.KeyChar == '@' || evt.KeyChar == '.')
             {
                 evt.Handled = false;
             }

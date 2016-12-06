@@ -21,5 +21,6 @@ namespace ClinicaFrba.Clases
         public string e_mail { get; set; }
         public DateTime fecha_nac { get; set; }
         public int estado_civil { get; set; }
+        public int id_principal { get; set; }
     }
 }

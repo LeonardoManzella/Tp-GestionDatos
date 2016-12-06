@@ -128,23 +128,35 @@ namespace ClinicaFrba
             var altaAfiliado = new ABM_AFILIADO();
             altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.ALTA;
             altaAfiliado.usuario = this.usuario;
-            altaAfiliado.ShowDialog();
+
+            var identificar_afiliado = new IdentificarAfiliado();
+            identificar_afiliado.usuario = this.usuario;
+            identificar_afiliado.siguiente = altaAfiliado;
+            identificar_afiliado.ShowDialog();
         }
 
         private void modificarAfiliadoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var altaAfiliado = new ABM_AFILIADO();
-            altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.MODIFICACION;
-            altaAfiliado.usuario = this.usuario;
-            altaAfiliado.ShowDialog();
+            var modificaAfiliado = new ABM_AFILIADO();
+            modificaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.MODIFICACION;
+            modificaAfiliado.usuario = this.usuario;
+
+            var identificar_afiliado = new IdentificarAfiliado();
+            identificar_afiliado.usuario = this.usuario;
+            identificar_afiliado.siguiente = modificaAfiliado;
+            identificar_afiliado.ShowDialog();
         }
 
         private void bajaAfiliadoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var altaAfiliado = new ABM_AFILIADO();
-            altaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.BAJA;
-            altaAfiliado.usuario = this.usuario;
-            altaAfiliado.ShowDialog();
+            var bajaAfiliado = new ABM_AFILIADO();
+            bajaAfiliado.funcionalidad = ABM_AFILIADO.tipos_funcionalidad.BAJA;
+            bajaAfiliado.usuario = this.usuario;
+
+            var identificar_afiliado = new IdentificarAfiliado();
+            identificar_afiliado.usuario = this.usuario;
+            identificar_afiliado.siguiente = bajaAfiliado;
+            identificar_afiliado.ShowDialog();
         }
 
         private void agendaToolStripMenuItem_Click(object sender, EventArgs e)

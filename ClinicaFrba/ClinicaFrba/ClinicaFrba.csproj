@@ -47,6 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abm Afiliado\IdentificarAfiliado.cs">
+      <SubType>Form</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Abm Afiliado\IdentificarAfiliado.Designer.cs">
+      <DependentUpon>IdentificarAfiliado.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Abm Afiliado\ABM_AFILIADO.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Form</SubType>
@@ -144,6 +152,10 @@
       <DependentUpon>RegistrarLlegada.cs</DependentUpon>
     </Compile>
     <Compile Include="Clases\Usuario.cs" />
+    <EmbeddedResource Include="Abm Afiliado\IdentificarAfiliado.resx">
+      <DependentUpon>IdentificarAfiliado.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Abm Afiliado\ABM_AFILIADO.resx">
       <DependentUpon>ABM_AFILIADO.cs</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

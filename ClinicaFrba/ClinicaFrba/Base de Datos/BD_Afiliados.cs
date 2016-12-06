@@ -12,6 +12,8 @@ namespace ClinicaFrba.Base_de_Datos
 {
     class BD_Afiliados
     {
+
+        public static DataTable cargarAfiliados(string nombre, string apellido) { return new DataTable(); }
         /// <summary>
         /// Obtiene el id de un afiliado a partir de su nombre y apellido y id de usuario.
         /// </summary>
@@ -104,7 +106,7 @@ namespace ClinicaFrba.Base_de_Datos
                 SqlConnection conexion = Conexion.Instance.get();
 
 
-                SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario, @afil_id OUTPUT", conexion);
+                SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @afil_id_titular, @afil_id OUTPUT", conexion);
                 
                 var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
@@ -117,7 +119,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro8 = new SqlParameter("@fecha_nac", SqlDbType.DateTime);
                 var parametro9 = new SqlParameter("@estado", SqlDbType.Int);
                 var parametro10 = new SqlParameter("@plan", SqlDbType.Int);
-                var parametro11 = new SqlParameter("@usuario", SqlDbType.Int);
+                var parametro11 = new SqlParameter("@afil_id_titular", SqlDbType.Int);
                 var parametro0 = new SqlParameter("@afil_id", SqlDbType.Int);
 
                 parametro1.Value = afiliado.nombre.ToUpper();
@@ -131,8 +133,8 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro8.Value = afiliado.fecha_nac;
                 parametro9.Value = afiliado.estado_civil;
                 parametro10.Value = afiliado.plan_id;
-                parametro11.Value = afiliado.usuario;
-                parametro0.Direction = ParameterDirection.ReturnValue;
+                parametro11.Value = afiliado.id_principal;
+                parametro0.Direction = ParameterDirection.Output;//ReturnValue;
 
                 comando_sql.Parameters.Add(parametro1);
                 comando_sql.Parameters.Add(parametro2);
@@ -174,7 +176,7 @@ namespace ClinicaFrba.Base_de_Datos
                 //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
                 SqlConnection conexion = Conexion.Instance.get();
 
-                SqlCommand comando_sql = new SqlCommand("kfc.modifica_afiliado @afiliado, @nombre, @apellido, @tipo_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario", conexion);
+                SqlCommand comando_sql = new SqlCommand("kfc.modifica_afiliado @afiliado, @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario", conexion);
                 var parametro0 = new SqlParameter("@afiliado", SqlDbType.Int);
                 var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);

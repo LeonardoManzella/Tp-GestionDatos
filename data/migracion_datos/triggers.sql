@@ -28,13 +28,16 @@ GO
 CREATE TRIGGER KFC.existe_rol_habilitar_deshabilitar
 ON KFC.roles
 INSTEAD OF UPDATE AS
-	IF NOT EXISTS (SELECT * FROM KFC.roles WHERE rol_id = (SELECT rol_id FROM inserted))
+	IF NOT EXISTS (SELECT * FROM KFC.roles r, inserted i WHERE r.rol_id = i.rol_id )
 	BEGIN
 		RAISERROR ('No existe el rol a habilitar/deshabilitar', 16, 1);
 		RETURN
 	END
 
-	UPDATE KFC.roles set habilitado = (SELECT habilitado FROM inserted);
+	UPDATE KFC.roles SET habilitado = i.habilitado
+	FROM	KFC.roles r
+		INNER JOIN	inserted i
+		ON	r.rol_id = i.rol_id
 GO
 ---------------------------------------------------------------------------
 

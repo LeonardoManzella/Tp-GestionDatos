@@ -63,7 +63,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
-                if (!reader.HasRows) throw new Exception("Reader sin filas");
+                if (!reader.HasRows) throw new Exception("No se han encontrado Turnos Cancelables");
 
                 List<string> turnos = new List<string>();
 
@@ -80,7 +80,7 @@ namespace ClinicaFrba.Base_de_Datos
                 }
 
                 if (turnos.Count == 0)
-                    throw new Exception("No se encontraron los turnos cancelables");
+                    throw new Exception("No se Encontraron los turnos Cancelables");
 
                 return turnos;
 
@@ -166,7 +166,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
-                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo cancelar el turno. Fallo la ejecucion del procedure");
+                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo cancelar el turno");
 
                 return;
             }
@@ -216,7 +216,7 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="fecha"></param>
         /// <param name="descripcionEspecialidad"></param>
         /// <param name="id_afiliado"></param>
-        public static void asignar_turno(string nombre , string apellido, DateTime fecha, string horario, string descripcionEspecialidad, int id_afiliado)
+        public static void asignar_turno(string prof_nombre , string prof_apellido, DateTime fecha, string horario, string descripcionEspecialidad, int id_afiliado)
         {
             try
             {
@@ -228,9 +228,9 @@ namespace ClinicaFrba.Base_de_Datos
                 SqlParameter parametro3 = new SqlParameter("@espe_desc", SqlDbType.Text);
                 parametro3.Value = descripcionEspecialidad;
                 SqlParameter parametro4 = new SqlParameter("@prof_nombre", SqlDbType.Text);
-                parametro4.Value = nombre;
+                parametro4.Value = prof_nombre;
                 SqlParameter parametro5 = new SqlParameter("@prof_apellido", SqlDbType.Text);
-                parametro5.Value = apellido;
+                parametro5.Value = prof_apellido;
                 SqlParameter parametro6 = new SqlParameter("@afil_id", SqlDbType.Int);
                 parametro6.Value = id_afiliado;
 
@@ -245,7 +245,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                 //Veo si trajo datos o no
-                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Asignar el Turno. Fallo Ejecucion Procedure");
+                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Pedir el Turno");
 
                 return;
             }

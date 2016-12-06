@@ -120,12 +120,12 @@ GO
 CREATE TRIGGER KFC.nuevo_bono
 ON KFC.bonos
 INSTEAD OF INSERT AS
-IF NOT EXISTS (SELECT * FROM KFC.afiliados WHERE afil_id = (SELECT afil_id FROM inserted))
+IF NOT EXISTS (SELECT * FROM KFC.afiliados a INNER JOIN inserted i ON a.afil_id = i.afil_id )
 BEGIN
 	RAISERROR ('No existe el afiliado que intenta comprar el bono', 16, 1);
 	RETURN
 END;
-IF NOT EXISTS (SELECT * FROM KFC.planes WHERE plan_id = (SELECT plan_id FROM inserted))
+IF NOT EXISTS (SELECT * FROM KFC.planes p INNER JOIN inserted i ON p.plan_id = i.plan_id)
 BEGIN
 	RAISERROR ('No existe el plan para el cual se compra el bono', 16, 1);
 	RETURN

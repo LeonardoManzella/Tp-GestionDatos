@@ -1,4 +1,271 @@
-﻿PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA NEGOCIO...'
+﻿/*	::::::::::::::::::::: ORDEN CREACION TABLAS :::::::::::::::::::::
+	(De primero a ultimo, todos los nombres en minusculas para respetar Snake Case)
+	
+	usuarios
+	roles
+	roles_usuarios
+	funcionalidades
+	funcionalidades_roles
+	
+	planes
+	afiliados
+	historial_afiliados
+	
+	profesionales
+	tipos_especialidades
+	especialidades
+	especialidades_profesional
+	agenda
+	
+	tipos_cancelaciones
+	cancelaciones
+	turnos
+	bonos
+	atenciones
+*/
+PRINT 'Inicio Script';
+PRINT '------------------';
+PRINT 'CREANDO ESQUEMA...';
+GO
+
+
+CREATE SCHEMA KFC AUTHORIZATION gd
+GO
+
+PRINT 'ESQUEMA CREADO'
+PRINT 'CREANDO TABLAS...'
+
+CREATE TABLE KFC.usuarios
+          (
+                    us_id      INT PRIMARY KEY IDENTITY(1,1)		--No hay que cambiarlo a secuencia? o sacarle el Identity porque lo manejariamos nosotros
+                  , nick       VARCHAR(255) UNIQUE NOT NULL
+                  , pass       VARBINARY(8000) NOT NULL			--NOTA: Es VarBinary por estar Encriptada la Contraseña por SHA2_256. Se encripta al llenar los datos
+                  , habilitado BIT NOT NULL
+				  , intentos   INT NOT NULL DEFAULT 0
+          )
+PRINT '- Creada Tabla usuarios'		   
+
+CREATE TABLE KFC.roles
+          (
+                    rol_id      INT PRIMARY KEY IDENTITY(1,1)
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
+                  , habilitado  BIT NOT NULL
+          )
+PRINT '- Creada Tabla roles'	
+           
+CREATE TABLE KFC.roles_usuarios
+          (
+                    us_id  INT NOT NULL REFERENCES KFC.usuarios
+                  , rol_id INT NOT NULL REFERENCES KFC.roles
+				   ,CONSTRAINT pk_roles_usuarios PRIMARY KEY (us_id, rol_id)
+          )
+PRINT '- Creada Tabla roles_usuarios'	
+           
+CREATE TABLE KFC.funcionalidades
+          (
+                    func_id     INT PRIMARY KEY IDENTITY(1,1)
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
+          )
+PRINT '- Creada Tabla funcionalidades'	
+           
+CREATE TABLE KFC.funcionalidades_roles
+          (
+                    rol_id  INT NOT NULL REFERENCES KFC.roles
+                  , func_id INT NOT NULL REFERENCES KFC.funcionalidades
+				  ,CONSTRAINT pk_funcionalidades_roles PRIMARY KEY (rol_id, func_id)
+          )
+PRINT '- Creada Tabla funcionalidades_roles'	
+           
+CREATE TABLE KFC.planes
+          (
+                    plan_id              INT PRIMARY KEY IDENTITY(1,1)
+				  , descripcion VARCHAR(255) NOT NULL
+                  , precio_bono_consulta NUMERIC(18,0) NOT NULL
+                  , precio_bono_farmacia NUMERIC(18,0) NOT NULL
+          )
+PRINT '- Creada Tabla planes'	
+           
+CREATE TABLE KFC.estado_civil
+          (
+                    estado_id   INT PRIMARY KEY IDENTITY(1,1)
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
+          )
+PRINT '- Creada Tabla estado_civil'	
+           
+CREATE TABLE KFC.afiliados
+          (
+                    afil_id          INT PRIMARY KEY IDENTITY(1,1)
+                  , nombre           VARCHAR(255) NOT NULL
+                  , apellido         VARCHAR(255) NOT NULL
+                  , tipo_doc         VARCHAR(25) NOT NULL CHECK (tipo_doc IN ('DNI', 'LC', 'LE', 'CI', 'PAS')) 
+                  , numero_doc       NUMERIC(18,0) NOT NULL
+                  , direccion        VARCHAR(255) NULL
+                  , telefono         NUMERIC(18, 0) NULL
+                  , mail             VARCHAR(255) NULL
+                  , sexo             CHAR NOT NULL CHECK (sexo IN ('M', 'F', 'T', 'P'))
+                  , fecha_nacimiento DATETIME NOT NULL
+                  , estado_id        INT NOT NULL REFERENCES KFC.estado_civil
+                  , habilitado       BIT NOT NULL
+				  , personas_a_car 	 INT NULL		-- Incluye conyuge, familiars mayores o cantidad hijos
+                  , plan_id          INT NOT NULL REFERENCES KFC.planes
+                  , us_id            INT NOT NULL REFERENCES KFC.usuarios
+          )
+PRINT '- Creada Tabla afiliados'	
+           
+CREATE TABLE KFC.historial_afiliados
+          (
+                    afil_id       INT NOT NULL REFERENCES KFC.afiliados
+                  , fecha         DATETIME
+                  , plan_activo   INT NOT NULL REFERENCES KFC.planes
+                  , motivo_cambio VARCHAR(255) NOT NULL
+				  ,CONSTRAINT pk_historial_afiliados PRIMARY KEY (afil_id, fecha)
+          )
+PRINT '- Creada Tabla historial_afiliados'	
+           
+CREATE TABLE KFC.profesionales
+          (
+                    prof_id          INT PRIMARY KEY IDENTITY(1,1)
+                  , nombre           VARCHAR(255) NOT NULL
+                  , apellido         VARCHAR(255) NOT NULL
+                  , tipo_doc         VARCHAR(25) NOT NULL CHECK (tipo_doc IN ('DNI', 'LC', 'LE', 'CI', 'PAS')) 
+                  , numero_doc       NUMERIC(18,0) NOT NULL
+                  , direccion        VARCHAR(255) NULL
+                  , telefono         NUMERIC(18, 0) NULL
+                  , mail             VARCHAR(255) NULL
+                  , fecha_nacimiento DATETIME NOT NULL
+                  , matricula        VARCHAR(255) NULL
+                  , us_id            INT NOT NULL REFERENCES KFC.usuarios
+				  , habilitado BIT NOT NULL
+          )
+PRINT '- Creada Tabla profesionales'	
+           
+CREATE TABLE KFC.tipos_especialidades
+          (
+                    tipo_esp_id INT PRIMARY KEY IDENTITY(1,1)
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
+          )
+PRINT '- Creada Tabla tipos_especialidades'	
+           
+CREATE TABLE KFC.especialidades
+          (
+                    espe_id     INT PRIMARY KEY IDENTITY(1,1)
+                  , descripcion VARCHAR(255) UNIQUE NOT NULL
+                  , tipo_esp_id INT NOT NULL REFERENCES KFC.tipos_especialidades
+          )
+PRINT '- Creada Tabla especialidades'	
+           
+CREATE TABLE KFC.especialidades_profesional
+          (
+                    espe_id INT NOT NULL REFERENCES KFC.especialidades
+                  , prof_id INT NOT NULL REFERENCES KFC.profesionales
+				  ,CONSTRAINT pk_especialidades_profesional PRIMARY KEY (espe_id, prof_id)
+          )
+PRINT '- Creada Tabla especialidades_profesional'	
+           
+CREATE TABLE KFC.agenda
+          (
+                    espe_id INT NOT NULL 
+                  , prof_id INT NOT NULL
+				  , dia		INT NOT NULL CHECK (dia > 0 AND dia < 8)
+				  , fecha_desde DATETIME
+                  , fecha_hasta DATETIME
+                  , hora_desde  TIME(0) -- 0 por Minima precicion Nanosegundos. No queremos tanta precicion
+                  , hora_hasta  TIME(0)
+				  ,CONSTRAINT fk_agenda_especialidades_profesional FOREIGN KEY(espe_id, prof_id) REFERENCES KFC.especialidades_profesional (espe_id, prof_id)
+				  ,CONSTRAINT pk_agenda PRIMARY KEY (espe_id, prof_id, dia, fecha_desde, fecha_hasta, hora_desde, hora_hasta)	-- Habria que ver si puede acortarse la PK
+          )
+PRINT '- Creada Tabla agenda'	
+
+CREATE TABLE KFC.turnos
+          (
+                    turno_id   INT PRIMARY KEY IDENTITY(1,1)
+                  , fecha_hora DATETIME NOT NULL
+				  , hora	   TIME(0)  NOT NULL
+                  , afil_id    INT NOT NULL REFERENCES KFC.afiliados
+                  , espe_id    INT NOT NULL
+                  , prof_id    INT NOT NULL
+				  , CONSTRAINT fk_turnos_especialidades_profesional FOREIGN KEY(espe_id, prof_id) REFERENCES KFC.especialidades_profesional (espe_id, prof_id)
+          )
+PRINT '- Creada Tabla turnos'	
+           
+CREATE TABLE KFC.tipos_cancelaciones
+          (
+                    tipo_cancel_id INT PRIMARY KEY IDENTITY(1,1)
+                  , descripcion    VARCHAR(255) UNIQUE NOT NULL
+          )
+PRINT '- Creada Tabla tipos_cancelaciones'	
+           
+CREATE TABLE KFC.cancelaciones
+          (
+                    cancel_id      INT PRIMARY KEY IDENTITY(1,1)
+                  , turno_id       INT NOT NULL REFERENCES KFC.turnos
+                  , detalle_cancel VARCHAR(255) NOT NULL
+				  , fecha_cancel   DATETIME
+                  , tipo_cancel_id INT NOT NULL REFERENCES KFC.tipos_cancelaciones
+          )
+PRINT '- Creada Tabla cancelaciones'	
+           
+CREATE TABLE KFC.bonos
+          (
+                    bono_id INT PRIMARY KEY IDENTITY(1,1)
+                  , plan_id INT NOT NULL REFERENCES KFC.planes
+                  , afil_id INT NOT NULL REFERENCES KFC.afiliados
+				  , fecha_compra DATETIME NOT NULL
+				  , fecha_impresion DATETIME NULL
+				  , consumido BIT NOT NULL DEFAULT 0			-- Por defecto (Bonos Nuevos) estan sin consumir
+          ) 
+PRINT '- Creada Tabla bonos'	
+           
+CREATE TABLE KFC.atenciones
+          (
+                    atencion_id  INT PRIMARY KEY IDENTITY(1,1)
+                  , turno_id     INT NOT NULL REFERENCES KFC.turnos
+                  , hora_llegada	DATETIME NOT NULL
+				  , hora_atencion	DATETIME NOT NULL
+                  , sintomas     VARCHAR(255)
+                  , diagnostico  VARCHAR(255)
+                  , bono_id      INT NOT NULL REFERENCES KFC.bonos
+          )
+PRINT '- Creada Tabla atenciones'	
+
+PRINT 'Creadas todas las tablas'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA NEGOCIO...'
 GO
 
 ------------------OBTENER_TODOS_LOS_ROLES------------------
@@ -366,14 +633,6 @@ BEGIN
 END
 GO
 
-------------------------------------------
-
-------------------------------------------
-create procedure kfc.get_afiliado @id_afiliado int
-as
-select * from kfc.afiliados a
-where a.afil_id = @id_afiliado;
-go
 
 
 ------------------OBTENER_ESPECIALIDADES------------------
@@ -1270,7 +1529,18 @@ AS
 				SET @horaConvertida = CONVERT(TIME(0),@hora, 108);
 				SET @espe_id = KFC.fun_obtener_id_especialidad(@espe_desc);
 				SET @prof_id = KFC.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
-				SET @turno_id = (SELECT turno_id FROM KFC.turnos WHERE espe_id = @espe_id AND prof_id = @prof_id AND fecha_hora = @fecha + CAST(@horaConvertida as DATETIME))
+				SET @turno_id = (
+								SELECT turno_id FROM KFC.turnos 
+								WHERE espe_id = @espe_id 
+								AND prof_id = @prof_id 
+								
+								--Convierto asi Solo comparamos Fecha y Hora Separados
+								AND CONVERT(DATE, fecha_hora) = CONVERT(DATE, @fecha) 
+								AND hora = @horaConvertida
+								
+				)
+
+				IF(@turno_id IS NULL) RAISERROR('No encuentro Turno',16,1)
 
 				INSERT INTO KFC.cancelaciones
 				SELECT @turno_id, @motivo, @fecha_actual, CASE WHEN @tipo = 'USUARIO' THEN 1 ELSE 2 END
@@ -1286,6 +1556,12 @@ AS
         END CATCH
     END;
 GO
+
+/*
+DECLARE @fecha DATETIME
+SET @fecha = CONVERT(DATETIME, '2016.01.08', 102)
+EXEC KFC.pro_cancelar_turno @fecha, '10:00:00',  'ALERGOLOGÍA','LARA','GIMÉNEZ','Motivooo','USUARIO', '2015.01.01'
+*/
 
 CREATE PROCEDURE KFC.pro_cancelar_turno_profesional
           @fechaDesde DATETIME
@@ -1596,293 +1872,64 @@ GO
 
 
 
-/*
----Merge contra lo de Raul. Es de Raul. Estaba trabajando "temporalmente" en esto. NOTA: Hay repetidos que hay que borrar y cosas de Mas. 
----------------------------------------------------------------
----------------------------------------------------------------
 
-	------------------OBTENER_TODOS_LOS_ROLES------------------
---Proposito: obtiene los roles actuales del sistema
---
---Ingreso: -
---
---Egreso: una tabla con la descripcion y el id de los roles
-------------------OBTENER_TODOS_LOS_ROLES------------------
-CREATE FUNCTION KFC.fun_obtener_todos_los_roles()
-returns TABLE AS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+PRINT 'Creando Funciones y Procedures Deploy...'
+GO
+
+CREATE FUNCTION kfc.get_especialidades(@id_profesional INT)
+returns TABLE
 RETURN
 SELECT
-          rol.rol_id
-        , rol.descripcion
-FROM
-          KFC.roles AS rol
-WHERE
-          rol.habilitado = 1
-;
-GO
-------------------VALIDAR_USUARIO------------------
---Proposito: verificar el correcto logueo en el sistema
---
---Ingreso: usuario y contraseña
---
---Egreso: el identificador del usuario
-------------------VALIDAR_USUARIO------------------
-CREATE FUNCTION KFC.fun_validar_usuario(@usuario VARCHAR(30),
-@contrasenia                                 VARCHAR(30))
-returns INT AS
-BEGIN
-          DECLARE @id INT;
-          SELECT
-                    @id = ISNULL(us_id,-1)
-          FROM
-                    KFC.usuarios us
-          WHERE
-                    us.nick           = @usuario
-                    AND us.pass       = HASHBYTES('SHA', @contrasenia)
-                    AND us.habilitado = 1
-          ;
+          esp.espe_id as id
+        , esp.descripcion as descripcion 
+		FROM
+          kfc.especialidades esp
           
-          RETURN @id;
-END;
-GO
-------------------DESHABILITAR_USUARIO------------------
---Proposito: deshabilita un usuario
---
---Ingreso: el nick del usuario
---
---Egreso: -
-------------------DESHABILITAR_USUARIO------------------
-CREATE PROCEDURE kfc.pro_deshabilitar_usuario
-          @usu_nick VARCHAR(30)
-AS
-          BEGIN
-                    BEGIN TRANSACTION
-                    UPDATE kfc.usuarios SET habilitado = 0 WHERE nick = @usu_nick;
-                    
-                    COMMIT;
-          END;
+;
 GO
 
-------------------HABILITAR_ROL------------------
---Proposito: Habilitar un rol, para que sea útil en el sistema
---
---Ingreso: el identificador del rol
---
---Egreso: -
-------------------HABILITAR_ROL------------------
-CREATE PROCEDURE KFC.pro_habilitar_rol
-          @rol_id INT
-AS
-          BEGIN
-                    BEGIN TRANSACTION
-                    UPDATE kfc.roles SET habilitado = 1 WHERE rol_id = @rol_id;
-                    
-                    COMMIT;
-          END;
-GO
-------------------DESHABILITAR_ROL------------------
---Proposito: Deshabilitar un rol, para que sea inútil en el sistema
---
---Ingreso: el identificador del rol
---
---Egreso: -
-------------------DESHABILITAR_ROL------------------
-CREATE PROCEDURE kfc.pro_deshabilitar_rol
-          @rol_id INT
-AS
-          BEGIN
-                    BEGIN TRANSACTION
-                    UPDATE kfc.roles SET habilitado = 0 WHERE rol_id = @rol_id;
-                    
-                    COMMIT;
-          END;
-GO
-------------------AUMENTAR_INTENTOS------------------
---Proposito: Actualizar la cantidad de errores al loguear con un usuario
---
---Ingreso: el nick del usuario
---
---Egreso: -
-------------------AUMENTAR_INTENTOS------------------
-CREATE PROCEDURE kfc.pro_aumentar_intentos
-          @usu_nick VARCHAR(30)
-AS
-          BEGIN
-                    BEGIN TRANSACTION
-                    UPDATE kfc.usuarios SET intentos = intentos +1 WHERE nick = @usu_nick;
-                    
-                    COMMIT;
-          END;
-GO
-------------------REINICIAR_INTENTOS------------------
---Proposito: Reiniciar la cantidad de errores al loguear con un usuario
---
---Ingreso: el nick del usuario
---
---Egreso: -
-------------------REINICIAR_INTENTOS------------------
-CREATE PROCEDURE kfc.pro_reiniciar_intentos
-          @usu_nick VARCHAR(30)
-AS
-          BEGIN
-                    BEGIN TRANSACTION
-                    UPDATE kfc.usuarios SET intentos = 0 WHERE nick = @usu_nick;
-                    
-                    COMMIT;
-          END;
-GO
-------------------OBTENER_FUNCION_ROL------------------
---Proposito: Saber que funciones puede realizar un determinado rol
---
---Ingreso: el identificador del rol
---
---Egreso: una tabla con las funciones de ese rol
-------------------OBTENER_FUNCION_ROL------------------
-CREATE FUNCTION KFC.fun_obtener_funcion_rol( @id_rol INT)
-returns TABLE AS
-RETURN
+CREATE PROCEDURE kfc.get_cmb_prof_x_esp (@id_esp INT)
+as
 SELECT
-          fr.func_id
-        , fun.descripcion
-FROM
-          kfc.funcionalidades_roles fr
-          INNER JOIN
-                    kfc.funcionalidades fun
-          ON
-                    fr.func_id = fun.func_id
-WHERE
-          fr.rol_id = @id_rol
-;
-GO
-------------------OBTENER_TODAS_LAS_FUNCIONALIDADES------------------
---Proposito: Saber que funciones hay en el sistema
---
---Ingreso: -
---
---Egreso: una tabla con todas las funcionalidades del sistema
-------------------OBTENER_TODAS_LAS_FUNCIONALIDADES------------------
-CREATE FUNCTION kfc.fun_obtener_todas_las_funcionalidades()
-returns TABLE AS
-RETURN
-SELECT fun.func_id, fun.descripcion FROM kfc.funcionalidades fun;
-GO
-------------------VERIFICAR_FUNCION_ROL------------------
---Proposito: Revisa que un rol tenga determinada funcionalidad
---
---Ingreso: -
---
---Egreso: 1 = la tiene, 0 = no la tiene
-------------------VERIFICAR_FUNCION_ROL------------------
-CREATE PROCEDURE kfc.pro_verificar_funcion_rol( @id_func INT,
-@id_rol                                              INT
-)
-AS
-          BEGIN
-		 
-                    SELECT
-                              'a'
-                    FROM
-                              kfc.funcionalidades_roles fr
-                    WHERE
-                              fr.func_id    = @id_func
-                              AND fr.rol_id = @id_rol
-                    ;
-                    
-                    DECLARE @encontrado BIT
-                    IF @@rowcount = 0
-                    BEGIN
-                              SET @encontrado = 0
-                    END
-                    ELSE
-                    BEGIN
-                              SET @encontrado = 1
-                    END
-                    RETURN (@encontrado)
-          END;
-GO
-------------------OBTENER_PLANES_AFILIADO------------------
---Proposito: Saber que planes posee un afiliado
---
---Ingreso: identificador del afiliado
---
---Egreso: una tabla con todos los planes que actualmente posee el afiliado,
---			el nombre del afiliado y del titular del beneficio
-------------------OBTENER_PLANES_AFILIADO------------------
-CREATE FUNCTION kfc.fun_obtener_planes_afiliado( @afiliado_id INT)
-returns TABLE
-RETURN
-(
-          SELECT
-                    afi.afil_id
-                  , concat(afi.apellido,', ', afi.nombre) AS paciente
-                  , concat(tit.apellido,', ', tit.nombre) AS titular
-                  , pl.plan_id
-                  , pl.descripcion
-          FROM
-                    kfc.afiliados afi
-                    INNER JOIN
-                              kfc.afiliados tit
-                    ON
-                              kfc.obtener_titular(afi.afil_id) = tit.afil_id
-                    INNER JOIN
-                              kfc.planes pl
-                    ON
-                              pl.plan_id = tit.plan_id
-          WHERE
-                    afi.habilitado  = 1
-                    AND afi.afil_id = @afiliado_id);
-GO
-------------------OBTENER_TODOS_LOS_PLANES------------------
---Proposito: Saber que planes existen actualmente en nuestro sistema
---
---Ingreso: -
---
---Egreso: una tabla con todos los planes que actualmente existen en nuestro sistema
-------------------OBTENER_TODOS_LOS_PLANES------------------
-CREATE FUNCTION kfc.fun_obtener_todos_los_planes()
-returns TABLE
-RETURN
-( SELECT pl.plan_id, pl.descripcion FROM kfc.planes pl);
-GO
-------------------OBTENER_ESPECIALIDADES------------------
---Proposito: Saber que especialidades posee un profesional
---
---Ingreso: un identificador de profesional
---
---Egreso: una tabla con todas las especialidades que posee el profesional
-------------------OBTENER_ESPECIALIDADES------------------
-CREATE FUNCTION kfc.fun_obtener_especialidades(@id_profesional INT)
-returns TABLE
-RETURN
-SELECT
-          esp.espe_id
-        , esp.descripcion
-FROM
-          kfc.especialidades_profesional ep
-          INNER JOIN
-                    kfc.especialidades esp
-          ON
-                    ep.espe_id= esp.espe_id
-WHERE
-          (
-                    @id_profesional = 0
-                    OR ep.prof_id   = @id_profesional
-          )
-;
-GO
-------------------OBTENER_PROFESIONALES_POR_ESPECIALIDAD------------------
---Proposito: Saber que profesionales poseen una especialidad
---
---Ingreso: un identificador de especialidad
---
---Egreso: una tabla con todas los profesionales que poseen esa especialidad
-------------------OBTENER_PROFESIONALES_POR_ESPECIALIDAD------------------
-CREATE FUNCTION kfc.fun_obtener_profesionales_por_especialidad (@id_esp INT)
-returns TABLE
-RETURN
-SELECT
-          prof.prof_id
-        , concat(prof.apellido,', ',prof.nombre) AS profesional
+          prof.prof_id as id
+        , concat(prof.apellido,', ',prof.nombre) AS descripcion
 FROM
           kfc.especialidades_profesional ep
           INNER JOIN
@@ -1896,49 +1943,14 @@ WHERE
           )
 ;
 GO
-------------------ELIMINAR_ROL_USUARIO------------------
---Proposito: Quitarle un rol a un determinado usuario
---
---Ingreso: un identificador de usuario
---
---Egreso: -
-------------------ELIMINAR_ROL_USUARIO------------------
-CREATE PROCEDURE kfc.pro_eliminar_rol_usuario
-          @rol_id INT
-          ,
-          @usu_id INT
+
+CREATE PROCEDURE kfc.get_turno_hoy (@afiliado_id INT,
+@especialidad INT,
+@profesional  INT,
+@fecha		  DateTime)
 AS
-          BEGIN
-		  begin transaction
-                    DELETE
-                    FROM
-                              kfc.roles_usuarios
-                    WHERE
-                              rol_id    = @rol_id
-                              AND us_id = @usu_id
-                    ;
-          commit;
-          END;
-GO
-------------------OBTENER_TURNOS_DEL_DIA------------------
---Proposito: Obtener los turnos "ocupados" de un dia
---
---Ingreso: un identificador de profesional, otro de especialidad y un día
---
---Egreso: una tabla con la fecha, hora, paciente, doctor y especialidad
-------------------OBTENER_TURNOS_DEL_DIA------------------
-CREATE FUNCTION kfc.fun_obtener_turnos_del_dia (@especialidad INT,
-@profesional                                              INT,
-@sysdate                                                  DATETIME)
-returns TABLE
-RETURN
-(
-          SELECT
-                    CONVERT (DATE,t.fecha_hora)        AS fecha
-                  , CONVERT (TIME,t.hora)              AS hora
-                  , CONCAT(a.apellido, ', ', a.nombre) AS paciente
-                  , CONCAT(a.apellido, ', ', a.nombre) AS doctor
-                  , esp.descripcion                    AS especialidad
+          SELECT	t.turno_id						   AS id
+                  , CONCAT(a.apellido, ', ', a.nombre, ': ', esp.descripcion ) AS descripcion
           FROM
                     KFC.turnos t
                     INNER JOIN
@@ -1963,101 +1975,1038 @@ RETURN
                               @especialidad = 0
                               OR t.espe_id  = @especialidad
                     )
-                    AND CONVERT(DATE,t.fecha_hora) = CONVERT(DATE, @sysdate)--(date,GETDATE()));
-		);
+					AND
+                    (
+                              @afiliado_id = 0
+                              OR t.afil_id  = @afiliado_id
+                    )
+                    AND (
+		  DATEPART(YEAR, t.fecha_hora) = DATEPART(Year, @fecha) 
+	           AND DATEPART(DAYOFYEAR, t.fecha_hora) =DATEPART(DAYOFYEAR, @fecha)
+	           AND t.fecha_hora >= @fecha 
+						   );
 GO
-------------------OBTENER_BONOS_AFILIADO------------------
---Proposito: Obtener los turnos "ocupados" de un dia
---
---Ingreso: un identificador de profesional, otro de especialidad y un día
---
---Egreso: una tabla con la fecha, hora, paciente, doctor y especialidad
-------------------OBTENER_BONOS_AFILIADO------------------
-CREATE FUNCTION fun_obtener_bonos_afiliado(@afiliado_id INT)
-returns TABLE
-RETURN
-(
-          SELECT
-                    b.bono_id
-                  , b.plan_id
+
+CREATE PROCEDURE kfc.get_bonos_afiliado(@afiliado_id INT, @plan_id INT)
+as
+	SELECT
+                    b.bono_id as id
+                  , CONVERT(varchar(10), b.bono_id) as descripcion
           FROM
                     kfc.bonos b
           WHERE
                     b.afil_id       = @afiliado_id
-                    AND b.consumido = 0
-          ;
+					AND	b.plan_id = @plan_id
+                    AND b.consumido = 0;
 GO
-CREATE PROCEDURE kfc.pro_baja_afiliado
-          @afiliado_id INT
-          ,
-          @sysdate DATETIME
+
+CREATE Procedure KFC.get_cmb_planes_sociales
+as
+SELECT pl.plan_id id, pl.descripcion FROM kfc.planes pl;
+go
+
+CREATE procedure KFC.registrar_llegada (@id_afiliado int, @id_turno int, @id_bono int, @fecha time)
+as
+begin
+begin try
+begin transaction
+
+insert into kfc.atenciones(turno_id, hora_llegada, bono_id)
+values
+(@id_turno, @fecha, @id_bono);
+
+update kfc.bonos
+set consumido = 1
+where bono_id = @id_bono;
+
+commit;
+end try
+begin catch
+ROLLBACK TRANSACTION;
+PRINT 'LLegada Turno No Ingresada. Fecha ' + CONVERT(varchar,@fecha,102)
+;THROW
+end catch
+END;
+GO
+
+CREATE PROCEDURE KFC.alta_afiliado( @nombre VARCHAR(255),
+									@apellido                                   VARCHAR(255),
+									@tipo_doc                                   VARCHAR(25),
+									@nro_doc                                    NUMERIC(18,0),
+									@direccion                                  VARCHAR(255),
+									@telefono                                   NUMERIC(18,0),
+									@mail                                       VARCHAR(255),
+									@sexo                                       CHAR(1),
+									@fecha_nac                                  DATETIME,
+									@estado                                     INT,
+									@plan                                       INT,
+									@usuario                                    INT,
+									@afil_id									NUMERIC(18,0) OUTPUT )
 AS
-          BEGIN
+BEGIN
+        SET @afil_id = -1;
+        BEGIN TRY
                     BEGIN TRANSACTION
-                    UPDATE kfc.afiliados SET habilitado = 0, fecha_baja = @sysdate;
-                    
-                    COMMIT;
-          END;
-GO
-CREATE PROCEDURE kfc.pro_liberar_turnos
-          @afiliado_id INT
-          ,
-          @sysdate DATETIME
-AS
-          BEGIN
-                    BEGIN TRANSACTION
-                    DELETE
-                              kfc.turnos
-                    WHERE
-                              afil_id                            = @afiliado_id
-                              AND DATEPART(YEAR,fecha_hora)     >= DATEPART(YEAR,@sysdate)
-                              AND DATEPART(DAYOFYEAR,fecha_hora) > DATEPART(DAYOFYEAR, @sysdate)
-                    COMMIT;
-          END;
-GO
-CREATE PROCEDURE kfc.pro_registrar_llegada_atencion
-          @turno_id INT
-          ,
-          @bono_id INT
-          ,
-          @sysdate DATETIME
-AS
-          BEGIN
-                    BEGIN TRY
-                              BEGIN TRANSACTION
-                              INSERT INTO kfc.atenciones
-                                        (
-                                                  turno_id
-                                                , hora_llegada
-                                                , bono_id
-                                        )
-                                        VALUES
-                                        (
-                                                  @turno_id
-                                                , @sysdate
-                                                , @bono_id
-                                        )
-                              ;
+                    INSERT INTO kfc.afiliados
+                            (
+                                        nombre
+                                    , apellido
+                                    , tipo_doc
+                                    , numero_doc
+                                    , direccion
+                                    , telefono
+                                    , mail
+                                    , sexo
+                                    , fecha_nacimiento
+                                    , estado_id
+                                    , plan_id
+                                    , us_id
+                                    , habilitado
+                            )
+                            VALUES
+                            (
+                                        @nombre
+                                    , @apellido
+                                    , @tipo_doc
+                                    , @nro_doc
+                                    , @direccion
+                                    , @telefono
+                                    , @mail
+                                    , @sexo
+                                    , @fecha_nac
+                                    , @estado
+                                    , @plan
+                                    , @usuario
+                                    , 1
+                            )
+                    ;
                               
-                              UPDATE
-                                        kfc.bonos
-                              SET       consumido = 1
-                              WHERE
-                                        bono_id = @bono_id
-                              ;
+                    SELECT @afil_id = @@IDENTITY;
                               
-                              COMMIT;
-                              IF (@@ROWCOUNT = 0)
-                              RAISERROR('',16,1);
-                    END TRY
-                    BEGIN CATCH
-                              PRINT('Catcheamos Excepciones');
-                              IF @@trancount > 0
-                              ROLLBACK TRANSACTION;
-                              THROW;
-                    END CATCH;
-          END;
+                    COMMIT;
+                    RETURN
+        END TRY
+        BEGIN CATCH
+                    IF @@trancount > 0
+                    ROLLBACK TRANSACTION;
+                    PRINT 'Afiliado No Ingresado.';
+                    THROW
+        END CATCH
+END;
 GO
--------------------------------------------------------
--------------------------------------------------------
+
+create procedure KFC.get_afiliado @id_afiliado int
+as
+select * from kfc.afiliados a
+where a.afil_id = @id_afiliado;
+GO
+
+create procedure KFC.get_cmb_estado_civil
+as
+SELECT DISTINCT c.estado_id
+		, c.descripcion 
+FROM
+	kfc.estado_civil c;
+GO
+
+create procedure KFC.modifica_afiliado( 
+								 @afiliado int,
+								 @nombre varchar(255),
+								 @apellido varchar(255),
+								 @tipo_doc varchar(25),
+								 @direccion varchar(255),
+								 @telefono numeric(18,0),
+								 @mail  varchar(255),
+								 @sexo char(1),
+								 @fecha_nac datetime,
+								 @estado int,
+								 @plan int,
+								 @usuario int
+								 )
+as
+Begin
+		BEGIN TRY
+			BEGIN TRANSACTION
+			Update kfc.afiliados
+			set nombre = @nombre,
+				apellido = @apellido,
+				tipo_doc = @tipo_doc,
+				direccion = @direccion,
+				telefono = @telefono,
+				mail = @mail,
+				sexo = @sexo,
+				fecha_nacimiento = @fecha_nac,
+				estado_id = @estado,
+				plan_id = @plan,
+				us_id = @usuario
+				where afil_id = @afiliado;
+
+			Commit;
+			End try
+			BEGIN CATCH
+			IF @@trancount > 0
+			ROLLBACK TRANSACTION;
+			THROW
+			END CATCH
+end;
+
+
+PRINT 'Creadas Funciones y Procedures Deploy'
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+PRINT 'POBLANDO TABLAS...'
+
+DECLARE @true BIT
+SET @true = 1
+
+-- Insercion Estados Civiles del Enunciado
+PRINT '- Llenando Tabla estado_civil...'
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('SOLTERO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('CASADO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('VIUDO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('CONCUBINATO')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('DIVORCIADO/A')
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('MIGRADO')			--Para los Datos de la Tabla Maestra
+
+-- Insercion Funcionalidades
+PRINT '- Llenando Tabla funcionalidades...'
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('ALTA_AFILIADO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('MODIFICAR_AFILIADO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('BAJA_AFILIADO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('PEDIR_TURNO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('CANCELAR_TURNO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('COMPRAR_BONO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('CREAR_AGENDA')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('CANCELAR_TURNOS_AGENDA')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('REGISTRAR_LLEGADA')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('REGISTRAR_DIAGNOSTICO')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('CREAR_ROL')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('MODIFICAR_ROL')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('COMPRA_BONO_ADMINISTRADOR')
+INSERT INTO KFC.funcionalidades(descripcion) VALUES ('ESTADISTICAS')
+
+-- Insercion Roles del Enunciado
+PRINT '- Llenando Tabla roles...'
+INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('AFILIADO', @true)
+INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('PROFESIONAL', @true)
+INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('ADMINISTRATIVO', @true)
+
+-- Insercion Funcionalidades por Roles
+PRINT '- Llenando Tabla funcionalidades_roles...'
+INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+SELECT	r.rol_id, f.func_id
+FROM	KFC.roles R,
+		KFC.funcionalidades F
+WHERE	R.descripcion = 'AFILIADO'
+--Uso un OR para no crear multiples Insert
+AND		(
+		F.descripcion    = 'PEDIR_TURNO'
+		OR F.descripcion = 'COMPRAR_BONO'
+		OR F.descripcion = 'CANCELAR_TURNO'
+		)
+
+INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+SELECT	r.rol_id, f.func_id
+FROM	KFC.roles R,
+		KFC.funcionalidades F
+WHERE	R.descripcion = 'PROFESIONAL'
+--Uso un OR para no crear multiples Insert
+AND		(
+		F.descripcion	 = 'CREAR_AGENDA'
+		OR F.descripcion = 'CANCELAR_TURNOS_AGENDA'
+		OR F.descripcion = 'REGISTRAR_LLEGADA'
+		OR F.descripcion = 'REGISTRAR_DIAGNOSTICO'
+		)
+
+INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+SELECT	r.rol_id, f.func_id
+FROM	KFC.roles R,
+		KFC.funcionalidades F
+WHERE	R.descripcion = 'ADMINISTRATIVO'
+--Uso un OR para no crear multiples Insert
+AND		(
+		F.descripcion	 = 'ALTA_AFILIADO'
+		OR F.descripcion = 'MODIFICAR_AFILIADO'
+		OR F.descripcion = 'BAJA_AFILIADO'
+		OR F.descripcion = 'CREAR_ROL'
+		OR F.descripcion = 'MODIFICAR_ROL'
+		OR F.descripcion = 'COMPRA_BONO_ADMINISTRADOR'
+		OR F.descripcion = 'ESTADISTICAS'
+		)
+
+
+
+-- Insercion Usuarios del Enunciado
+PRINT '- Llenando Tabla usuarios...'
+INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('ADMIN', HASHBYTES('SHA2_256','W23E'), @true)
+
+--Agrego Usuarios para Afiliados, pedido por el Enunciado
+INSERT INTO KFC.usuarios
+          (
+			  nick 
+			, pass 
+			, habilitado
+          )
+SELECT DISTINCT  UPPER(Paciente_Mail)
+        ,  HASHBYTES('SHA2_256',UPPER(Paciente_Mail)) AS pass
+        , @true AS habilitado
+FROM
+          GD2C2016.gd_esquema.Maestra
+WHERE
+          Paciente_Mail IS NOT NULL
+
+
+--Agrego Usuarios para Profesionales, pedido por el Enunciado
+INSERT INTO KFC.usuarios
+          (
+			  nick 
+			, pass 
+			, habilitado
+          )
+SELECT DISTINCT  UPPER(Medico_Mail)
+        ,  HASHBYTES('SHA2_256',UPPER(Medico_Mail)) AS pass
+        , @true AS habilitado
+FROM
+          GD2C2016.gd_esquema.Maestra
+WHERE
+          Medico_Mail IS NOT NULL
+
+
+-- Insercion Roles por Usuario
+PRINT '- Llenando Tabla roles_usuarios...'
+INSERT INTO KFC.roles_usuarios
+          (
+			  us_id
+			, rol_id
+          )
+SELECT
+          u.us_id
+        , r.rol_id
+FROM
+          KFC.usuarios u
+        , KFC.roles    r
+WHERE
+        UPPER(r.descripcion) =   UPPER('ADMINISTRATIVO')
+        AND   UPPER(u.nick)    =   UPPER('ADMIN')
+
+
+-- Insercion Roles para Afiliados
+INSERT INTO KFC.roles_usuarios
+          (
+			  us_id
+			, rol_id
+          )
+SELECT DISTINCT
+          u.us_id
+        , r.rol_id
+FROM
+          KFC.usuarios u
+        , KFC.roles    r
+WHERE
+          UPPER(r.descripcion) = UPPER('AFILIADO')
+		  -- Selecciono Solo los Afiliados
+          AND u.nick IN (
+							SELECT DISTINCT Paciente_Mail
+							FROM
+										GD2C2016.gd_esquema.Maestra
+							WHERE
+										Paciente_Mail IS NOT NULL
+						)
+ORDER BY  u.us_id
+
+
+-- Insercion Roles para Profesionales
+INSERT INTO KFC.roles_usuarios
+          (
+			  us_id
+			, rol_id
+          )
+SELECT DISTINCT 
+		  u.us_id
+        , r.rol_id
+FROM
+          KFC.usuarios u
+        , KFC.roles    r
+WHERE
+          UPPER(r.descripcion) = UPPER('PROFESIONAL')
+		  -- Selecciono Solo los Profesionales
+          AND u.nick IN (
+							SELECT DISTINCT Medico_Mail
+							FROM
+										GD2C2016.gd_esquema.Maestra
+							WHERE
+										Medico_Mail IS NOT NULL
+						)
+ORDER BY
+          u.us_id
+
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Planes
+-- El IDENTITY_INSERT me permite introducir manualmente claves donde seria autoincrementable
+-- Link IDENTITY_INSERT: https://www.mssqltips.com/sqlservertutorial/2521/insert-into-sql-server-table-with-identity-column/
+PRINT '- Llenando Tabla planes...'
+SET IDENTITY_INSERT KFC.planes ON
+INSERT INTO KFC.planes
+          (
+                    plan_id
+                  , descripcion
+                  , precio_bono_consulta
+                  , precio_bono_farmacia
+          )
+SELECT DISTINCT Plan_Med_Codigo
+        ,  UPPER(Plan_Med_Descripcion)
+        , Plan_Med_Precio_Bono_Consulta
+        , Plan_Med_Precio_Bono_Farmacia
+FROM
+          GD2C2016.gd_esquema.Maestra
+ORDER BY
+          Plan_Med_Codigo
+SET IDENTITY_INSERT KFC.planes OFF
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Afiliados
+PRINT '- Llenando Tabla afiliados...'
+SET IDENTITY_INSERT KFC.afiliados ON
+INSERT INTO KFC.afiliados
+          (
+                    afil_id
+				  , tipo_doc
+                  , numero_doc
+                  , nombre
+                  , apellido
+				  , sexo
+                  , direccion
+                  , telefono
+                  , mail
+                  , fecha_nacimiento
+                  , plan_id
+				  , us_id
+				  , estado_id
+                  , habilitado
+          )
+SELECT 
+		ROW_NUMBER() OVER( ORDER BY us_id ) * 100 + 1				--Para generar los ID de Afiliados, todos titulares
+		, 'DNI' AS Tipo_Doc
+        , m.Paciente_Dni
+        ,  UPPER(m.Paciente_Nombre) AS nombre
+        ,  UPPER(m.Paciente_Apellido) AS apellido
+		, 'P' AS sexo								-- P de Pendiente
+        ,  UPPER(m.Paciente_Direccion) AS direccion
+        , m.Paciente_Telefono
+        ,  UPPER(m.Paciente_Mail) AS mail
+        , m.Paciente_Fecha_Nac
+        , m.Plan_Med_Codigo
+		, u.us_id
+		, e.estado_id
+        , 1 AS habilitado
+FROM
+			--Es Necesario Subconsulta para evitar repetidos
+          (
+			  SELECT DISTINCT Paciente_Dni, Paciente_Nombre, Paciente_Apellido, Paciente_Direccion, Paciente_Telefono, Paciente_Mail, Paciente_Fecha_Nac, Plan_Med_Codigo
+			  FROM GD2C2016.gd_esquema.Maestra
+		  ) m
+		  INNER JOIN KFC.usuarios u
+		  ON m.Paciente_Mail = u.nick
+		  INNER JOIN KFC.estado_civil e
+		  ON e.descripcion = 'MIGRADO'
+WHERE
+			Paciente_Dni IS NOT NULL
+ORDER BY
+          u.us_id
+SET IDENTITY_INSERT KFC.afiliados OFF
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Profesionales
+PRINT '- Llenando Tabla profesionales...'
+INSERT INTO KFC.profesionales
+          (
+                    tipo_doc
+                  , numero_doc
+                  , nombre
+                  , apellido
+                  , direccion
+                  , telefono
+                  , mail
+                  , fecha_nacimiento
+				  , us_id
+                  , habilitado
+          )
+SELECT DISTINCT 'DNI' AS Tipo_Doc
+        , m.Medico_Dni
+        ,  UPPER(m.Medico_Nombre)
+        ,  UPPER(m.Medico_Apellido)
+        ,  UPPER(m.Medico_Direccion)
+        , m.Medico_Telefono
+        ,  UPPER(m.Medico_Mail)
+        , m.Medico_Fecha_Nac
+		, u.us_id
+        , @true AS habilitado
+FROM
+          GD2C2016.gd_esquema.Maestra m
+		  , KFC.usuarios u
+WHERE
+          Medico_Dni IS NOT NULL
+		  AND m.Medico_Mail = u.nick
+ORDER BY
+          u.us_id
+ 
+
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Tipos Especialidades
+PRINT '- Llenando Tabla tipos_especialidades...'
+SET IDENTITY_INSERT KFC.tipos_especialidades ON
+INSERT INTO KFC.tipos_especialidades
+          (
+			tipo_esp_id
+			, descripcion
+          )
+SELECT DISTINCT Tipo_Especialidad_Codigo
+        ,  UPPER(Tipo_Especialidad_Descripcion)
+FROM
+          GD2C2016.gd_esquema.Maestra
+WHERE
+          Tipo_Especialidad_Codigo IS NOT NULL
+ORDER BY
+          Tipo_Especialidad_Codigo
+SET IDENTITY_INSERT KFC.tipos_especialidades OFF
+
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Especialidades
+PRINT '- Llenando Tabla especialidades...'
+SET IDENTITY_INSERT KFC.especialidades ON
+INSERT INTO KFC.especialidades
+          (
+		      espe_id
+			, descripcion
+			, tipo_esp_id
+          )
+SELECT DISTINCT Especialidad_Codigo
+        ,  UPPER(Especialidad_Descripcion)
+        , Tipo_Especialidad_Codigo
+FROM
+          GD2C2016.gd_esquema.Maestra
+WHERE
+          Especialidad_Codigo IS NOT NULL
+ORDER BY
+          Especialidad_Codigo
+SET IDENTITY_INSERT KFC.especialidades OFF
+ 
+
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Especialidad Profesional
+--El ID de profesional necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
+PRINT '- Llenando Tabla especialidades_profesional...'
+INSERT INTO KFC.especialidades_profesional
+          (
+		     espe_id
+		   , prof_id
+          )
+SELECT DISTINCT 
+		  m.Especialidad_Codigo
+        , p.prof_id
+FROM
+          GD2C2016.gd_esquema.Maestra m
+        , KFC.profesionales           p
+WHERE
+          m.Especialidad_Codigo IS NOT NULL
+          AND m.Medico_Nombre             = p.nombre
+          AND m.Medico_Apellido           = p.apellido
+          AND m.Medico_Dni                = p.numero_doc
+ORDER BY
+          m.Especialidad_Codigo
+ 
+
+
+
+------------------------------------------------------------------
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  la Agenda
+--
+--El ID de Profesional necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
+--Este codigo es complicado, pero basicamente lo que hago es calcular los rangos de horarios usando funciones de sumarizacion
+--No se preocupen tanto por las conversiones y calculos, las hace y funciona bien. Lo comprobe manualmente.
+--Link CONVERT: https://msdn.microsoft.com/en-us/library/ms187928.aspx
+------------------------------------------------------------------
+PRINT '- Llenando Tabla agenda...'
+INSERT INTO KFC.agenda
+          (
+                    espe_id
+                  , prof_id
+                  , dia
+                  , fecha_desde
+                  , fecha_hasta
+                  , hora_desde
+                  , hora_hasta
+          )
+SELECT DISTINCT 
+		  m.Especialidad_Codigo
+        , p.prof_id
+        , DATEPART(WEEKDAY, m.Turno_Fecha)       AS dia_semana
+        , MIN( m.Turno_Fecha )                   AS fecha_desde
+        , MAX( m.Turno_Fecha )                   AS fecha_hasta
+        , CONVERT( TIME(0), MIN( m.Turno_Fecha) ) AS hora_desde
+        , CONVERT( TIME(0), MAX( m.Turno_Fecha) ) AS hora_hasta
+FROM
+          GD2C2016.gd_esquema.Maestra m
+        , KFC.profesionales           p
+WHERE
+          m.Especialidad_Codigo IS NOT NULL
+          AND m.Turno_Fecha     IS NOT NULL
+          AND m.Medico_Nombre             = p.nombre
+          AND m.Medico_Apellido           = p.apellido
+          AND m.Medico_Dni                = p.numero_doc
+GROUP BY
+          Especialidad_Codigo
+        , p.prof_id
+        , DATEPART(WEEKDAY, m.Turno_Fecha)
+
+--Dato Extra Nuestro para Pruebas
+PRINT '- Llenando Tabla agenda...'
+INSERT INTO KFC.agenda
+          (
+                    espe_id
+                  , prof_id
+                  , dia
+                  , fecha_desde
+                  , fecha_hasta
+                  , hora_desde
+                  , hora_hasta
+          )
+SELECT DISTINCT 
+		  e.espe_id
+        , p.prof_id
+        , DATEPART(WEEKDAY,  CONVERT( DATETIME, '2016.01.01', 102) )       AS dia_semana
+        , CONVERT( DATETIME, '2016.01.01', 102)                   AS fecha_desde
+        , CONVERT( DATETIME, '2016.01.30', 102)                   AS fecha_hasta
+        , CONVERT(TIME(0), '10:00:00', 108) AS hora_desde
+        , CONVERT(TIME(0), '12:00:00', 108) AS hora_hasta
+FROM
+          KFC.especialidades	e
+        , KFC.profesionales     p
+WHERE
+          UPPER('ALERGOLOGÍA')	= UPPER(e.descripcion)
+          AND	UPPER('LARA')		=  UPPER(p.nombre)
+          AND	UPPER('GIMÉNEZ')		=  UPPER(p.apellido)
+
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Tipos Cancelaciones
+PRINT '- Llenando Tabla tipos_cancelaciones...'
+INSERT INTO KFC.tipos_cancelaciones	Values('Por Usuario')
+INSERT INTO KFC.tipos_cancelaciones	Values('Por Medico')
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Turnos
+--El ID de profesional, especialidad y afiliado necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla. De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
+PRINT '- Llenando Tabla turnos...'
+SET IDENTITY_INSERT KFC.turnos ON
+INSERT INTO KFC.turnos
+          (
+			    turno_id
+			  , fecha_hora
+			  , hora
+			  , afil_id
+			  , espe_id
+			  , prof_id
+          )
+SELECT DISTINCT m.Turno_Numero
+        , m.Turno_Fecha
+        , CONVERT(TIME(0), m.Turno_Fecha) AS hora		--Covierto Formato Datos
+        , a.afil_id
+        , m.Especialidad_Codigo
+        , p.prof_id
+FROM
+          GD2C2016.gd_esquema.Maestra m
+        , KFC.afiliados               a
+        , KFC.profesionales           p
+WHERE
+          m.Turno_Numero IS NOT NULL
+          AND m.Paciente_Nombre    = a.nombre
+          AND m.Paciente_Apellido  = a.apellido
+          AND m.Paciente_Dni       = a.numero_doc
+          AND m.Medico_Nombre      = p.nombre
+          AND m.Medico_Apellido    = p.apellido
+          AND m.Medico_Dni         = p.numero_doc
+ORDER BY
+          m.Turno_Numero
+SET IDENTITY_INSERT KFC.turnos OFF
+ 
+
+
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Bonos
+--El ID  de plan y afiliado necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.--El ID necesito obtenerlo de la nueva tabla, no puedo obtenerlo de la vieja porque el ID se genera en la nueva tabla.De ahi que halla tantas condiciones de JOIN en el WHERE, estoy haciendolo a mano
+PRINT '- Llenando Tabla bonos...'
+SET IDENTITY_INSERT KFC.bonos ON
+INSERT INTO KFC.bonos
+          (
+			    bono_id
+			  , afil_id
+			  , plan_id
+			  , fecha_compra
+			  , fecha_impresion
+          )
+SELECT DISTINCT m.Bono_Consulta_Numero
+        , a.afil_id
+        , m.Plan_Med_Codigo
+        , m.Compra_Bono_Fecha
+        , m.Bono_Consulta_Fecha_Impresion
+FROM
+          GD2C2016.gd_esquema.Maestra m
+        , KFC.afiliados               a
+WHERE
+          m.Compra_Bono_Fecha        IS NOT NULL
+          AND m.Bono_Consulta_Numero IS NOT NULL
+          AND m.Paciente_Nombre                = a.nombre
+          AND m.Paciente_Apellido              = a.apellido
+          AND m.Paciente_Dni                   = a.numero_doc
+ORDER BY
+          m.Bono_Consulta_Numero
+SET IDENTITY_INSERT KFC.bonos OFF
+
+
+
+
+
+--Tomo Datos de Tabla Maestra y los Inserto en Tabla  Atenciones
+PRINT '- Llenando Tabla atenciones...'
+INSERT INTO KFC.atenciones
+          (
+			    turno_id
+			  , hora_llegada
+			  , sintomas
+			  , diagnostico
+			  , bono_id
+			  , hora_atencion
+          )
+SELECT DISTINCT Turno_Numero
+        , Bono_Consulta_Fecha_Impresion --Considero la Fecha de la Impresion del Bono como la de la Atencion (unicamente para Turnos Migrados), Ya que consideramos que el Bono se Imprime al momento de su uso (en el sistema anterior)
+        ,  UPPER(Consulta_Sintomas)
+        ,  UPPER(Consulta_Enfermedades)
+        , Bono_Consulta_Numero
+		, Bono_Consulta_Fecha_Impresion	--Idem hora llegada
+FROM
+          GD2C2016.gd_esquema.Maestra
+WHERE
+          Turno_Numero             IS NOT NULL
+          AND Bono_Consulta_Numero IS NOT NULL
+ORDER BY
+          Turno_Numero
+ 
+ PRINT 'TABLAS POBLADAS'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+PRINT 'CREANDO TRIGGERS...'
+GO
+
+-- Se chequea la integridad de los datos a insertar en la tabla FUNCIONALIDADES_ROLES
+CREATE TRIGGER KFC.rol_nueva_funcionalidad
+ON KFC.funcionalidades_roles
+INSTEAD OF INSERT AS
+	IF NOT EXISTS (SELECT * FROM KFC.roles WHERE rol_id = (SELECT rol_id FROM inserted))
+	BEGIN
+		RAISERROR ('No existe el rol a insertar en la tabla de relacion', 16, 1);
+		RETURN
+	END
+
+	IF NOT EXISTS (SELECT * FROM KFC.funcionalidades WHERE func_id = (SELECT func_id FROM inserted))
+		BEGIN
+			RAISERROR ('No existe la funcionalidad a asociar en la tabla de relacion', 16, 1);
+		RETURN
+	END
+
+	INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+	SELECT rol_id, func_id
+	FROM inserted;
+
+GO
+---------------------------------------------------------------------------
+
+-- Se chequea la integridad de los datos para habilitar/deshabilitar un rol --
+CREATE TRIGGER KFC.existe_rol_habilitar_deshabilitar
+ON KFC.roles
+INSTEAD OF UPDATE AS
+	IF NOT EXISTS (SELECT * FROM KFC.roles r, inserted i WHERE r.rol_id = i.rol_id )
+	BEGIN
+		RAISERROR ('No existe el rol a habilitar/deshabilitar', 16, 1);
+		RETURN
+	END
+
+	UPDATE KFC.roles SET habilitado = i.habilitado
+	FROM	KFC.roles r
+		INNER JOIN	inserted i
+		ON	r.rol_id = i.rol_id
+GO
+---------------------------------------------------------------------------
+
+/*
+-- Todavía no funciona - aclarar el tema del ID de los afiliados --
+CREATE TRIGGER KFC.existe_afiliado_principal
+ON KFC.afiliados
+INSTEAD OF INSERT AS
+
+DECLARE @afil_id int;
+DECLARE @afil_id_base int;
+SELECT @afil_id = afil_id FROM inserted;
+
+IF @afil_id NOT LIKE '%01'
+BEGIN
+	SELECT @afil_id_base = @afil_id/100;
+	IF EXISTS (SELECT * FROM KFC.afiliados WHERE afil_id = (@afil_id_base*100+1)
+				AND personas_a_car IS NOT NULL)
+		BEGIN TRANSACTION
+			INSERT INTO KFC.afiliados
+			SELECT * FROM inserted;
+		COMMIT;
+END
+ELSE
+BEGIN
+	RAISERROR ('No existe el afiliado principal', 16, 1);
+	RETURN
+END;
+GO
+---------------------------------------------------------------------------
 */
+
+-- Trigger para chequear el insert en la agenda --
+CREATE TRIGGER KFC.nueva_agenda_profesional
+ON KFC.agenda
+INSTEAD OF INSERT AS
+IF NOT EXISTS (SELECT * FROM KFC.profesionales 
+	WHERE prof_id = (SELECT prof_id FROM inserted))
+	BEGIN
+		RAISERROR ('No existe el profesional indicado', 16, 1);
+		RETURN
+	END;
+IF NOT EXISTS (SELECT * FROM KFC.especialidades 
+	WHERE espe_id = (SELECT espe_id FROM inserted))
+	BEGIN
+		RAISERROR ('No existe la especialidad indicada', 16, 1);
+		RETURN
+	END;
+IF NOT EXISTS (SELECT * FROM KFC.especialidades_profesional 
+	WHERE espe_id = (SELECT espe_id FROM inserted) AND prof_id = (SELECT prof_id FROM inserted))
+	BEGIN
+		RAISERROR ('El profesional no tiene la especialidad indicada', 16, 1);
+		RETURN
+	END;
+IF ((SELECT fecha_desde from inserted) > (SELECT fecha_hasta from inserted))
+	BEGIN
+		RAISERROR ('La fecha de inicio no puede ser mayor a la del final', 16, 1);
+		RETURN
+	END;
+IF ((SELECT hora_desde from inserted) > (SELECT hora_hasta from inserted))
+	BEGIN
+		RAISERROR ('La hora de inicio no puede ser mayor a la del final', 16, 1);
+		RETURN
+	END;
+
+	INSERT INTO KFC.agenda(espe_id, prof_id, dia, fecha_desde, fecha_hasta, hora_desde, hora_hasta)
+	VALUES(
+	 (SELECT espe_id FROM inserted), 
+	 (SELECT prof_id FROM inserted), 
+	 (SELECT dia FROM inserted), 
+	 (SELECT fecha_desde FROM inserted), 
+	 (SELECT fecha_hasta FROM inserted), 
+	 (SELECT hora_desde FROM inserted), 
+	 (SELECT hora_hasta FROM inserted)
+	 );
+GO
+---------------------------------------------------------------------------
+
+-- Trigger para chequear la informacion del bono --
+CREATE TRIGGER KFC.nuevo_bono
+ON KFC.bonos
+INSTEAD OF INSERT AS
+IF NOT EXISTS (SELECT * FROM KFC.afiliados a INNER JOIN inserted i ON a.afil_id = i.afil_id )
+BEGIN
+	RAISERROR ('No existe el afiliado que intenta comprar el bono', 16, 1);
+	RETURN
+END;
+IF NOT EXISTS (SELECT * FROM KFC.planes p INNER JOIN inserted i ON p.plan_id = i.plan_id)
+BEGIN
+	RAISERROR ('No existe el plan para el cual se compra el bono', 16, 1);
+	RETURN
+END;
+
+INSERT INTO KFC.bonos(afil_id, plan_id, consumido, fecha_compra, fecha_impresion)
+	VALUES(
+	 (SELECT afil_id FROM inserted),
+	 (SELECT plan_id FROM inserted), 
+	 (SELECT consumido FROM inserted), 
+	 (SELECT fecha_compra FROM inserted), 
+	 (SELECT fecha_impresion FROM inserted)
+	 );
+GO
+
+/* TRIGGER NO NECESARIO
+---------------------------------------------------------------------------
+-- Trigger para chequear la fecha de la impresion del bono --
+CREATE TRIGGER KFC.impresion_bono
+ON KFC.bonos
+INSTEAD OF UPDATE AS
+
+IF UPDATE(fecha_impresion)
+BEGIN
+	IF((SELECT fecha_impresion FROM inserted) < (SELECT fecha_compra FROM inserted))
+	BEGIN
+		RAISERROR ('La fecha de impresión no puede ser anterior a la fecha de la compra del bono', 16, 1);
+		RETURN
+	END;
+END
+
+ARREGLAR
+GO
+*/
+---------------------------------------------------------------------------
+
+-- Trigger para chequear la informacion del turno --
+CREATE TRIGGER KFC.nuevo_turno
+ON KFC.turnos
+INSTEAD OF INSERT AS
+IF NOT EXISTS (SELECT * FROM KFC.afiliados WHERE afil_id = (SELECT afil_id FROM inserted))
+BEGIN
+	RAISERROR ('No existe el afiliado que intenta solicitar el turno', 16, 1);
+	RETURN
+END;
+IF NOT EXISTS (SELECT * FROM KFC.profesionales 
+	WHERE prof_id = (SELECT prof_id FROM inserted))
+	BEGIN
+		RAISERROR ('No existe el profesional indicado', 16, 1);
+		RETURN
+	END;
+IF NOT EXISTS (SELECT * FROM KFC.especialidades 
+	WHERE espe_id = (SELECT espe_id FROM inserted))
+	BEGIN
+		RAISERROR ('No existe la especialidad indicada', 16, 1);
+		RETURN
+	END;
+IF NOT EXISTS (SELECT * FROM KFC.especialidades_profesional 
+	WHERE espe_id = (SELECT espe_id FROM inserted) AND prof_id = (SELECT prof_id FROM inserted))
+	BEGIN
+		RAISERROR ('El profesional no tiene la especialidad indicada', 16, 1);
+		RETURN
+	END;
+
+INSERT INTO KFC.turnos(afil_id, espe_id, prof_id, fecha_hora, hora)
+	VALUES(
+	 (SELECT afil_id FROM inserted), 
+	 (SELECT espe_id FROM inserted), 
+	 (SELECT prof_id FROM inserted),
+	 (SELECT fecha_hora FROM inserted), 
+	 (SELECT hora FROM inserted)
+	 );
+GO
+---------------------------------------------------------------------------
+
+
+PRINT 'TRIGGERS CREADOS'
+PRINT '------------------'
+PRINT 'Fin Script'

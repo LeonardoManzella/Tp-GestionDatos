@@ -45,6 +45,7 @@ namespace ClinicaFrba
         private void habilitar_componentes()
         {
             //En base a los Permisos, vemos las Pestañas a Habilitar para Usar
+            
             if (this.usuario.permisos.Contains("ALTA_AFILIADO"))                this.nuevoAfiliadoToolStripMenuItem.Enabled                     = true;
             if (this.usuario.permisos.Contains("MODIFICAR_AFILIADO"))           this.modificarAfiliadoToolStripMenuItem.Enabled                 = true;
             if (this.usuario.permisos.Contains("BAJA_AFILIADO"))                this.bajaAfiliadoToolStripMenuItem.Enabled                      = true;
@@ -59,6 +60,7 @@ namespace ClinicaFrba
             if (this.usuario.permisos.Contains("MODIFICAR_ROL"))                this.modificarRol_ToolStripMenuItem.Enabled                     = true;
             if (this.usuario.permisos.Contains("COMPRA_BONO_ADMINISTRADOR"))    this.comprarBonoAdmin_ToolStripMenuItem.Enabled                 = true;
             if (this.usuario.permisos.Contains("ESTADISTICAS"))                 this.estadisticasToolStripMenuItem.Enabled                      = true;
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)

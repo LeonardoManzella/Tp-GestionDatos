@@ -14,10 +14,13 @@ namespace ClinicaFrba.Estadisticas
 {
     public partial class Estadisticas : Form
     {
+
+        ComboData cero;
         public Estadisticas()
         {
             InitializeComponent();
         }
+
 
         private void btnEjecutar_Click(object sender, EventArgs e)
         {
@@ -33,19 +36,25 @@ namespace ClinicaFrba.Estadisticas
         {
             try
             {
-                var vacio = new ComboData(null, "Sin Elegir");
+                cero = new ComboData(0, "Sin Elegir");
 
                 this.comboEspec.DisplayMember = "descripcion";
                 this.comboEspec.ValueMember = "identificador";
                 var estados = Llegada_At_Med.obtenerEspecialidades();
-                this.comboEspec.Items.Add(vacio);
-                this.comboEspec.Items.AddRange(estados.ToArray());
+                this.comboEspec.Items.Add(cero);
+                foreach (ComboData item in estados)
+                { 
+                this.comboEspec.Items.Add(item);
+                }
 
                 this.comboBox3.DisplayMember = "descripcion";
                 this.comboBox3.ValueMember = "identificador";
                 var planes = ABMAFIL.get_Planes_Sociales();
-                this.comboEspec.Items.Add(vacio);
-                this.comboEspec.Items.AddRange(planes.ToArray());
+                this.comboEspec.Items.Add(cero);
+                foreach (ComboData item in planes)
+                {
+                    this.comboEspec.Items.Add(item);
+                }
 
                 this.comboTop5.Items.Add(new ComboData(1, "Especialidades más canceladas"));
                 this.comboTop5.Items.Add(new ComboData(2, "Profesionales más consultados"));

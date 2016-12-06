@@ -14,6 +14,9 @@ namespace ClinicaFrba.AtencionesMedicas
 {
     public partial class RegistrarLlegada : Form
     {
+        private ComboData cero = new ComboData(0, "Sin elegir");
+        private ComboData vacio = new ComboData("", "Sin elegir");
+
         public RegistrarLlegada()
         {
             InitializeComponent();
@@ -52,9 +55,6 @@ namespace ClinicaFrba.AtencionesMedicas
 
         private void limpiar()
         {
-            var cero = new ComboData(0, "Sin elegir");
-            var vacio = new ComboData(null, "Sin elegir");
-
             this.comboBox1.Items.Clear();
             this.comboEspecialidades.Items.Clear();
             this.cmbBono.Items.Clear();
@@ -139,6 +139,16 @@ namespace ClinicaFrba.AtencionesMedicas
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             limpiar();
+        }
+
+        private void txtDNI_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtDNI.Text.Trim()))
+            {
+                this.cmbPlan.Items.Clear();
+                this.cmbPlan.Items.Add(cero);
+                //this.cmbPlan.Items.AddRange(Llegada_At_Med.pedir_planes_usuario().ToArray());
+            }
         }
     }
 }

@@ -59,6 +59,7 @@
             this.txtDNI.Size = new System.Drawing.Size(211, 20);
             this.txtDNI.TabIndex = 0;
             this.txtDNI.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDNI_KeyPress);
+            this.txtDNI.Leave += new System.EventHandler(this.txtDNI_Leave);
             // 
             // label1
             // 

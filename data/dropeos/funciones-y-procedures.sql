@@ -97,6 +97,9 @@ IF OBJECT_ID('KFC.pro_cancelar_turno_profesional') IS NOT NULL
 DROP PROCEDURE KFC.pro_cancelar_turno_profesional;
 GO
 
+IF OBJECT_ID('KFC.pro_crear_agenda_profesional') IS NOT NULL
+DROP PROCEDURE KFC.pro_crear_agenda_profesional;
+GO
 PRINT 'Procedures Borrados'
 
 

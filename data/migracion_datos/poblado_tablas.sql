@@ -383,8 +383,8 @@ SELECT DISTINCT
         , DATEPART(WEEKDAY, m.Turno_Fecha)       AS dia_semana
         , MIN( m.Turno_Fecha )                   AS fecha_desde
         , MAX( m.Turno_Fecha )                   AS fecha_hasta
-        , MIN( CONVERT(TIME(0), m.Turno_Fecha) ) AS hora_desde
-        , MAX( CONVERT(TIME(0), m.Turno_Fecha) ) AS hora_hasta
+        , CONVERT( TIME(0), MIN( m.Turno_Fecha) ) AS hora_desde
+        , CONVERT( TIME(0), MAX( m.Turno_Fecha) ) AS hora_hasta
 FROM
           GD2C2016.gd_esquema.Maestra m
         , KFC.profesionales           p
@@ -517,12 +517,14 @@ INSERT INTO KFC.atenciones
 			  , sintomas
 			  , diagnostico
 			  , bono_id
+			  , hora_atencion
           )
 SELECT DISTINCT Turno_Numero
         , Bono_Consulta_Fecha_Impresion --Considero la Fecha de la Impresion del Bono como la de la Atencion (unicamente para Turnos Migrados), Ya que consideramos que el Bono se Imprime al momento de su uso (en el sistema anterior)
         ,  UPPER(Consulta_Sintomas)
         ,  UPPER(Consulta_Enfermedades)
         , Bono_Consulta_Numero
+		, Bono_Consulta_Fecha_Impresion	--Idem hora llegada
 FROM
           GD2C2016.gd_esquema.Maestra
 WHERE

@@ -24,8 +24,7 @@ namespace ClinicaFrba.CancelarTurno
         {
             try
             {
-                List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
-                ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
+                actualizar_turnos_cancelables();
             }
             catch(Exception ex)
             {
@@ -52,17 +51,17 @@ namespace ClinicaFrba.CancelarTurno
                 string apellidoProfesional = turno[0].Split(',')[0].Trim();
                 string nombreProfesional = turno[0].Split(',')[1].Trim();
                 string especialidad = turno[1].Trim();
-                DateTime fecha = DateTime.Parse(turno[2].Trim());;
+                DateTime fecha = DateTime.Parse(turno[2].Trim()); ;
                 string hora = turno[3].Trim();
 
                 Base_de_Datos.BD_Turnos.cancelar_turno(nombreProfesional, apellidoProfesional, especialidad, fecha, hora, motivo, "USUARIO");
 
-                List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
-                comboCancelarTurno.Items.Clear();
-                ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
+
                 motivoCancelacion.Clear();
 
                 MessageBox.Show("El turno se cancelo exitosamente.", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                actualizar_turnos_cancelables();
 
             }
             catch (Exception ex)
@@ -70,6 +69,21 @@ namespace ClinicaFrba.CancelarTurno
                 MessageBox.Show(ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void actualizar_turnos_cancelables()
+        {
+            try {
+                comboCancelarTurno.Items.Clear();
+                List<string> turnosCancelables = Base_de_Datos.BD_Turnos.obtener_turnos_cancelables(usuario);
+                ComboData.llenarCombo(comboCancelarTurno, turnosCancelables);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.comboCancelarTurno.Enabled = false;
+                this.cancelarTurnoButton.Enabled = false;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

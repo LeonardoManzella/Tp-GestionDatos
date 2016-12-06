@@ -51,6 +51,7 @@ namespace ClinicaFrba.Compra_Bono
             this.dataGridView_resultados_filtros.Visible = false;
             this.button_Buscar.Visible = false;
             this.label_afiliados.Visible = false;
+            this.button_limpiar.Visible = false;
         }
 
         private void deshabilitar_comprar()

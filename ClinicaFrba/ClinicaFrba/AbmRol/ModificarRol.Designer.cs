@@ -36,8 +36,13 @@
             this.checkBox_rolHabilitado = new System.Windows.Forms.CheckBox();
             this.button_cancelar = new System.Windows.Forms.Button();
             this.comboBox_rol = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label_funcionalidades = new System.Windows.Forms.Label();
             this.button_limpiar = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label2
@@ -53,7 +58,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 75);
+            this.label3.Location = new System.Drawing.Point(6, 30);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(127, 18);
             this.label3.TabIndex = 3;
@@ -62,7 +67,7 @@
             // button_busqueda
             // 
             this.button_busqueda.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_busqueda.Location = new System.Drawing.Point(227, 18);
+            this.button_busqueda.Location = new System.Drawing.Point(229, 10);
             this.button_busqueda.Name = "button_busqueda";
             this.button_busqueda.Size = new System.Drawing.Size(123, 34);
             this.button_busqueda.TabIndex = 2;
@@ -74,16 +79,16 @@
             // 
             this.checkedListBox_Funcionalidades.Enabled = false;
             this.checkedListBox_Funcionalidades.FormattingEnabled = true;
-            this.checkedListBox_Funcionalidades.Location = new System.Drawing.Point(161, 107);
+            this.checkedListBox_Funcionalidades.Location = new System.Drawing.Point(162, 40);
             this.checkedListBox_Funcionalidades.Name = "checkedListBox_Funcionalidades";
-            this.checkedListBox_Funcionalidades.Size = new System.Drawing.Size(159, 154);
+            this.checkedListBox_Funcionalidades.Size = new System.Drawing.Size(201, 229);
             this.checkedListBox_Funcionalidades.TabIndex = 4;
             // 
             // button_modificarRol
             // 
             this.button_modificarRol.Enabled = false;
             this.button_modificarRol.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_modificarRol.Location = new System.Drawing.Point(337, 292);
+            this.button_modificarRol.Location = new System.Drawing.Point(334, 342);
             this.button_modificarRol.Name = "button_modificarRol";
             this.button_modificarRol.Size = new System.Drawing.Size(97, 49);
             this.button_modificarRol.TabIndex = 5;
@@ -95,16 +100,16 @@
             // 
             this.checkBox_rolHabilitado.AutoSize = true;
             this.checkBox_rolHabilitado.Enabled = false;
-            this.checkBox_rolHabilitado.Location = new System.Drawing.Point(15, 122);
+            this.checkBox_rolHabilitado.Location = new System.Drawing.Point(7, 114);
             this.checkBox_rolHabilitado.Name = "checkBox_rolHabilitado";
-            this.checkBox_rolHabilitado.Size = new System.Drawing.Size(85, 17);
+            this.checkBox_rolHabilitado.Size = new System.Drawing.Size(104, 17);
             this.checkBox_rolHabilitado.TabIndex = 3;
-            this.checkBox_rolHabilitado.Text = "¿Habilitado?";
+            this.checkBox_rolHabilitado.Text = "¿Rol Habilitado?";
             this.checkBox_rolHabilitado.UseVisualStyleBackColor = true;
             // 
             // button_cancelar
             // 
-            this.button_cancelar.Location = new System.Drawing.Point(161, 299);
+            this.button_cancelar.Location = new System.Drawing.Point(161, 346);
             this.button_cancelar.Name = "button_cancelar";
             this.button_cancelar.Size = new System.Drawing.Size(115, 42);
             this.button_cancelar.TabIndex = 6;
@@ -120,19 +125,19 @@
             this.comboBox_rol.Size = new System.Drawing.Size(121, 21);
             this.comboBox_rol.TabIndex = 1;
             // 
-            // label1
+            // label_funcionalidades
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label1.Location = new System.Drawing.Point(184, 79);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(120, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Funcionalidades del Rol";
+            this.label_funcionalidades.AutoSize = true;
+            this.label_funcionalidades.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label_funcionalidades.Location = new System.Drawing.Point(199, 18);
+            this.label_funcionalidades.Name = "label_funcionalidades";
+            this.label_funcionalidades.Size = new System.Drawing.Size(120, 13);
+            this.label_funcionalidades.TabIndex = 10;
+            this.label_funcionalidades.Text = "Funcionalidades del Rol";
             // 
             // button_limpiar
             // 
-            this.button_limpiar.Location = new System.Drawing.Point(12, 305);
+            this.button_limpiar.Location = new System.Drawing.Point(12, 350);
             this.button_limpiar.Name = "button_limpiar";
             this.button_limpiar.Size = new System.Drawing.Size(81, 36);
             this.button_limpiar.TabIndex = 7;
@@ -140,24 +145,60 @@
             this.button_limpiar.UseVisualStyleBackColor = true;
             this.button_limpiar.Click += new System.EventHandler(this.button_limpiar_Click);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 44);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(95, 39);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Permite Cambiar \r\nAlta y Baja Logica \r\nal Rol";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.groupBox2);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label_funcionalidades);
+            this.groupBox1.Controls.Add(this.checkedListBox_Funcionalidades);
+            this.groupBox1.Location = new System.Drawing.Point(12, 59);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(385, 277);
+            this.groupBox1.TabIndex = 12;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Datos del Rol";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.checkBox_rolHabilitado);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.groupBox2.Location = new System.Drawing.Point(9, 87);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(120, 141);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Des / Habilitacion del Rol";
+            // 
             // ModificarRol
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(443, 353);
+            this.ClientSize = new System.Drawing.Size(443, 396);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button_limpiar);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox_rol);
             this.Controls.Add(this.button_cancelar);
-            this.Controls.Add(this.checkBox_rolHabilitado);
             this.Controls.Add(this.button_modificarRol);
-            this.Controls.Add(this.checkedListBox_Funcionalidades);
             this.Controls.Add(this.button_busqueda);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Name = "ModificarRol";
             this.Text = "ModificarRol";
             this.Load += new System.EventHandler(this.ModificarRol_Load);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -172,7 +213,10 @@
         private System.Windows.Forms.CheckBox checkBox_rolHabilitado;
         private System.Windows.Forms.Button button_cancelar;
         private System.Windows.Forms.ComboBox comboBox_rol;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label_funcionalidades;
         private System.Windows.Forms.Button button_limpiar;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
     }
 }

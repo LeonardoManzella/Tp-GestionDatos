@@ -1593,6 +1593,24 @@ AS
 				IF @@ROWCOUNT = 0			
                     RAISERROR ('No hay turnos a cancelar',16,1);
 
+				--Elimina Agenda Profesional para Que no hayan nuevos turnos
+				DELETE KFC.agenda
+					FROM	KFC.agenda a
+					WHERE	a.fecha_desde >= @fechaDesde
+					AND		a.fecha_hasta <= @fechaHasta
+					AND		a.prof_id = @prof_id
+
+
+				--Si selecciona algo, no borro nada
+				IF EXISTS	(
+								SELECT 1
+								FROM	KFC.agenda a
+								WHERE	a.fecha_desde <= @fechaDesde
+								AND		a.fecha_hasta >= @fechaHasta
+								AND		a.prof_id = @prof_id
+								)		
+                    RAISERROR ('No se pudo Eliminar Turnos Agenda',16,1);
+
 			COMMIT;
 		END TRY
 		BEGIN CATCH

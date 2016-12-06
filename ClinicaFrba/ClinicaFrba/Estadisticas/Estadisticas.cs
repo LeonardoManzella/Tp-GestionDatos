@@ -67,7 +67,7 @@ namespace ClinicaFrba.Estadisticas
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Cargar Form: ERROR: " + ex.Message, "Estadisticas", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Form: " + ex.Message, "Estadisticas", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

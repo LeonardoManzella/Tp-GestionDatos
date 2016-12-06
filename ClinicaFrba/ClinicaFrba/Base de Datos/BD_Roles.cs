@@ -30,7 +30,7 @@ namespace ClinicaFrba.Base_de_Datos
                 SqlCommand procedureEjecutado = InteraccionDB.ejecutar_storedProcedureConRetorno(procedure, parametros);
                 int id_rol_creado = 0;
                 id_rol_creado = Convert.ToInt32(procedureEjecutado.Parameters["@id"].Value);
-                if (id_rol_creado <= 0) throw new Exception("No se creo el Rol, trajo ID invalido. Fallo Ejecucion Procedure");
+                if (id_rol_creado <= 0) throw new Exception("No se creo el Rol, el Procedure que Crea los Roles devolvio ID invalido. ");
 
                 //Inserto Cada Funcionalidad
                 foreach (var funcionalidad in funcionalidades_descripcion)
@@ -63,8 +63,8 @@ namespace ClinicaFrba.Base_de_Datos
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                 //Veo si trajo datos o no. No se porque siempre devuelve -1
-                if (reader.RecordsAffected != -1) throw new Exception("No se pudo asignar la Funcionalidad al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
-                MessageBox.Show("Insertada funcionalidad: " + descripcion_funcionalidad, "Crear o Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
+                if (reader.RecordsAffected != -1) throw new Exception("No se pudo asignar la Funcionalidad al Rol:'" + id_rol + "'.");
+                //MessageBox.Show("Insertada funcionalidad: " + descripcion_funcionalidad, "Crear o Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
 
                 return;
             }
@@ -91,9 +91,9 @@ namespace ClinicaFrba.Base_de_Datos
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                 //Veo si trajo datos o no. No se porque siempre devuelve -1
-                if (reader.RecordsAffected != -1) throw new Exception("No se pudo quitar la Funcionalidad al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
+                if (reader.RecordsAffected != -1) throw new Exception("No se pudo quitar la Funcionalidad al Rol:'" + id_rol + "'.");
 
-                MessageBox.Show("Quitada funcionalidad: " + descripcion_funcionalidad, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
+                //MessageBox.Show("Quitada funcionalidad: " + descripcion_funcionalidad, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
 
                 return;
             }
@@ -111,15 +111,16 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
                 string procedure = "KFC.pro_setear_rol_estado_habilitacion";
-                SqlParameter parametro1 = new SqlParameter("@estado", SqlDbType.Int);
-                SqlParameter parametro2 = new SqlParameter("@rol_id", SqlDbType.Int);
+                SqlParameter parametro1 = new SqlParameter("@rol_id", SqlDbType.Int);
+                SqlParameter parametro2 = new SqlParameter("@estado", SqlDbType.Int);
+                parametro1.Value = id_rol;
 
                 //Por ser Bit en SQL Server 1 significa true, 0 significa false
                 if (estado == true)
-                    parametro1.Value = 1;
+                    parametro2.Value = 1;
                 else
-                    parametro1.Value = 0;
-                parametro2.Value = id_rol;
+                    parametro2.Value = 0;
+                
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
@@ -129,10 +130,10 @@ namespace ClinicaFrba.Base_de_Datos
                 var reader = InteraccionDB.ejecutar_storedProcedure(procedure, parametros);
 
                 //Veo si trajo datos o no
-                //if (reader.RecordsAffected != 1) throw new Exception("No se pudo modificar Estado al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
-                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo modificar Estado al Rol:'" + id_rol + "'. Fallo Ejecucion Procedure");
+                //if (reader.RecordsAffected != 1) throw new Exception("No se pudo modificar Estado al Rol:'" + id_rol + "'. ");
+                if (reader.RecordsAffected <= 0) throw new Exception("No se pudo modificar Estado al Rol:'" + id_rol + "'.");
 
-                MessageBox.Show("Modificado Estado Habilitacion de Rol a: " + estado, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
+                //MessageBox.Show("Modificado Estado Habilitacion de Rol a: " + estado, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
 
                 return;
             }
@@ -215,7 +216,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 InteraccionDB.ImprimirExcepcion(e);
 
-                throw new Exception("No Pudieron Obtenerse ID Rol. Error: " + e.Message);
+                throw new Exception("No Pudieron Obtenerse el Rol. Error: " + e.Message);
             }
         }
 
@@ -240,7 +241,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 InteraccionDB.ImprimirExcepcion(e);
 
-                throw new Exception("No pudo Obtenerse Estado habilitacion del Rol. Error: " + e.Message);
+                throw new Exception("No pudo ver si el Rol esta Habilitado o No. Error: " + e.Message);
             }
         }
     }

@@ -74,7 +74,7 @@ namespace ClinicaFrba.Base_de_Datos
             int rowsAffected = comando_sql.ExecuteNonQuery();
 
             //Veo si trajo datos o no
-            if (rowsAffected <= 0) throw new Exception("No se modificaron Columnas. Fallo Ejecucion Procedure");
+            if (rowsAffected <= 0) throw new Exception("No se modificaron Datos.  ");
 
             return comando_sql;
         }
@@ -128,7 +128,7 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
                 conexion = Conexion.Instance.get();
-                if (conexion == null) throw new Exception("No se pueden Obtener Conexiones de la Base de Datos. Devuelve Null");
+                if (conexion == null) throw new Exception("No se pueden Obtener Conexiones de la Base de Datos");
             }
             catch (Exception ex)
             {
@@ -147,7 +147,7 @@ namespace ClinicaFrba.Base_de_Datos
         {
 
             //Veo si trajo datos o no
-            if (!reader.HasRows) throw new Exception("Reader sin Filas");
+            if (!reader.HasRows) throw new Exception("La Consulta no selecciono datos. Resultado Vacio. Pruebe con otros filtros");
 
             var strings = new List<string>();
 
@@ -174,7 +174,7 @@ namespace ClinicaFrba.Base_de_Datos
         public static int ObtenerIntReader(SqlDataReader reader, int columnaPorObtener)
         {
             //Veo si trajo datos o no
-            if (!reader.HasRows) throw new Exception("Reader sin Filas");
+            if (!reader.HasRows) throw new Exception("La Consulta no selecciono datos. Resultado Vacio. Pruebe con otros filtros");
 
             int valorObtener = -1;
             bool flag_leyo_algo = false;
@@ -200,7 +200,7 @@ namespace ClinicaFrba.Base_de_Datos
         public static List<string> ObtenerStringDeColumnasReader(SqlDataReader reader, int cantidadColumnasPorObtener)
         {
             //Veo si trajo datos o no
-            if (!reader.HasRows) throw new Exception("Reader sin Filas");
+            if (!reader.HasRows) throw new Exception("La Consulta no selecciono datos. Resultado Vacio. Pruebe con otros filtros");
 
             var strings = new List<string>();
 
@@ -229,7 +229,7 @@ namespace ClinicaFrba.Base_de_Datos
         public static bool ObtenerBoolReader(SqlDataReader reader, int columnaPorObtener)
         {
             //Veo si trajo datos o no
-            if (!reader.HasRows) throw new Exception("Reader sin Filas");
+            if (!reader.HasRows) throw new Exception("La Consulta no selecciono datos. Resultado Vacio. Pruebe con otros filtros");
 
             bool valorObtener = false;
             bool flag_leyo_algo = false;

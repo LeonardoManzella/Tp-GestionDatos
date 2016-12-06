@@ -1,3 +1,4 @@
+using ClinicaFrba.Clases;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,8 +22,10 @@ namespace ClinicaFrba.CancelarTurno
 
         private void CancelarTurnoProfesional_Load(object sender, EventArgs e)
         {
-            fechaDesdePicker.MinDate = DateTime.Today.AddDays(1);
-            fechaHastaPicker.MinDate = DateTime.Today.AddDays(1);
+            fechaDesdePicker.Value = DateTime.ParseExact(Configuracion_Global.fecha_actual, "yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture).AddDays(1);
+            fechaDesdePicker.MinDate = fechaDesdePicker.Value;
+            fechaHastaPicker.Value = DateTime.ParseExact(Configuracion_Global.fecha_actual, "yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture).AddDays(1);
+            fechaHastaPicker.MinDate = fechaHastaPicker.Value;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -40,7 +43,7 @@ namespace ClinicaFrba.CancelarTurno
             try
             {
                 DateTime fechaDesde = fechaDesdePicker.Value;
-                DateTime fechaHasta = fechaHastaPicker.Value;
+                DateTime fechaHasta = fechaHastaPicker.Value.AddDays(1);
                 string motivo = motivoTextBox.Text.ToString();
 
                 if (motivo.Trim().Equals(""))
@@ -50,10 +53,13 @@ namespace ClinicaFrba.CancelarTurno
                 }
 
                 Base_de_Datos.BD_Turnos.cancelar_turnos_pro(fechaDesde, fechaHasta, motivo, usuario.id);
+
+                MessageBox.Show("Los turnos se cancelaron exitosamente", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             }
             catch(Exception ex)
             {
-                MessageBox.Show("No se pudo cancelar los turnos", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }

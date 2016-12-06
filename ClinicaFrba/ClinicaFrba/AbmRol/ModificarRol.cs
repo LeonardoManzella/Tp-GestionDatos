@@ -42,7 +42,7 @@ namespace ClinicaFrba.AbmRol
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Cargar Datos del Form. ERROR: " + ex.Message, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Datos del Form. " + ex.Message, "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -94,6 +94,7 @@ namespace ClinicaFrba.AbmRol
             this.checkBox_rolHabilitado.Enabled = false;
             this.button_modificarRol.Enabled = false;
             this.comboBox_rol.Text = "";
+            this.checkBox_rolHabilitado.Checked = false;
 
         }
 
@@ -144,6 +145,7 @@ namespace ClinicaFrba.AbmRol
                 BD_Roles.setear_habilitacion(id_rol,estado);
 
                 MessageBox.Show("Rol Modificado con Exito", "Modificar Rol", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                button_limpiar_Click(null,null);
             }
             catch (Exception ex)
             {
@@ -170,7 +172,9 @@ namespace ClinicaFrba.AbmRol
 
         private void button_limpiar_Click(object sender, EventArgs e)
         {
+            funcionalidades_del_rol = new List<string>();
             resetear_botones();
         }
+
     }
 }

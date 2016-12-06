@@ -93,19 +93,20 @@ namespace ClinicaFrba.Pedir_Turno
                 {
                     //Hago cosas con los valores de la fila seleccionada
                     string horario = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 0);
-                    string nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
-                    string apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
+                    string prof_nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
+                    string prof_apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
                     string especialidad = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 3);
+                    int afil_id = BD_Afiliados.obtenerID_afiliado(usuario.nombre, usuario.apellido, usuario.id);
 
-                    BD_Turnos.asignar_turno(nombre, apellido, fecha, horario, especialidad, usuario.id);
+                    BD_Turnos.asignar_turno(prof_nombre, prof_apellido, fecha, horario, especialidad, afil_id);
 
-                    MessageBox.Show("Turno Asignado.   Seleccionado Profesional: " + nombre + " " + apellido + "   Especialidad: " + especialidad, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Turno Asignado.   Seleccionado Profesional: " + prof_nombre + " " + prof_apellido + "   Especialidad: " + especialidad, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     button_limpiar_Click(null,null);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al obtener Datos Columna. ERROR: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al obtener Datos Afiliado. " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -318,8 +318,10 @@ RETURN
                     afi.habilitado  = 1
                     AND afi.afil_id = @afiliado_id);
 GO
-
 -------------------------------------
+
+
+
 
 --------------------------------------
 CREATE FUNCTION kfc.fun_obtener_todos_los_planes()
@@ -723,7 +725,7 @@ END;
 GO
 
 
---Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado).
+--Funcionalidad COMPRAR BONOS. Devuelve precio del 'bono consulta' (del mismo plan que tiene el afiliado titular).
 CREATE FUNCTION KFC.fun_devolver_precio_bono(@afiliado_id INT)
 returns INT AS
 BEGIN
@@ -736,7 +738,9 @@ BEGIN
                     INNER JOIN
                               KFC.planes p
                     ON
-                              a.plan_id = p.plan_id
+							 -- Con la funcion de abajo se valida el afiliado titular
+                              --a.plan_id = p.plan_id AND
+							  p.descripcion = ( SELECT descripcion FROM KFC.fun_obtener_planes_afiliado(@afiliado_id) )
           WHERE
                     a.afil_id = @afiliado_id
           RETURN @precio;

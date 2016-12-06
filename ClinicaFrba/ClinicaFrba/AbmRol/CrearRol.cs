@@ -68,10 +68,19 @@ namespace ClinicaFrba.AbmRol
 
                 BD_Roles.crear_rol(nombre_rol, funcionalidades_elegidas);
 
+                MessageBox.Show("Rol Creado con Exito", "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.None);
+
+                button_limpiar_Click(null,null);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string mensaje = ex.Message;
+                if (mensaje.ToUpper().Contains("DUPLIC") && mensaje.ToUpper().Contains("KFC.ROLES"))
+                {
+                    mensaje = "Rol Duplicado. Ya existe un Rol con ese nombre";
+                }
+
+                MessageBox.Show("Error al Crear Rol. "+ mensaje, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

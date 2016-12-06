@@ -28,13 +28,16 @@ GO
 CREATE TRIGGER KFC.existe_rol_habilitar_deshabilitar
 ON KFC.roles
 INSTEAD OF UPDATE AS
-	IF NOT EXISTS (SELECT * FROM KFC.roles WHERE rol_id = (SELECT rol_id FROM inserted))
+	IF NOT EXISTS (SELECT * FROM KFC.roles r, inserted i WHERE r.rol_id = i.rol_id )
 	BEGIN
 		RAISERROR ('No existe el rol a habilitar/deshabilitar', 16, 1);
 		RETURN
 	END
 
-	UPDATE KFC.roles set habilitado = (SELECT habilitado FROM inserted);
+	UPDATE KFC.roles SET habilitado = i.habilitado
+	FROM	KFC.roles r
+		INNER JOIN	inserted i
+		ON	r.rol_id = i.rol_id
 GO
 ---------------------------------------------------------------------------
 
@@ -117,12 +120,12 @@ GO
 CREATE TRIGGER KFC.nuevo_bono
 ON KFC.bonos
 INSTEAD OF INSERT AS
-IF NOT EXISTS (SELECT * FROM KFC.afiliados WHERE afil_id = (SELECT afil_id FROM inserted))
+IF NOT EXISTS (SELECT * FROM KFC.afiliados a INNER JOIN inserted i ON a.afil_id = i.afil_id )
 BEGIN
 	RAISERROR ('No existe el afiliado que intenta comprar el bono', 16, 1);
 	RETURN
 END;
-IF NOT EXISTS (SELECT * FROM KFC.planes WHERE plan_id = (SELECT plan_id FROM inserted))
+IF NOT EXISTS (SELECT * FROM KFC.planes p INNER JOIN inserted i ON p.plan_id = i.plan_id)
 BEGIN
 	RAISERROR ('No existe el plan para el cual se compra el bono', 16, 1);
 	RETURN

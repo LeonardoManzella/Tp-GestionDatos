@@ -78,7 +78,7 @@ namespace ClinicaFrba
             catch (Exception ex)
             {
                 InteraccionDB.ImprimirExcepcion(ex);
-                MessageBox.Show("Error al Pedir Roles contra la Base. Compruebe que la Base de Datos este Poblada. ERROR: " + ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Pedir Roles contra la Base. Compruebe que la Base de Datos este Poblada. " + ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -119,7 +119,7 @@ namespace ClinicaFrba
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Ingresar Datos para Loguear. ERROR: " + ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

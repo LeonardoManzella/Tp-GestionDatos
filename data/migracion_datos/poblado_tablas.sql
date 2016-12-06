@@ -211,9 +211,11 @@ SET IDENTITY_INSERT KFC.planes OFF
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Afiliados
 PRINT '- Llenando Tabla afiliados...'
+SET IDENTITY_INSERT KFC.afiliados ON
 INSERT INTO KFC.afiliados
           (
-                    tipo_doc
+                    afil_id
+				  , tipo_doc
                   , numero_doc
                   , nombre
                   , apellido
@@ -227,30 +229,36 @@ INSERT INTO KFC.afiliados
 				  , estado_id
                   , habilitado
           )
-SELECT DISTINCT 'DNI' AS Tipo_Doc
+SELECT 
+		ROW_NUMBER() OVER( ORDER BY us_id ) * 100 + 1				--Para generar los ID de Afiliados, todos titulares
+		, 'DNI' AS Tipo_Doc
         , m.Paciente_Dni
-        ,  UPPER(m.Paciente_Nombre)
-        ,  UPPER(m.Paciente_Apellido)
-		, 'P'								-- P de Pendiente
-        ,  UPPER(m.Paciente_Direccion)
+        ,  UPPER(m.Paciente_Nombre) AS nombre
+        ,  UPPER(m.Paciente_Apellido) AS apellido
+		, 'P' AS sexo								-- P de Pendiente
+        ,  UPPER(m.Paciente_Direccion) AS direccion
         , m.Paciente_Telefono
-        ,  UPPER(m.Paciente_Mail)
+        ,  UPPER(m.Paciente_Mail) AS mail
         , m.Paciente_Fecha_Nac
         , m.Plan_Med_Codigo
 		, u.us_id
 		, e.estado_id
-        , @true AS habilitado
+        , 1 AS habilitado
 FROM
-          GD2C2016.gd_esquema.Maestra m
-		  , KFC.usuarios u
-		  , KFC.estado_civil e
+			--Es Necesario Subconsulta para evitar repetidos
+          (
+			  SELECT DISTINCT Paciente_Dni, Paciente_Nombre, Paciente_Apellido, Paciente_Direccion, Paciente_Telefono, Paciente_Mail, Paciente_Fecha_Nac, Plan_Med_Codigo
+			  FROM GD2C2016.gd_esquema.Maestra
+		  ) m
+		  INNER JOIN KFC.usuarios u
+		  ON m.Paciente_Mail = u.nick
+		  INNER JOIN KFC.estado_civil e
+		  ON e.descripcion = 'MIGRADO'
 WHERE
 			Paciente_Dni IS NOT NULL
-			AND m.Paciente_Mail = u.nick
-			AND e.descripcion = 'MIGRADO'
 ORDER BY
           u.us_id
-
+SET IDENTITY_INSERT KFC.afiliados OFF
 
 
 --Tomo Datos de Tabla Maestra y los Inserto en Tabla  Profesionales
@@ -383,8 +391,8 @@ SELECT DISTINCT
         , DATEPART(WEEKDAY, m.Turno_Fecha)       AS dia_semana
         , MIN( m.Turno_Fecha )                   AS fecha_desde
         , MAX( m.Turno_Fecha )                   AS fecha_hasta
-        , MIN( CONVERT(TIME(0), m.Turno_Fecha) ) AS hora_desde
-        , MAX( CONVERT(TIME(0), m.Turno_Fecha) ) AS hora_hasta
+        , CONVERT( TIME(0), MIN( m.Turno_Fecha) ) AS hora_desde
+        , CONVERT( TIME(0), MAX( m.Turno_Fecha) ) AS hora_hasta
 FROM
           GD2C2016.gd_esquema.Maestra m
         , KFC.profesionales           p
@@ -517,12 +525,14 @@ INSERT INTO KFC.atenciones
 			  , sintomas
 			  , diagnostico
 			  , bono_id
+			  , hora_atencion
           )
 SELECT DISTINCT Turno_Numero
         , Bono_Consulta_Fecha_Impresion --Considero la Fecha de la Impresion del Bono como la de la Atencion (unicamente para Turnos Migrados), Ya que consideramos que el Bono se Imprime al momento de su uso (en el sistema anterior)
         ,  UPPER(Consulta_Sintomas)
         ,  UPPER(Consulta_Enfermedades)
         , Bono_Consulta_Numero
+		, Bono_Consulta_Fecha_Impresion	--Idem hora llegada
 FROM
           GD2C2016.gd_esquema.Maestra
 WHERE

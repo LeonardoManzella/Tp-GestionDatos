@@ -47,11 +47,9 @@ namespace ClinicaFrba.AtencionesMedicas
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Cargar Form: ERROR: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Form: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
 
         private void limpiar()
         {

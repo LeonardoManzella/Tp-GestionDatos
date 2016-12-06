@@ -47,7 +47,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                     intentos_aumentar_fallidos_logIn(usuario);
 
-                    throw new Exception("Fallo Obtener Datos:   Usuario Inexistente,   Esta mal la Contraseña,   el Rol no pertenece al Usuario   o No esta Habilitado el Usuario");
+                    throw new Exception("Usuario Inexistente,   Esta mal la Contraseña,   el Rol no pertenece al Usuario   o No esta Habilitado el Usuario");
                 }
 
                 //Encapsulo reiniciar intentos, si falla solo es un warning no debe parar todo.
@@ -58,7 +58,7 @@ namespace ClinicaFrba.Base_de_Datos
                 catch (Exception e)
                 {
                     InteraccionDB.ImprimirExcepcion(e);
-                    MessageBox.Show("WARNING: No pudo Reiniciarse Intentos Usuario. Es raro. Error: " + e.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //MessageBox.Show("WARNING: No pudo Reiniciarse Intentos Usuario. Es raro.  " + e.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 Usuario user = cargar_datos(id, rol_descripcion);
@@ -68,7 +68,7 @@ namespace ClinicaFrba.Base_de_Datos
             catch (Exception e)
             {
                 InteraccionDB.ImprimirExcepcion(e);
-                throw new Exception("Error al Validar Datos Logueo. Error: " + e.Message);
+                throw new Exception("Error al Validar Datos Logueo.  " + e.Message);
             }
         }
 

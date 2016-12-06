@@ -25,7 +25,7 @@ namespace ClinicaFrba.Clases
             catch (Exception ex)
             {
                 InteraccionDB.ImprimirExcepcion(ex);
-                throw new Exception("Error al Agregar Boton Datagrid. ERROR: " + ex.Message);
+                throw new Exception("Error al Agregar Boton Datagrid. " + ex.Message);
             }
         }
 
@@ -42,7 +42,7 @@ namespace ClinicaFrba.Clases
             catch (Exception ex)
             {
                 InteraccionDB.ImprimirExcepcion(ex);
-                throw new Exception("Error al llenar datos Datagrid. ERROR: " + ex.Message);
+                throw new Exception("Error al llenar datos Datagrid. " + ex.Message);
             }
         }
 
@@ -67,7 +67,7 @@ namespace ClinicaFrba.Clases
         /// <returns></returns>
         public static int obtenerIntDataGrid(DataGridView dataGrid, int numero_fila, int numero_columa)
         {
-            return Convert.ToInt16(dataGrid.Rows[numero_fila].Cells[numero_columa].FormattedValue);
+            return Convert.ToInt32(dataGrid.Rows[numero_fila].Cells[numero_columa].FormattedValue);
         }
     }
 }

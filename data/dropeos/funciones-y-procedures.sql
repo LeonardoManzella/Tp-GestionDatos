@@ -69,10 +69,6 @@ IF OBJECT_ID('KFC.registrar_llegada') IS NOT NULL
 DROP PROCEDURE KFC.registrar_llegada;
 GO
 
-IF OBJECT_ID('KFC.get_bonos_afiliado') IS NOT NULL
-DROP PROCEDURE KFC.get_bonos_afiliado;
-GO
-
 IF OBJECT_ID('KFC.get_turno_hoy') IS NOT NULL
 DROP PROCEDURE KFC.get_turno_hoy;
 GO
@@ -238,4 +234,6 @@ GO
 IF OBJECT_ID('KFC.fun_obtener_turnos_sin_diagnostico_profesional') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_turnos_sin_diagnostico_profesional;
 GO
+
+
 PRINT 'Funciones Borradas'

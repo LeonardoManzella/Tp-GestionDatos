@@ -12,7 +12,7 @@ namespace ClinicaFrba.Base_de_Datos
     class BD_Turnos
     {
 
-        
+
 
 
         /// <summary>
@@ -85,12 +85,12 @@ namespace ClinicaFrba.Base_de_Datos
                 return turnos;
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 InteraccionDB.ImprimirExcepcion(e);
                 throw e;
             }
-        
+
         }
 
         public static void cancelar_turnos_pro(DateTime fechaDesde, DateTime fechaHasta, string motivo, int id)
@@ -124,7 +124,7 @@ namespace ClinicaFrba.Base_de_Datos
                 return;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 InteraccionDB.ImprimirExcepcion(ex);
                 throw ex;
@@ -216,7 +216,7 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="fecha"></param>
         /// <param name="descripcionEspecialidad"></param>
         /// <param name="id_afiliado"></param>
-        public static void asignar_turno(string prof_nombre , string prof_apellido, DateTime fecha, string horario, string descripcionEspecialidad, int id_afiliado)
+        public static void asignar_turno(string prof_nombre, string prof_apellido, DateTime fecha, string horario, string descripcionEspecialidad, int id_afiliado)
         {
             try
             {
@@ -248,6 +248,47 @@ namespace ClinicaFrba.Base_de_Datos
                 if (reader.RecordsAffected <= 0) throw new Exception("No se pudo Pedir el Turno");
 
                 return;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+
+                throw e;
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los Turnos a partir de filtros Like de nombre y apellido (afiliado y profesional) y descripcion especialidad.
+        /// </summary>
+        /// <returns></returns>
+        public static DataTable obtener_turnos_filtros(string afil_nombre, string afil_apellido, string prof_nombre, string prof_apellido, string descripcion_especialidad)
+        {
+            try
+            {
+
+                string funcion = "SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional(@afil_nombre, @afil_apellido, @prof_nombre, @prof_apellido, @prof_especialidad)";
+                SqlParameter parametro1 = new SqlParameter("@afil_nombre", SqlDbType.Text);
+                parametro1.Value = afil_nombre.ToUpper();
+                SqlParameter parametro2 = new SqlParameter("@afil_apellido", SqlDbType.Text);
+                parametro2.Value = afil_apellido.ToUpper();
+                SqlParameter parametro3 = new SqlParameter("@prof_nombre", SqlDbType.Text);
+                parametro3.Value = prof_nombre.ToUpper();
+                SqlParameter parametro4 = new SqlParameter("@prof_apellido", SqlDbType.Text);
+                parametro4.Value = prof_apellido.ToUpper();
+                SqlParameter parametro5 = new SqlParameter("@prof_especialidad", SqlDbType.Text);
+                parametro5.Value = descripcion_especialidad.ToUpper();
+
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                parametros.Add(parametro3);
+                parametros.Add(parametro4);
+                parametros.Add(parametro5);
+
+                var tabla_datos = InteraccionDB.ejecutar_funcion_table(funcion, parametros);
+
+                return tabla_datos;
             }
             catch (Exception e)
             {

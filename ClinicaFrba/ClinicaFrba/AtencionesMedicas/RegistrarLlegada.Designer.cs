@@ -43,18 +43,19 @@
             this.label_afiliado_apellido = new System.Windows.Forms.Label();
             this.textBox_afiliado_nombre = new System.Windows.Forms.TextBox();
             this.label_afiliado_nombre = new System.Windows.Forms.Label();
-            this.btnRegistrar = new System.Windows.Forms.Button();
-            this.cmbBono = new System.Windows.Forms.ComboBox();
+            this.button_Registrar = new System.Windows.Forms.Button();
+            this.combo_Bono = new System.Windows.Forms.ComboBox();
             this.cmb_turnos = new System.Windows.Forms.ComboBox();
             this.cmbPlan = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView_resultados_filtros = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.button_cancelar = new System.Windows.Forms.Button();
+            this.label_Afiliado = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).BeginInit();
             this.SuspendLayout();
             // 
             // txtDNI
@@ -65,8 +66,6 @@
             this.txtDNI.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.txtDNI.Size = new System.Drawing.Size(211, 20);
             this.txtDNI.TabIndex = 0;
-            this.txtDNI.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtDNI_KeyPress);
-            this.txtDNI.Leave += new System.EventHandler(this.txtDNI_Leave);
             // 
             // label1
             // 
@@ -110,7 +109,6 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(211, 21);
             this.comboBox1.TabIndex = 14;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label6
             // 
@@ -124,7 +122,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(395, 463);
+            this.label7.Location = new System.Drawing.Point(447, 401);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(40, 13);
             this.label7.TabIndex = 16;
@@ -132,7 +130,7 @@
             // 
             // btnLimpiar
             // 
-            this.btnLimpiar.Location = new System.Drawing.Point(12, 501);
+            this.btnLimpiar.Location = new System.Drawing.Point(12, 425);
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Size = new System.Drawing.Size(75, 32);
             this.btnLimpiar.TabIndex = 18;
@@ -142,7 +140,7 @@
             // 
             // btnBuscar
             // 
-            this.btnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBuscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnBuscar.Location = new System.Drawing.Point(521, 49);
             this.btnBuscar.Name = "btnBuscar";
             this.btnBuscar.Size = new System.Drawing.Size(79, 35);
@@ -198,24 +196,23 @@
             this.label_afiliado_nombre.TabIndex = 30;
             this.label_afiliado_nombre.Text = "Nombre Afiliado";
             // 
-            // btnRegistrar
+            // button_Registrar
             // 
-            this.btnRegistrar.Location = new System.Drawing.Point(551, 495);
-            this.btnRegistrar.Name = "btnRegistrar";
-            this.btnRegistrar.Size = new System.Drawing.Size(97, 44);
-            this.btnRegistrar.TabIndex = 24;
-            this.btnRegistrar.Text = "REGISTRAR LLEGADA";
-            this.btnRegistrar.UseVisualStyleBackColor = true;
-            this.btnRegistrar.Click += new System.EventHandler(this.btnRegistrar_Click);
+            this.button_Registrar.Location = new System.Drawing.Point(711, 419);
+            this.button_Registrar.Name = "button_Registrar";
+            this.button_Registrar.Size = new System.Drawing.Size(97, 44);
+            this.button_Registrar.TabIndex = 24;
+            this.button_Registrar.Text = "REGISTRAR LLEGADA";
+            this.button_Registrar.UseVisualStyleBackColor = true;
+            this.button_Registrar.Click += new System.EventHandler(this.btnRegistrar_Click);
             // 
-            // cmbBono
+            // combo_Bono
             // 
-            this.cmbBono.FormattingEnabled = true;
-            this.cmbBono.Location = new System.Drawing.Point(441, 460);
-            this.cmbBono.Name = "cmbBono";
-            this.cmbBono.Size = new System.Drawing.Size(194, 21);
-            this.cmbBono.TabIndex = 25;
-            this.cmbBono.SelectedIndexChanged += new System.EventHandler(this.cmbBono_SelectedIndexChanged);
+            this.combo_Bono.FormattingEnabled = true;
+            this.combo_Bono.Location = new System.Drawing.Point(493, 398);
+            this.combo_Bono.Name = "combo_Bono";
+            this.combo_Bono.Size = new System.Drawing.Size(194, 21);
+            this.combo_Bono.TabIndex = 25;
             // 
             // cmb_turnos
             // 
@@ -224,7 +221,6 @@
             this.cmb_turnos.Name = "cmb_turnos";
             this.cmb_turnos.Size = new System.Drawing.Size(220, 21);
             this.cmb_turnos.TabIndex = 26;
-            this.cmb_turnos.SelectedIndexChanged += new System.EventHandler(this.cmbBono_SelectedIndexChanged);
             // 
             // cmbPlan
             // 
@@ -253,20 +249,21 @@
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.cmb_turnos);
-            this.groupBox2.Location = new System.Drawing.Point(659, 26);
+            this.groupBox2.Location = new System.Drawing.Point(632, 10);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(322, 156);
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "esto hay que borrarlo";
             // 
-            // dataGridView1
+            // dataGridView_resultados_filtros
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(12, 185);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(636, 207);
-            this.dataGridView1.TabIndex = 30;
+            this.dataGridView_resultados_filtros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_resultados_filtros.Location = new System.Drawing.Point(12, 185);
+            this.dataGridView_resultados_filtros.Name = "dataGridView_resultados_filtros";
+            this.dataGridView_resultados_filtros.Size = new System.Drawing.Size(822, 207);
+            this.dataGridView_resultados_filtros.TabIndex = 30;
+            this.dataGridView_resultados_filtros.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_resultados_filtros_CellContentClick);
             // 
             // label3
             // 
@@ -280,7 +277,7 @@
             // 
             // button_cancelar
             // 
-            this.button_cancelar.Location = new System.Drawing.Point(303, 501);
+            this.button_cancelar.Location = new System.Drawing.Point(350, 425);
             this.button_cancelar.Name = "button_cancelar";
             this.button_cancelar.Size = new System.Drawing.Size(93, 32);
             this.button_cancelar.TabIndex = 31;
@@ -288,17 +285,26 @@
             this.button_cancelar.UseVisualStyleBackColor = true;
             this.button_cancelar.Click += new System.EventHandler(this.button_cancelar_Click);
             // 
+            // label_Afiliado
+            // 
+            this.label_Afiliado.AutoSize = true;
+            this.label_Afiliado.Location = new System.Drawing.Point(157, 401);
+            this.label_Afiliado.Name = "label_Afiliado";
+            this.label_Afiliado.Size = new System.Drawing.Size(0, 13);
+            this.label_Afiliado.TabIndex = 32;
+            // 
             // RegistrarLlegada
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(966, 545);
+            this.ClientSize = new System.Drawing.Size(966, 480);
+            this.Controls.Add(this.label_Afiliado);
             this.Controls.Add(this.button_cancelar);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dataGridView_resultados_filtros);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.cmbBono);
-            this.Controls.Add(this.btnRegistrar);
+            this.Controls.Add(this.combo_Bono);
+            this.Controls.Add(this.button_Registrar);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnBuscar);
             this.Controls.Add(this.btnLimpiar);
@@ -310,7 +316,7 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -330,8 +336,8 @@
         private System.Windows.Forms.Button btnBuscar;
         private System.Windows.Forms.GroupBox groupBox1;
 
-        private System.Windows.Forms.Button btnRegistrar;
-        private System.Windows.Forms.ComboBox cmbBono;
+        private System.Windows.Forms.Button button_Registrar;
+        private System.Windows.Forms.ComboBox combo_Bono;
         private System.Windows.Forms.ComboBox cmb_turnos;
         private System.Windows.Forms.ComboBox cmbPlan;
         private System.Windows.Forms.Label label9;
@@ -340,8 +346,9 @@
         private System.Windows.Forms.TextBox textBox_afiliado_nombre;
         private System.Windows.Forms.Label label_afiliado_nombre;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView_resultados_filtros;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button_cancelar;
+        private System.Windows.Forms.Label label_Afiliado;
     }
 }

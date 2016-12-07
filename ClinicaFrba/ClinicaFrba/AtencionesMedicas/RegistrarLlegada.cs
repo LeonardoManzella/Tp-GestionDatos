@@ -21,6 +21,11 @@ namespace ClinicaFrba.AtencionesMedicas
         public Usuario usuario_profesional;
         private int profesional_id;     //Soy yo, porque el unico usuario que puede ver la pantalla en un profesional
         private List<string> profesional_especialidades = new List<string>();
+        private string nombre_boton_datagrid = "boton_seleccionar";
+        private int id_turno;
+        private int id_afiliado;
+        private TimeSpan hora_seleccionada;
+        private int plan_id;
 
         public RegistrarLlegada()
         {
@@ -31,30 +36,11 @@ namespace ClinicaFrba.AtencionesMedicas
         {
             try
             {
-                //NUEVO Por LEO
                 profesional_id = Base_de_Datos.BD_Profesional.obtenerID_profesional(usuario_profesional.id);
                 profesional_especialidades = Base_de_Datos.BD_Profesional.getEspecialidadesProfesional(profesional_id);
-                //------
-
-
-                this.comboBox1.DisplayMember = "descripcion";
-                this.comboBox1.ValueMember = "identificador";
-                this.comboEspecialidades.DisplayMember = "descripcion";
-                this.comboEspecialidades.ValueMember = "identificador";
-                this.cmb_turnos.DisplayMember = "descripcion";
-                this.cmb_turnos.ValueMember = "identificador";
-                this.cmbBono.DisplayMember = "descripcion";
-                this.cmbBono.ValueMember = "identificador";
-                this.cmbPlan.DisplayMember = "descripcion";
-                this.cmbPlan.ValueMember = "identificador";
-
-                limpiar();
-
-                var profesionales = Llegada_At_Med.obtener_profesionales(0);
-                this.comboBox1.Items.AddRange(profesionales.ToArray());
-
-                var especialidades = Llegada_At_Med.obtenerEspecialidades();
-                this.comboEspecialidades.Items.AddRange(profesionales.ToArray());
+                ComboData.llenarCombo(comboEspecialidades, profesional_especialidades);
+                this.combo_Bono.DropDownStyle = ComboBoxStyle.DropDown;
+                this.comboEspecialidades.DropDownStyle = ComboBoxStyle.DropDown;
             }
             catch (Exception ex)
             {
@@ -64,31 +50,15 @@ namespace ClinicaFrba.AtencionesMedicas
 
         private void limpiar()
         {
-            this.comboBox1.Items.Clear();
-            this.comboEspecialidades.Items.Clear();
-            this.cmbBono.Items.Clear();
-            this.cmb_turnos.Items.Clear();
-            this.cmbPlan.Items.Clear();
+            this.label_Afiliado.Text = "";
 
-            this.comboBox1.Items.Add(cero);
-            this.comboEspecialidades.Items.Add(vacio);
-            this.cmbBono.Items.Add(cero);
-            this.cmb_turnos.Items.Add(cero);
-            this.cmbPlan.Items.Add(cero);
+            this.combo_Bono.Items.Clear();
+            this.combo_Bono.Enabled = false;
+            this.button_Registrar.Enabled = false;
 
-            this.cmb_turnos.SelectedIndex = 0;
-            this.cmbBono.SelectedIndex = 0;
-            this.comboBox1.SelectedIndex = 0;
-            this.comboEspecialidades.SelectedIndex = 0;
-            this.cmbPlan.SelectedIndex = 0;
-
-            this.txtDNI.Text = "";
-
-            this.cmbBono.Enabled = false;
-            this.cmb_turnos.Enabled = false;
-            this.cmbPlan.Enabled = false;
-            this.btnBuscar.Enabled = false;
-            this.btnRegistrar.Enabled = false;
+            this.textBox_afiliado_apellido.Text = "";
+            this.textBox_afiliado_nombre.Text = "";
+            actualizar_datagrid("","","");
         }
         private void txtDNI_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -97,53 +67,34 @@ namespace ClinicaFrba.AtencionesMedicas
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            if (!(ComboData.obtener_identificador(comboBox1) == 0))
+            try
             {
-                int afiliado = Int32.Parse(txtDNI.Text);
-                int plan = ComboData.obtener_identificador(cmbPlan);
-                this.cmbBono.Items.AddRange(Llegada_At_Med.obtener_bonos(afiliado, plan).ToArray());
+                string afiliado_nombre = this.textBox_afiliado_nombre.Text.Trim();
+                string afiliado_apellido = this.textBox_afiliado_apellido.Text.Trim();
+                string especialidad_descripcion = this.comboEspecialidades.Text.Trim();
+
+                actualizar_datagrid(afiliado_nombre, afiliado_apellido, especialidad_descripcion);
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Para Realizar la Búsqueda debe indicarse el profesional");
+                MessageBox.Show("Error al Buscar: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void cmbBono_SelectedIndexChanged(object sender, EventArgs e)
+        private void actualizar_datagrid(string afiliado_nombre, string afiliado_apellido, string especialidad_descripcion)
         {
-            if (ComboData.obtener_identificador(this.cmbBono) > 0 && ComboData.obtener_identificador(this.cmb_turnos) > 0)
-            {
-                this.btnRegistrar.Enabled = true;
-            }
-            else
-            {
-                this.btnRegistrar.Enabled = false;
-            }
+            //DATAGRID
+            DataTable datos = Base_de_Datos.BD_Turnos.obtener_turnos_filtros(afiliado_nombre, afiliado_apellido, usuario_profesional.nombre, usuario_profesional.apellido, especialidad_descripcion);
+
+            if (datos.Rows.Count <= 0) throw new Exception("No hay Turnos para Estos Filtros");
+
+            //Lleno el DataGrid
+            Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
+
+            //Agrego Boton
+            Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, "Seleccionar", nombre_boton_datagrid);
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ComboData.obtener_identificador(this.comboBox1) > 0)
-            {
-                this.btnBuscar.Enabled = true;
-            }
-            else
-            {
-                this.btnBuscar.Enabled = false;
-            }
-        }
-
-        private void cmbPlan_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ComboData.obtener_identificador(cmbPlan) > 0)
-            {
-                this.cmbBono.Enabled = true;
-            }
-            else
-            {
-                this.cmbBono.Enabled = false;
-            }
-        }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
@@ -157,24 +108,67 @@ namespace ClinicaFrba.AtencionesMedicas
             }
         }
 
-        private void txtDNI_Leave(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtDNI.Text.Trim()))
-            {
-                this.cmbPlan.Items.Clear();
-                this.cmbPlan.Items.Add(cero);
-                //this.cmbPlan.Items.AddRange(Llegada_At_Med.pedir_planes_usuario().ToArray());
-            }
-        }
 
         private void btnRegistrar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                var texto = this.combo_Bono.Text.Trim();
+                if (String.IsNullOrEmpty(texto)) throw new Exception("Debe seleccionar un Bono");
 
+                int bono_id_numero = Convert.ToInt32(texto);
+                if (bono_id_numero<=0) throw new Exception("El numero de bono no puede ser Cero o Negativo");
+
+                Base_de_Datos.BD_LLegada.registrar_llegada(id_afiliado, id_turno, bono_id_numero, hora_seleccionada);
+            }
+            catch (Exception ex)
+            {
+                limpiar();
+                MessageBox.Show("Error al obtener Registrar Llegada. " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void button_cancelar_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
+        //Handler para Cuando se Selecciona un Boton del DataGrid
+        //IMPORTANTE: Se genera haciendo doble click en el DataGrid
+        private void dataGridView_resultados_filtros_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+
+                if (dataGridView_resultados_filtros.Columns[e.ColumnIndex].Name == nombre_boton_datagrid)
+                {
+                    //Hago cosas con los valores de la fila seleccionada
+                    id_turno = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 0);
+                    id_afiliado = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
+                    string nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
+                    string apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 3);
+                    hora_seleccionada = TimeSpan.Parse(
+                                                    Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 4)
+                                                    );
+                    plan_id = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 5);
+
+
+
+                    this.label_Afiliado.Text = nombre + " " + apellido;
+                    this.combo_Bono.Enabled = true;
+                    var bonos = Base_de_Datos.BD_Bonos.getBonos(id_afiliado);
+                    ComboData.llenarCombo(combo_Bono,bonos);
+
+                    this.button_Registrar.Enabled = true;
+                    //MessageBox.Show("Seleccionado Afiliado: " + nombre + " " + apellido, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                limpiar();
+                MessageBox.Show("Error al obtener Datos Afiliado. " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }

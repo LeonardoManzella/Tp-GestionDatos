@@ -850,19 +850,12 @@ GO
 
 
 ------------------OBTENER_BONOS_AFILIADO------------------
---Proposito: Obtener los turnos "ocupados" de un dia
---
---Ingreso: un identificador de profesional, otro de especialidad y un día
---
---Egreso: una tabla con la fecha, hora, paciente, doctor y especialidad
-------------------OBTENER_BONOS_AFILIADO------------------
 CREATE FUNCTION KFC.fun_obtener_bonos_afiliado(@afiliado_id INT)
 returns TABLE
 RETURN
 (
           SELECT
                     b.bono_id
-                  , b.plan_id
           FROM
                     kfc.bonos b
           WHERE
@@ -922,7 +915,8 @@ returns TABLE
 RETURN
 (
           SELECT
-                    Afi.afil_id, Afi.nombre, Afi.apellido--, Afi.numero_doc
+                    t.turno_id,
+					Afi.afil_id, Afi.nombre, Afi.apellido--, Afi.numero_doc
 					, t.fecha_hora--, t.hora
 					, planes.plan_id, planes.descripcion--, planes.precio_bono_consulta
 					
@@ -930,7 +924,8 @@ RETURN
                     KFC.afiliados Afi
 					INNER JOIN KFC.planes planes
 					ON planes.plan_id = Afi.plan_id
-					, KFC.turnos t
+					INNER JOIN KFC.turnos t
+					ON t.afil_id = afi.afil_id
 					INNER JOIN KFC.profesionales prof
 					ON prof.prof_id = t.prof_id
 					INNER JOIN KFC.especialidades e
@@ -947,11 +942,12 @@ RETURN
 					AND t.turno_id NOT IN	(
 											SELECT	turno_id
 											FROM	KFC.atenciones
-											WHERE	diagnostico IS NULL
 											)
                     
 );
 GO
+
+--SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','lara','GIMÉNEZ','')
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @dni INT)
@@ -2041,7 +2037,7 @@ AS
 	           AND t.fecha_hora >= @fecha 
 						   );
 GO
-
+/* Deprecated
 CREATE PROCEDURE kfc.get_bonos_afiliado(@afiliado_id INT, @plan_id INT)
 as
 	SELECT
@@ -2054,33 +2050,34 @@ as
 					AND	b.plan_id = @plan_id
                     AND b.consumido = 0;
 GO
+*/
 
 CREATE Procedure KFC.get_cmb_planes_sociales
 as
 SELECT pl.plan_id id, pl.descripcion FROM kfc.planes pl;
 go
 
-CREATE procedure KFC.registrar_llegada (@id_afiliado int, @id_turno int, @id_bono int, @fecha time)
-as
-begin
-begin try
-begin transaction
+CREATE PROCEDURE KFC.registrar_llegada (@id_afiliado int, @id_turno int, @id_bono int, @hora time)
+AS
+BEGIN
+	BEGIN TRY
+		BEGIN TRANSACTION
 
-insert into kfc.atenciones(turno_id, hora_llegada, bono_id)
-values
-(@id_turno, @fecha, @id_bono);
+			insert into kfc.atenciones(turno_id, hora_llegada, bono_id)
+			values
+			(@id_turno, @hora, @id_bono);
 
-update kfc.bonos
-set consumido = 1
-where bono_id = @id_bono;
+			update kfc.bonos
+			set consumido = 1
+			where bono_id = @id_bono;
 
-commit;
-end try
-begin catch
-ROLLBACK TRANSACTION;
-PRINT 'LLegada Turno No Ingresada. Fecha ' + CONVERT(varchar,@fecha,102)
-;THROW
-end catch
+		COMMIT;
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRANSACTION;
+		PRINT 'LLegada Turno No Ingresada. Hora ' + CONVERT(varchar,@hora,102)
+		;THROW
+	END CATCH
 END;
 GO
 

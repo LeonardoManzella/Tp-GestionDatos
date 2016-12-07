@@ -23,11 +23,6 @@ namespace ClinicaFrba.Negocio
         {
             return Base_de_Datos.BD_LLegada.get_turno_hoy(afiliado, especialidad, profesional);
         }
-        public static void registrarLLegada(int afiliado, int turno, int bono)
-        {
-            var rta = Base_de_Datos.BD_LLegada.registrar_llegada(afiliado, turno, bono);
-            if (!rta)
-            { throw new Exception("No se ha podido registrar la llegada"); }
-        }
+
     }
 }

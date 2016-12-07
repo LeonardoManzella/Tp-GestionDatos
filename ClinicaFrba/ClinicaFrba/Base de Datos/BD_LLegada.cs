@@ -129,21 +129,20 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="id_turno"></param>
         /// <param name="id_bono"></param>
         /// <returns></returns>
-        public static bool registrar_llegada(int id_afiliado, int id_turno, int id_bono)
+        public static void registrar_llegada(int id_afiliado, int id_turno, int id_bono, TimeSpan hora)
         {
             try
             {
+                string sql = "KFC.registrar_llegada";
 
-                string sql = "kfc.registrar_llegada @id_afiliado , @id_turno, @id_bono, @fecha";
-
-                SqlParameter parametro1 = new SqlParameter("@fecha", SqlDbType.Time);
-                parametro1.Value = DateTime.Parse(Configuracion_Global.fecha_actual).TimeOfDay;
+                SqlParameter parametro1 = new SqlParameter("@id_afiliado", SqlDbType.Int);
+                parametro1.Value = id_afiliado;
                 SqlParameter parametro2 = new SqlParameter("@id_turno", SqlDbType.Int);
                 parametro2.Value = id_turno;
-                SqlParameter parametro3 = new SqlParameter("@id_afiliado", SqlDbType.Int);
-                parametro3.Value = id_afiliado;
-                SqlParameter parametro4 = new SqlParameter("@id_bono", SqlDbType.Int);
-                parametro4.Value = id_bono;
+                SqlParameter parametro3 = new SqlParameter("@id_bono", SqlDbType.Int);
+                parametro3.Value = id_bono;
+                SqlParameter parametro4 = new SqlParameter("@hora", SqlDbType.Time);
+                parametro4.Value = hora;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
@@ -151,14 +150,12 @@ namespace ClinicaFrba.Base_de_Datos
                 parametros.Add(parametro3);
                 parametros.Add(parametro4);
 
-                InteraccionDB.ejecutar_storedProcedureConRetorno(sql, parametros);
-
-                return true;
+                InteraccionDB.ejecutar_storedProcedure(sql, parametros);
             }
             catch (Exception e)
             {
                 InteraccionDB.ImprimirExcepcion(e);
-                return false;
+                throw e;
             }
         }
     }

@@ -101,5 +101,29 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
+        public static List<string> getBonos(int afiliado_id)
+        {
+            try
+            {
+                string funcion = "SELECT * FROM  KFC.fun_obtener_bonos_afiliado(@afiliado_id)";
+                SqlParameter parametro = new SqlParameter("@afiliado_id", SqlDbType.Int);
+                parametro.Value = afiliado_id;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro);
+
+                var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+
+                List<string> especialidades = InteraccionDB.ObtenerStringsReader(reader, 1);
+
+                return especialidades;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+                throw e;
+            }
+        }
+
     }
 }

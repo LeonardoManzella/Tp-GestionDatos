@@ -916,6 +916,43 @@ RETURN
 );
 GO
 
+
+CREATE FUNCTION KFC.fun_obtener_turnos_sin_diagnostico_profesional(@afil_nombre VARCHAR(255), @afil_apellido VARCHAR(255), @prof_nombre VARCHAR(50), @prof_apellido VARCHAR(50) , @prof_especialidad VARCHAR(50) )
+returns TABLE
+RETURN
+(
+          SELECT
+                    Afi.afil_id, Afi.nombre, Afi.apellido--, Afi.numero_doc
+					, t.fecha_hora--, t.hora
+					, planes.plan_id, planes.descripcion--, planes.precio_bono_consulta
+					
+          FROM
+                    KFC.afiliados Afi
+					INNER JOIN KFC.planes planes
+					ON planes.plan_id = Afi.plan_id
+					, KFC.turnos t
+					INNER JOIN KFC.profesionales prof
+					ON prof.prof_id = t.prof_id
+					INNER JOIN KFC.especialidades e
+					ON e.espe_id = t.espe_id
+          WHERE
+		  
+                    Afi.nombre			LIKE '%' + UPPER(@afil_nombre) + '%'
+                    AND Afi.apellido	LIKE '%' + UPPER(@afil_apellido) + '%'
+					--AND Afi.habilitado = 1
+					AND	prof.nombre     LIKE '%' + UPPER(@prof_nombre) + '%'
+                    AND prof.apellido   LIKE '%' + UPPER(@prof_apellido) + '%'
+					AND e.descripcion   LIKE '%' + UPPER(@prof_especialidad) + '%'
+					--Solo Traigo Turnos sin Diagnostico ni Llegada
+					AND t.turno_id NOT IN	(
+											SELECT	turno_id
+											FROM	KFC.atenciones
+											WHERE	diagnostico IS NULL
+											)
+                    
+);
+GO
+
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @dni INT)
 returns INT AS

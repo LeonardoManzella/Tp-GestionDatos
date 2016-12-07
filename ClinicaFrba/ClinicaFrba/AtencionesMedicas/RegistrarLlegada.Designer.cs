@@ -229,7 +229,7 @@
             // cmbPlan
             // 
             this.cmbPlan.FormattingEnabled = true;
-            this.cmbPlan.Location = new System.Drawing.Point(93, 460);
+            this.cmbPlan.Location = new System.Drawing.Point(93, 128);
             this.cmbPlan.Name = "cmbPlan";
             this.cmbPlan.Size = new System.Drawing.Size(211, 21);
             this.cmbPlan.TabIndex = 28;
@@ -237,7 +237,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(22, 463);
+            this.label9.Location = new System.Drawing.Point(22, 131);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(65, 13);
             this.label9.TabIndex = 27;
@@ -248,12 +248,14 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.comboBox1);
+            this.groupBox2.Controls.Add(this.cmbPlan);
             this.groupBox2.Controls.Add(this.txtDNI);
+            this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.cmb_turnos);
             this.groupBox2.Location = new System.Drawing.Point(659, 26);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(322, 140);
+            this.groupBox2.Size = new System.Drawing.Size(322, 156);
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "esto hay que borrarlo";
@@ -294,9 +296,7 @@
             this.Controls.Add(this.button_cancelar);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.cmbPlan);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.label9);
             this.Controls.Add(this.cmbBono);
             this.Controls.Add(this.btnRegistrar);
             this.Controls.Add(this.groupBox1);

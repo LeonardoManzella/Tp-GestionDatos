@@ -235,4 +235,7 @@ IF OBJECT_ID('KFC.fun_obtener_id_profesional_x_user_id') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_id_profesional_x_user_id;
 GO
 
+IF OBJECT_ID('KFC.fun_obtener_turnos_sin_diagnostico_profesional') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_turnos_sin_diagnostico_profesional;
+GO
 PRINT 'Funciones Borradas'

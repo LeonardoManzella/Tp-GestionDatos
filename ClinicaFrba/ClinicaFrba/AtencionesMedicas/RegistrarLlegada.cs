@@ -17,6 +17,11 @@ namespace ClinicaFrba.AtencionesMedicas
         private ComboData cero = new ComboData(0, "");
         private ComboData vacio = new ComboData(0, "");
 
+
+        public Usuario usuario_profesional;
+        private int profesional_id;     //Soy yo, porque el unico usuario que puede ver la pantalla en un profesional
+        private List<string> profesional_especialidades = new List<string>();
+
         public RegistrarLlegada()
         {
             InitializeComponent();
@@ -26,6 +31,12 @@ namespace ClinicaFrba.AtencionesMedicas
         {
             try
             {
+                //NUEVO Por LEO
+                profesional_id = Base_de_Datos.BD_Profesional.obtenerID_profesional(usuario_profesional.id);
+                profesional_especialidades = Base_de_Datos.BD_Profesional.getEspecialidadesProfesional(profesional_id);
+                //------
+
+
                 this.comboBox1.DisplayMember = "descripcion";
                 this.comboBox1.ValueMember = "identificador";
                 this.comboEspecialidades.DisplayMember = "descripcion";

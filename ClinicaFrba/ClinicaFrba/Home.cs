@@ -45,7 +45,7 @@ namespace ClinicaFrba
         private void habilitar_componentes()
         {
             //En base a los Permisos, vemos las Pestañas a Habilitar para Usar
-            
+
             if (this.usuario.permisos.Contains("ALTA_AFILIADO"))                this.nuevoAfiliadoToolStripMenuItem.Enabled                     = true;
             if (this.usuario.permisos.Contains("MODIFICAR_AFILIADO"))           this.modificarAfiliadoToolStripMenuItem.Enabled                 = true;
             if (this.usuario.permisos.Contains("BAJA_AFILIADO"))                this.bajaAfiliadoToolStripMenuItem.Enabled                      = true;
@@ -60,7 +60,7 @@ namespace ClinicaFrba
             if (this.usuario.permisos.Contains("MODIFICAR_ROL"))                this.modificarRol_ToolStripMenuItem.Enabled                     = true;
             if (this.usuario.permisos.Contains("COMPRA_BONO_ADMINISTRADOR"))    this.comprarBonoAdmin_ToolStripMenuItem.Enabled                 = true;
             if (this.usuario.permisos.Contains("ESTADISTICAS"))                 this.estadisticasToolStripMenuItem.Enabled                      = true;
-            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -84,14 +84,14 @@ namespace ClinicaFrba
             }
         }
 
-       
+
 
         private void salirToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        
+
         private void logInToolStripMenuItem_Click(object sender, EventArgs e)
         {
             loguear();
@@ -228,7 +228,9 @@ namespace ClinicaFrba
 
         private void registrarLlegadaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new AtencionesMedicas.RegistrarLlegada().ShowDialog();
+            var form = new AtencionesMedicas.RegistrarLlegada();
+            form.usuario_profesional = this.usuario;
+            form.ShowDialog();
         }
 
         private void registrarResultadoDiagnosticoToolStripMenuItem_Click(object sender, EventArgs e)

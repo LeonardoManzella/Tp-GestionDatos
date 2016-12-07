@@ -118,6 +118,13 @@ namespace ClinicaFrba
                 MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 habilitar_componentes();
+
+                //Deshabilito Loguear
+                /*
+                this.textBox_usuario.Enabled = false;
+                this.textBox_password.Enabled = false;
+                this.comboBox_rol.Enabled = false;
+                */
             }
             catch (Exception ex)
             {

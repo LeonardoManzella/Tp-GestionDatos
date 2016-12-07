@@ -14,8 +14,8 @@ namespace ClinicaFrba.AtencionesMedicas
 {
     public partial class RegistrarLlegada : Form
     {
-        private ComboData cero = new ComboData(0, "Sin elegir");
-        private ComboData vacio = new ComboData("", "Sin elegir");
+        private ComboData cero = new ComboData(0, "");
+        private ComboData vacio = new ComboData(0, "");
 
         public RegistrarLlegada()
         {
@@ -136,7 +136,14 @@ namespace ClinicaFrba.AtencionesMedicas
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
-            limpiar();
+            try
+            {
+                limpiar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al Limpiar Datos: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void txtDNI_Leave(object sender, EventArgs e)
@@ -147,6 +154,16 @@ namespace ClinicaFrba.AtencionesMedicas
                 this.cmbPlan.Items.Add(cero);
                 //this.cmbPlan.Items.AddRange(Llegada_At_Med.pedir_planes_usuario().ToArray());
             }
+        }
+
+        private void btnRegistrar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button_cancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

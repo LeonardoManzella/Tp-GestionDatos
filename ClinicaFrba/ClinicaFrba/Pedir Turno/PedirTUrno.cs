@@ -63,18 +63,25 @@ namespace ClinicaFrba.Pedir_Turno
 
         private void actualizar_datagrid()
         {
-            var descripcion_especialidad = comboEspecialidades.Text.Trim();
-            var profesional_nombre = textBox_nombre.Text.Trim();
-            var profesional_apellido = textBox_apellido.Text.Trim();
-            fecha = datePicker_fecha.Value.Date;
+            try
+            {
+                var descripcion_especialidad = comboEspecialidades.Text.Trim();
+                var profesional_nombre = textBox_nombre.Text.Trim();
+                var profesional_apellido = textBox_apellido.Text.Trim();
+                fecha = datePicker_fecha.Value.Date;
 
 
-            DataTable datos = BD_Turnos.obtener_turnos_disponibles(profesional_nombre, profesional_apellido, descripcion_especialidad, fecha);
-            if (datos.Rows.Count <= 0) throw new Exception("No hay Turnos Disponibles ese Dia para los Filtros Seleccionados");
+                DataTable datos = BD_Turnos.obtener_turnos_disponibles(profesional_nombre, profesional_apellido, descripcion_especialidad, fecha);
+                if (datos.Rows.Count <= 0) throw new Exception("No hay Turnos Disponibles ese Dia para los Filtros Seleccionados");
 
-            Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
+                Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
 
-            Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, "Pedir Turno", nombre_boton_datagrid);
+                Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, "Pedir Turno", nombre_boton_datagrid);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void datePicker_fecha_ValueChanged(object sender, EventArgs e)
@@ -101,7 +108,7 @@ namespace ClinicaFrba.Pedir_Turno
                     BD_Turnos.asignar_turno(prof_nombre, prof_apellido, fecha, horario, especialidad, afil_id);
 
                     MessageBox.Show("Turno Asignado.   Seleccionado Profesional: " + prof_nombre + " " + prof_apellido + "   Especialidad: " + especialidad, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    button_limpiar_Click(null,null);
+                    button_limpiar_Click(null, null);
                 }
             }
             catch (Exception ex)

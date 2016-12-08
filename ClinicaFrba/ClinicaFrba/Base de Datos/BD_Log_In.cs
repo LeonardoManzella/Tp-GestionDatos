@@ -18,6 +18,7 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
+                /*
                 string funcion = "SELECT KFC.fun_validar_usuario(@user, @contrasenia, @rol_desc)";
                 SqlParameter parametro1 = new SqlParameter("@user", SqlDbType.Text);
                 parametro1.Value = usuario.ToUpper();
@@ -32,22 +33,42 @@ namespace ClinicaFrba.Base_de_Datos
                 parametros.Add(parametro3);
 
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
+                */
 
+                
+                
+                string procedure = "KFC.pro_validar_usuario";
+                SqlParameter parametro1 = new SqlParameter("@usuario", SqlDbType.Text);
+                parametro1.Value = usuario.ToUpper();
+                SqlParameter parametro2 = new SqlParameter("@contrasenia", SqlDbType.Text);
+                parametro2.Value = password.ToUpper();
+                SqlParameter parametro3 = new SqlParameter("@rol_desc", SqlDbType.Text);
+                parametro3.Value = rol_descripcion.ToUpper();
+                SqlParameter parametroOutput = new SqlParameter("@id", SqlDbType.Int);
+                parametroOutput.DbType = DbType.Int32;
+                parametroOutput.Direction = ParameterDirection.Output;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                parametros.Add(parametro3);
+                parametros.Add(parametroOutput);
 
                 int id = -1;
-                //Encapsulo Obtener ID usuario paara ver si no existe y aumentar intentos fallidos
+                //Encapsulo Obtener ID usuario paara ver si fallo contrasenia y aumentar intentos fallidos
                 try
                 {
-                    id = InteraccionDB.ObtenerIntReader(reader, 0);
-                    if (id == -1) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta Habilitado el Usuario");
+                    SqlCommand procedureEjecutado = InteraccionDB.ejecutar_storedProcedureConRetorno(procedure, parametros);
+                    id = Convert.ToInt32(procedureEjecutado.Parameters["@id"].Value);
+                    if (id <= 0) throw new Exception("Usuario Inexistente, Esta mal la Contraseña o no esta Habilitado el Usuario");
                 }
                 catch (Exception e)
                 {
                     InteraccionDB.ImprimirExcepcion(e);
 
-                    intentos_aumentar_fallidos_logIn(usuario);
-
-                    throw new Exception("Usuario Inexistente,   Esta mal la Contraseña,   el Rol no pertenece al Usuario   o No esta Habilitado el Usuario");
+                    if (e.Message.Contains("Esta Mal la Contrasenia")) intentos_aumentar_fallidos_logIn(usuario);
+                    throw new Exception(e.Message);
+                    //throw new Exception("Usuario Inexistente,   Esta mal la Contraseña,   el Rol no pertenece al Usuario   o No esta Habilitado el Usuario");
                 }
 
                 //Encapsulo reiniciar intentos, si falla solo es un warning no debe parar todo.
@@ -58,7 +79,7 @@ namespace ClinicaFrba.Base_de_Datos
                 catch (Exception e)
                 {
                     InteraccionDB.ImprimirExcepcion(e);
-                    //MessageBox.Show("WARNING: No pudo Reiniciarse Intentos Usuario. Es raro.  " + e.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("WARNING: No pudo Reiniciarse Intentos Usuario. Es raro.  " + e.Message, "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 Usuario user = cargar_datos(id, rol_descripcion);

@@ -96,6 +96,11 @@ GO
 IF OBJECT_ID('KFC.pro_crear_agenda_profesional') IS NOT NULL
 DROP PROCEDURE KFC.pro_crear_agenda_profesional;
 GO
+
+IF OBJECT_ID('KFC.pro_validar_usuario') IS NOT NULL
+DROP PROCEDURE KFC.pro_validar_usuario;
+GO
+
 PRINT 'Procedures Borrados'
 
 
@@ -108,9 +113,6 @@ PRINT 'Borrando Funciones...'
 
 IF OBJECT_ID('KFC.fun_obtener_roles_usuario') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_roles_usuario;
-GO
-IF OBJECT_ID('KFC.fun_validar_usuario') IS NOT NULL
-DROP FUNCTION KFC.fun_validar_usuario;
 GO
 IF OBJECT_ID('KFC.fun_obtener_funcion_rol') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_funcion_rol;

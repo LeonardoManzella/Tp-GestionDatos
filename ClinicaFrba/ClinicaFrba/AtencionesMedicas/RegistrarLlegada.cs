@@ -56,6 +56,7 @@ namespace ClinicaFrba.AtencionesMedicas
             this.comboEspecialidades.Text = "";
 
             this.combo_Bono.Items.Clear();
+            this.combo_Bono.Text = "";
             this.combo_Bono.Enabled = false;
             this.button_Registrar.Enabled = false;
 
@@ -77,6 +78,8 @@ namespace ClinicaFrba.AtencionesMedicas
         {
             try
             {
+                Comunes.limpiarDataGrid(dataGridView_resultados_filtros);
+
                 string afiliado_nombre = this.textBox_afiliado_nombre.Text.Trim();
                 string afiliado_apellido = this.textBox_afiliado_apellido.Text.Trim();
                 string profesional_nombre = this.textBox_profesional_nombre.Text.Trim();

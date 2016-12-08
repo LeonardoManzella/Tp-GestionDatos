@@ -60,6 +60,7 @@
             this.boton_loguear = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.comboBox_rol = new System.Windows.Forms.ComboBox();
+            this.label_fecha = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -330,11 +331,21 @@
             this.comboBox_rol.TabIndex = 3;
             this.comboBox_rol.Text = "ADMINISTRADOR GENERAL";
             // 
+            // label_fecha
+            // 
+            this.label_fecha.AutoSize = true;
+            this.label_fecha.Location = new System.Drawing.Point(429, 272);
+            this.label_fecha.Name = "label_fecha";
+            this.label_fecha.Size = new System.Drawing.Size(62, 13);
+            this.label_fecha.TabIndex = 7;
+            this.label_fecha.Text = "label_fecha";
+            // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(563, 294);
+            this.Controls.Add(this.label_fecha);
             this.Controls.Add(this.comboBox_rol);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.boton_loguear);
@@ -390,5 +401,6 @@
         private System.Windows.Forms.Button boton_loguear;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboBox_rol;
+        private System.Windows.Forms.Label label_fecha;
     }
 }

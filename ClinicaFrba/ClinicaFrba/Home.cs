@@ -69,6 +69,7 @@ namespace ClinicaFrba
             this.AcceptButton = boton_loguear;
 
             Configuracion_Global.cargar_archivo_configuracion();
+            label_fecha.Text = "Fecha Actual: " + Configuracion_Global.fecha_actual;
 
             try
             {

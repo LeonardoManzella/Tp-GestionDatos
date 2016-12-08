@@ -35,7 +35,8 @@ namespace ClinicaFrba.Abm_Afiliado
                         }
                         else
                         {
-                            this.siguiente.afiliado.id_principal = this.afiliado_id;
+                            this.siguiente.afiliado_principal = new Afiliado();
+                            this.siguiente.afiliado_principal.id = this.afiliado_id;
                         }
                         this.siguiente.ShowDialog();
                     }
@@ -152,7 +153,8 @@ namespace ClinicaFrba.Abm_Afiliado
                             }
                             else
                             {
-                                this.siguiente.afiliado.id_principal = this.afiliado_id;
+                                // SI es un alta sólo se pasa un id cuando es un nuevo afiliado a cargo del seleccionado
+                                this.siguiente.afiliado_principal.id = this.afiliado_id;
                             }
                             this.siguiente.ShowDialog();
                         }

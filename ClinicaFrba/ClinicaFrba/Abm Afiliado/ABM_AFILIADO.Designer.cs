@@ -63,6 +63,7 @@
             // txtNroDoc
             // 
             this.txtNroDoc.Location = new System.Drawing.Point(336, 77);
+            this.txtNroDoc.MaxLength = 13;
             this.txtNroDoc.Name = "txtNroDoc";
             this.txtNroDoc.Size = new System.Drawing.Size(94, 20);
             this.txtNroDoc.TabIndex = 5;
@@ -123,6 +124,7 @@
             // 
             this.TxtMail.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.TxtMail.Location = new System.Drawing.Point(198, 89);
+            this.TxtMail.MaxLength = 250;
             this.TxtMail.Name = "TxtMail";
             this.TxtMail.Size = new System.Drawing.Size(215, 20);
             this.TxtMail.TabIndex = 9;
@@ -140,6 +142,7 @@
             // txtNroTelefono
             // 
             this.txtNroTelefono.Location = new System.Drawing.Point(40, 89);
+            this.txtNroTelefono.MaxLength = 12;
             this.txtNroTelefono.Name = "txtNroTelefono";
             this.txtNroTelefono.Size = new System.Drawing.Size(143, 20);
             this.txtNroTelefono.TabIndex = 7;
@@ -158,6 +161,7 @@
             // 
             this.txtDireccion.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtDireccion.Location = new System.Drawing.Point(40, 46);
+            this.txtDireccion.MaxLength = 250;
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(373, 20);
             this.txtDireccion.TabIndex = 5;
@@ -247,6 +251,7 @@
             // 
             this.txtApellido.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtApellido.Location = new System.Drawing.Point(118, 48);
+            this.txtApellido.MaxLength = 250;
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(94, 20);
             this.txtApellido.TabIndex = 17;
@@ -265,6 +270,7 @@
             // 
             this.txtNombre.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtNombre.Location = new System.Drawing.Point(12, 48);
+            this.txtNombre.MaxLength = 250;
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(94, 20);
             this.txtNombre.TabIndex = 15;

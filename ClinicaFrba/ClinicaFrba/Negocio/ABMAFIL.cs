@@ -25,6 +25,25 @@ namespace ClinicaFrba.Negocio
         /// Obtiene los datos necesarios para el alta del nuevo afiliado
         /// </summary>
         /// <param name="afil"></param>
+        public static int alta_afiliado_adjunto(Afiliado afil)
+        {
+            return Base_de_Datos.BD_Afiliados.alta_afiliado_adjunto(afil);
+        }
+
+        /// <summary>
+        /// Obtiene los datos necesarios para el alta del nuevo afiliado adjunto
+        /// </summary>
+        /// <param name="afil"></param>
+        public static int alta_afiliado_Adjunto(Afiliado afil)
+        {
+            return Base_de_Datos.BD_Afiliados.alta_afiliado_adjunto(afil);
+        }
+
+
+        /// <summary>
+        /// Obtiene los datos necesarios para el alta del nuevo afiliado
+        /// </summary>
+        /// <param name="afil"></param>
         public static void modifica_afiliado(Afiliado afil)
         {
             Base_de_Datos.BD_Afiliados.modifica_afiliado(afil);

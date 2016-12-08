@@ -171,6 +171,7 @@
             this.combo_Bono.Name = "combo_Bono";
             this.combo_Bono.Size = new System.Drawing.Size(194, 21);
             this.combo_Bono.TabIndex = 25;
+            this.combo_Bono.SelectedIndexChanged += new System.EventHandler(this.combo_Bono_SelectedIndexChanged);
             // 
             // dataGridView_resultados_filtros
             // 

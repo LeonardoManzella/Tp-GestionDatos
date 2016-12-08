@@ -52,7 +52,7 @@ namespace ClinicaFrba.AtencionesMedicas
         {
             this.label_Afiliado.Text = "";
             this.label_profesional.Text = "";
-           this.comboEspecialidades.Items.Clear();
+            this.comboEspecialidades.Items.Clear();
             this.comboEspecialidades.Text = "";
 
             this.combo_Bono.Items.Clear();
@@ -61,7 +61,12 @@ namespace ClinicaFrba.AtencionesMedicas
 
             this.textBox_afiliado_apellido.Text = "";
             this.textBox_afiliado_nombre.Text = "";
-            actualizar_datagrid("","","","","");
+            this.textBox_profesional_nombre.Text = "";
+            this.textBox_profesional_apellido.Text = "";
+
+            Comunes.limpiarDataGrid(dataGridView_resultados_filtros);
+
+            //actualizar_datagrid("", "", "", "", "");
         }
         private void txtDNI_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -78,7 +83,7 @@ namespace ClinicaFrba.AtencionesMedicas
                 string profesional_apellido = this.textBox_profesional_apellido.Text.Trim();
                 string especialidad_descripcion = this.comboEspecialidades.Text.Trim();
 
-                actualizar_datagrid(afiliado_nombre, afiliado_apellido, profesional_nombre, profesional_apellido ,especialidad_descripcion);
+                actualizar_datagrid(afiliado_nombre, afiliado_apellido, profesional_nombre, profesional_apellido, especialidad_descripcion);
             }
             catch (Exception ex)
             {
@@ -109,7 +114,8 @@ namespace ClinicaFrba.AtencionesMedicas
             }
             catch (Exception ex)
             {
-                if (!ex.Message.Contains("No hay Turnos para Estos Filtros")) {
+                if (!ex.Message.Contains("No hay Turnos para Estos Filtros"))
+                {
                     MessageBox.Show("Error al Limpiar Datos: " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -124,11 +130,11 @@ namespace ClinicaFrba.AtencionesMedicas
                 if (String.IsNullOrEmpty(texto)) throw new Exception("Debe seleccionar un Bono");
 
                 int bono_id_numero = Convert.ToInt32(texto);
-                if (bono_id_numero<=0) throw new Exception("El numero de bono no puede ser Cero o Negativo");
+                if (bono_id_numero <= 0) throw new Exception("El numero de bono no puede ser Cero o Negativo");
 
                 Base_de_Datos.BD_LLegada.registrar_llegada(id_afiliado, id_turno, bono_id_numero, hora_seleccionada);
                 MessageBox.Show("Registrada Llegada", "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.None);
-                btnLimpiar_Click(null,null);
+                btnLimpiar_Click(null, null);
             }
             catch (Exception ex)
             {
@@ -167,20 +173,23 @@ namespace ClinicaFrba.AtencionesMedicas
 
                     this.label_profesional.Text = "PROF.: " + profesional_nombre + " " + profesional_apellido;
                     this.label_Afiliado.Text = "AFILIADO: " + afiliado_nombre + " " + afiliado_apellido;
-                    this.combo_Bono.Enabled = true;
                     var bonos = Base_de_Datos.BD_Bonos.getBonos(id_afiliado);
-                    ComboData.llenarCombo(combo_Bono,bonos);
+                    ComboData.llenarCombo(combo_Bono, bonos);
 
-                    this.button_Registrar.Enabled = true;
+                    this.combo_Bono.Enabled = true;
                     //MessageBox.Show("Seleccionado Afiliado: " + nombre + " " + apellido, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
                 btnLimpiar_Click(null, null);
-                MessageBox.Show("Error al obtener Datos Afiliado. " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+        private void combo_Bono_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.button_Registrar.Enabled = true;
+        }
     }
 }

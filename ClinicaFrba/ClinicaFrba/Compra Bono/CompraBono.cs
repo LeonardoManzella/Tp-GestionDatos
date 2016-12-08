@@ -121,6 +121,7 @@ namespace ClinicaFrba.Compra_Bono
             catch (Exception ex)
             {
                 resetear_comprar();
+                Comunes.limpiarDataGrid(dataGridView_resultados_filtros);
                 MessageBox.Show("Error al Buscar Afiliado con Filtros.  " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -140,11 +141,11 @@ namespace ClinicaFrba.Compra_Bono
 
                 BD_Bonos.comprar_bono(this.id_afiliado_que_compra, cantidad);
                 MessageBox.Show("Bonos Comprados", "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.textBox_Cantidad.Text = "";
+                button_limpiar_Click(null, null);
             }
             catch (Exception ex)
             {
-                this.textBox_Cantidad.Text = "";
+                button_limpiar_Click(null,null);
                 MessageBox.Show("Error al Comprar. " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -164,7 +165,7 @@ namespace ClinicaFrba.Compra_Bono
                 resetear_comprar();
                 deshabilitar_comprar();
 
-                button_Buscar_Click(null, null);
+                Comunes.limpiarDataGrid(dataGridView_resultados_filtros);
             }
             catch (Exception ex)
             {

@@ -69,5 +69,10 @@ namespace ClinicaFrba.Clases
         {
             return Convert.ToInt32(dataGrid.Rows[numero_fila].Cells[numero_columa].FormattedValue);
         }
+
+        internal static void limpiarDataGrid(DataGridView dataGrid)
+        {
+            dataGrid.Columns.Clear();
+        }
     }
 }

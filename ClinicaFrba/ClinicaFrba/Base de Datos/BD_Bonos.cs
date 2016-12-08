@@ -114,7 +114,7 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
-                List<string> especialidades = InteraccionDB.ObtenerStringsReader(reader, 1);
+                List<string> especialidades = InteraccionDB.ObtenerStringsReader(reader, 0);
 
                 return especialidades;
             }

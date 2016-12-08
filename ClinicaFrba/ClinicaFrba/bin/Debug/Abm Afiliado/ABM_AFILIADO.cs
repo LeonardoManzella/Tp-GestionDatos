@@ -33,8 +33,17 @@ namespace ClinicaFrba.Abm_Afiliado
             if (string.IsNullOrWhiteSpace(txtApellido.Text.Trim()))
                 error += "El Campo apellido no puede quedar vacío \r\n";
 
-            if (ComboData.obtener_identificador(cmbEstadoCiv) < 0)
+            if (cmbEstadoCiv.SelectedIndex <= 0)
                 error += "El estado civil no puede quedar sin seleccionar \r\n";
+
+
+            if (cmbSexo.SelectedIndex < 0)
+                error += "El género no puede quedar sin seleccionar \r\n";
+
+
+            if (cmbTipoDoc.SelectedIndex < 0)
+                error += "El estado civil no puede quedar sin seleccionar \r\n";
+
             if (string.IsNullOrWhiteSpace(TxtMail.Text.Trim()))
             { error += "El campo e-mail es obligatorio \r\n"; }
             else
@@ -85,9 +94,10 @@ namespace ClinicaFrba.Abm_Afiliado
                 {  //alta
                     error = validar_campos();
                     if (error == "")
-                    {
+                    {//Si es un alta y viene un  id en el afiliado principal, significa que estamos dando de alta un afiliado a cargo
                         if (afiliado_principal != new Afiliado())
                         {
+                            afiliado.id_principal = afiliado_principal.id;
                             mapAfiliado_Vista(afiliado);
                             id_us = Negocio.ABMAFIL.alta_afiliado_adjunto(afiliado);
 
@@ -95,12 +105,19 @@ namespace ClinicaFrba.Abm_Afiliado
                         }
                         else
                         {
+                            //Si viene por acá significa que es  un titular
                             mapAfiliado_Vista(afiliado_principal);
                             id_us = Negocio.ABMAFIL.alta_afiliado(afiliado_principal);
                             int i = 0;
+                            //Si se agrega una nueva ventana a traves de un botón que 
+                            //llame a la misma pantalla podría adjuntar a una lista el grupo familiar
                             for (i = 0; i < afiliados_a_cargo.Count; i++)
                             {
-
+                                id_us = Negocio.ABMAFIL.alta_afiliado_adjunto(afiliados_a_cargo[i]);
+                                if (id_us <= 0)
+                                {
+                                    MessageBox.Show("No se ha realizado el alta correctamente");
+                                }
                             }
                         }
                     }

@@ -19,7 +19,7 @@ namespace ClinicaFrba.AtencionesMedicas
 
 
         public Usuario usuario_profesional;
-        private int profesional_id;     //Soy yo, porque el unico usuario que puede ver la pantalla en un profesional
+        private int profesional_id;     //Soy yo, porque el unico usuario que puede ver la pantalla es un profesional
         private List<string> profesional_especialidades = new List<string>();
         private string nombre_boton_datagrid = "boton_seleccionar";
         private int id_turno;
@@ -44,13 +44,16 @@ namespace ClinicaFrba.AtencionesMedicas
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Cargar Form: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Form: " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void limpiar()
         {
             this.label_Afiliado.Text = "";
+            this.label_profesional.Text = "";
+           this.comboEspecialidades.Items.Clear();
+            this.comboEspecialidades.Text = "";
 
             this.combo_Bono.Items.Clear();
             this.combo_Bono.Enabled = false;
@@ -58,7 +61,7 @@ namespace ClinicaFrba.AtencionesMedicas
 
             this.textBox_afiliado_apellido.Text = "";
             this.textBox_afiliado_nombre.Text = "";
-            actualizar_datagrid("","","");
+            actualizar_datagrid("","","","","");
         }
         private void txtDNI_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -71,20 +74,22 @@ namespace ClinicaFrba.AtencionesMedicas
             {
                 string afiliado_nombre = this.textBox_afiliado_nombre.Text.Trim();
                 string afiliado_apellido = this.textBox_afiliado_apellido.Text.Trim();
+                string profesional_nombre = this.textBox_profesional_nombre.Text.Trim();
+                string profesional_apellido = this.textBox_profesional_apellido.Text.Trim();
                 string especialidad_descripcion = this.comboEspecialidades.Text.Trim();
 
-                actualizar_datagrid(afiliado_nombre, afiliado_apellido, especialidad_descripcion);
+                actualizar_datagrid(afiliado_nombre, afiliado_apellido, profesional_nombre, profesional_apellido ,especialidad_descripcion);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Buscar: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Buscar: " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void actualizar_datagrid(string afiliado_nombre, string afiliado_apellido, string especialidad_descripcion)
+        private void actualizar_datagrid(string afiliado_nombre, string afiliado_apellido, string profesional_nombre, string profesional_apellido, string especialidad_descripcion)
         {
             //DATAGRID
-            DataTable datos = Base_de_Datos.BD_Turnos.obtener_turnos_filtros(afiliado_nombre, afiliado_apellido, usuario_profesional.nombre, usuario_profesional.apellido, especialidad_descripcion);
+            DataTable datos = Base_de_Datos.BD_Turnos.obtener_turnos_filtros(afiliado_nombre, afiliado_apellido, profesional_nombre, profesional_apellido, especialidad_descripcion);
 
             if (datos.Rows.Count <= 0) throw new Exception("No hay Turnos para Estos Filtros");
 
@@ -104,7 +109,9 @@ namespace ClinicaFrba.AtencionesMedicas
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Limpiar Datos: " + ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!ex.Message.Contains("No hay Turnos para Estos Filtros")) {
+                    MessageBox.Show("Error al Limpiar Datos: " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -120,10 +127,12 @@ namespace ClinicaFrba.AtencionesMedicas
                 if (bono_id_numero<=0) throw new Exception("El numero de bono no puede ser Cero o Negativo");
 
                 Base_de_Datos.BD_LLegada.registrar_llegada(id_afiliado, id_turno, bono_id_numero, hora_seleccionada);
+                MessageBox.Show("Registrada Llegada", "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.None);
+                btnLimpiar_Click(null,null);
             }
             catch (Exception ex)
             {
-                limpiar();
+                btnLimpiar_Click(null, null);
                 MessageBox.Show("Error al obtener Registrar Llegada. " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -143,18 +152,21 @@ namespace ClinicaFrba.AtencionesMedicas
                 if (dataGridView_resultados_filtros.Columns[e.ColumnIndex].Name == nombre_boton_datagrid)
                 {
                     //Hago cosas con los valores de la fila seleccionada
-                    id_turno = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 0);
-                    id_afiliado = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
-                    string nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
-                    string apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 3);
+                    string afiliado_nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 0);
+                    string afiliado_apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
                     hora_seleccionada = TimeSpan.Parse(
-                                                    Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 4)
+                                                    Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 3)
                                                     );
-                    plan_id = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 5);
+                    string profesional_nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 4);
+                    string profesional_apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 5);
+
+                    id_turno = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 6);
+                    id_afiliado = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 7);
+                    plan_id = Comunes.obtenerIntDataGrid(dataGridView_resultados_filtros, e.RowIndex, 8);
 
 
-
-                    this.label_Afiliado.Text = nombre + " " + apellido;
+                    this.label_profesional.Text = "PROF.: " + profesional_nombre + " " + profesional_apellido;
+                    this.label_Afiliado.Text = "AFILIADO: " + afiliado_nombre + " " + afiliado_apellido;
                     this.combo_Bono.Enabled = true;
                     var bonos = Base_de_Datos.BD_Bonos.getBonos(id_afiliado);
                     ComboData.llenarCombo(combo_Bono,bonos);
@@ -165,7 +177,7 @@ namespace ClinicaFrba.AtencionesMedicas
             }
             catch (Exception ex)
             {
-                limpiar();
+                btnLimpiar_Click(null, null);
                 MessageBox.Show("Error al obtener Datos Afiliado. " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

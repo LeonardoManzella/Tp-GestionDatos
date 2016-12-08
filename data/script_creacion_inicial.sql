@@ -221,7 +221,7 @@ CREATE TABLE KFC.atenciones
                     atencion_id  INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id     INT NOT NULL REFERENCES KFC.turnos
                   , hora_llegada	DATETIME NOT NULL
-				  , hora_atencion	DATETIME NOT NULL
+				  , hora_atencion	DATETIME NULL		-- Debe Ser Nullable para poder ingresar solamente hora llegada
                   , sintomas     VARCHAR(255)
                   , diagnostico  VARCHAR(255)
                   , bono_id      INT NOT NULL REFERENCES KFC.bonos
@@ -855,7 +855,7 @@ returns TABLE
 RETURN
 (
           SELECT
-                    b.bono_id
+                    CONVERT( VARCHAR, b.bono_id) AS numero_bono
           FROM
                     kfc.bonos b
           WHERE
@@ -915,11 +915,13 @@ returns TABLE
 RETURN
 (
           SELECT
-                    t.turno_id,
-					Afi.afil_id, Afi.nombre, Afi.apellido--, Afi.numero_doc
-					, t.fecha_hora--, t.hora
-					, planes.plan_id, planes.descripcion--, planes.precio_bono_consulta
-					
+					Afi.nombre AS "Afil_Nombre", Afi.apellido AS "Afil_Apellido"
+					, planes.descripcion
+					, t.hora
+					, prof.nombre AS "Prof_Nombre", prof.apellido AS "Prof_Apellido"
+					, t.turno_id
+					, Afi.afil_id
+					, planes.plan_id
           FROM
                     KFC.afiliados Afi
 					INNER JOIN KFC.planes planes
@@ -948,6 +950,7 @@ RETURN
 GO
 
 --SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','lara','GIMÉNEZ','')
+--SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','','','')
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @dni INT)
@@ -2057,15 +2060,18 @@ as
 SELECT pl.plan_id id, pl.descripcion FROM kfc.planes pl;
 go
 
-CREATE PROCEDURE KFC.registrar_llegada (@id_afiliado int, @id_turno int, @id_bono int, @hora time)
+CREATE PROCEDURE KFC.registrar_llegada (@id_afiliado int, @id_turno int, @id_bono int, @hora time, @fecha Datetime)
 AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION
 
+			DECLARE @fecha_sumada DATETIME
+			SET @fecha_sumada = @fecha + CONVERT(DATETIME, @hora)
+
 			insert into kfc.atenciones(turno_id, hora_llegada, bono_id)
 			values
-			(@id_turno, @hora, @id_bono);
+			(@id_turno, @fecha_sumada, @id_bono);
 
 			update kfc.bonos
 			set consumido = 1
@@ -2074,8 +2080,9 @@ BEGIN
 		COMMIT;
 	END TRY
 	BEGIN CATCH
-		ROLLBACK TRANSACTION;
-		PRINT 'LLegada Turno No Ingresada. Hora ' + CONVERT(varchar,@hora,102)
+		IF @@trancount > 0
+        ROLLBACK TRANSACTION;
+		PRINT 'LLegada Turno No Ingresada'
 		;THROW
 	END CATCH
 END;
@@ -2319,7 +2326,6 @@ WHERE	R.descripcion = 'PROFESIONAL'
 AND		(
 		F.descripcion	 = 'CREAR_AGENDA'
 		OR F.descripcion = 'CANCELAR_TURNOS_AGENDA'
-		OR F.descripcion = 'REGISTRAR_LLEGADA'
 		OR F.descripcion = 'REGISTRAR_DIAGNOSTICO'
 		)
 
@@ -2333,6 +2339,7 @@ AND		(
 		F.descripcion	 = 'ALTA_AFILIADO'
 		OR F.descripcion = 'MODIFICAR_AFILIADO'
 		OR F.descripcion = 'BAJA_AFILIADO'
+		OR F.descripcion = 'REGISTRAR_LLEGADA'
 		OR F.descripcion = 'CREAR_ROL'
 		OR F.descripcion = 'MODIFICAR_ROL'
 		OR F.descripcion = 'COMPRA_BONO_ADMINISTRADOR'

@@ -21,5 +21,10 @@ namespace ClinicaFrba.AtencionesMedicas
         {
 
         }
+
+        private void button_Buscar_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

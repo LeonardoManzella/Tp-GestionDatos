@@ -77,6 +77,7 @@
             // 
             // diasSemanaCombo
             // 
+            this.diasSemanaCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.diasSemanaCombo.FormattingEnabled = true;
             this.diasSemanaCombo.Location = new System.Drawing.Point(21, 94);
             this.diasSemanaCombo.Name = "diasSemanaCombo";
@@ -86,6 +87,7 @@
             // 
             // horarioDesdeCombo
             // 
+            this.horarioDesdeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.horarioDesdeCombo.FormattingEnabled = true;
             this.horarioDesdeCombo.Location = new System.Drawing.Point(21, 145);
             this.horarioDesdeCombo.Name = "horarioDesdeCombo";
@@ -94,6 +96,7 @@
             // 
             // horarioHastaCombo
             // 
+            this.horarioHastaCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.horarioHastaCombo.FormattingEnabled = true;
             this.horarioHastaCombo.Location = new System.Drawing.Point(146, 145);
             this.horarioHastaCombo.Name = "horarioHastaCombo";
@@ -142,6 +145,7 @@
             // 
             // especialidadCombo
             // 
+            this.especialidadCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.especialidadCombo.FormattingEnabled = true;
             this.especialidadCombo.Location = new System.Drawing.Point(21, 43);
             this.especialidadCombo.Name = "especialidadCombo";

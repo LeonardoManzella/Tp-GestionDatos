@@ -102,7 +102,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 foreach(HorariosDia dia in diasAgenda)
                 {
-                    string sql = "kfc.pro_crear_agenda_profesional @especialidad, @prof_id, @dia, @fecha_desde, @fecha_hasta";
+                    string sql = "KFC.pro_crear_agenda_profesional";
 
                     SqlParameter parametro1 = new SqlParameter("@especialidad", SqlDbType.VarChar);
                     parametro1.Value = especialidad;
@@ -122,7 +122,7 @@ namespace ClinicaFrba.Base_de_Datos
                     parametros.Add(parametro4);
                     parametros.Add(parametro5);
 
-                    InteraccionDB.ejecutar_storedProcedureConRetorno(sql, parametros);
+                    InteraccionDB.ejecutar_storedProcedure(sql, parametros);
                 }
             }
             catch (Exception e)

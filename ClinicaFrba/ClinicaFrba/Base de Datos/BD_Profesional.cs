@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClinicaFrba.AgendaMedico;
+using ClinicaFrba.Clases;
+using System.Globalization;
 
 namespace ClinicaFrba.Base_de_Datos
 {
@@ -76,17 +78,15 @@ namespace ClinicaFrba.Base_de_Datos
                 if (!reader.HasRows)
                     throw new Exception("Reader sin filas");
 
-                DateTime maxFecha = DateTime.Now;
-                bool flag_leyo_algo = false;
+                DateTime maxFecha = DateTime.ParseExact(Configuracion_Global.fecha_actual, "yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture);
 
                 while (reader.Read())
                 {
+                    if (reader.IsDBNull(0))
+                        break;
                     maxFecha = reader.GetDateTime(0);
-                    flag_leyo_algo = true;
                     break;
                 }
-                if (flag_leyo_algo == false)
-                    throw new Exception("Hubo un problema al obtener la maxima fecha de la agenda");
                 return maxFecha;
             }
             catch (Exception e)
@@ -111,9 +111,9 @@ namespace ClinicaFrba.Base_de_Datos
                     SqlParameter parametro3 = new SqlParameter("@dia", SqlDbType.Int);
                     parametro3.Value = dia.diaSemana;
                     SqlParameter parametro4 = new SqlParameter("@fecha_desde", SqlDbType.DateTime);
-                    parametro4.Value = fechaDesde.Add(TimeSpan.Parse(dia.horaDesde));
+                    parametro4.Value = fechaDesde.Date.Add(TimeSpan.Parse(dia.horaDesde));
                     SqlParameter parametro5 = new SqlParameter("@fecha_hasta", SqlDbType.DateTime);
-                    parametro5.Value = fechaHasta.Add(TimeSpan.Parse(dia.horaHasta));
+                    parametro5.Value = fechaHasta.Date.Add(TimeSpan.Parse(dia.horaHasta));
 
                     var parametros = new List<SqlParameter>();
                     parametros.Add(parametro1);

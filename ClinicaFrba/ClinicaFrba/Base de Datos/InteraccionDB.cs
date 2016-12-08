@@ -74,7 +74,7 @@ namespace ClinicaFrba.Base_de_Datos
             int rowsAffected = comando_sql.ExecuteNonQuery();
 
             //Veo si trajo datos o no
-            if (rowsAffected <= 0) throw new Exception("No se modificaron Datos.  ");
+            //if (rowsAffected <= 0) throw new Exception("No se modificaron Datos.  ");
 
             return comando_sql;
         }

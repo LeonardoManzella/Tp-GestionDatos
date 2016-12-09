@@ -143,12 +143,15 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro3.Value = id_bono;
                 SqlParameter parametro4 = new SqlParameter("@hora", SqlDbType.Time);
                 parametro4.Value = hora;
+                SqlParameter parametro5 = new SqlParameter("@fecha", SqlDbType.DateTime);
+                parametro5.Value = DateTime.Parse(Configuracion_Global.fecha_actual);
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
                 parametros.Add(parametro3);
                 parametros.Add(parametro4);
+                parametros.Add(parametro5);
 
                 InteraccionDB.ejecutar_storedProcedure(sql, parametros);
             }

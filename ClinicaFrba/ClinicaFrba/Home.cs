@@ -69,13 +69,14 @@ namespace ClinicaFrba
             this.AcceptButton = boton_loguear;
 
             Configuracion_Global.cargar_archivo_configuracion();
+            label_fecha.Text = "Fecha Actual: " + Configuracion_Global.fecha_actual;
 
             try
             {
                 var lista = BD_Roles.obtener_roles();
                 ComboData.llenarCombo(this.comboBox_rol, lista);
                 this.comboBox_rol.DropDownStyle = ComboBoxStyle.DropDownList;
-                this.comboBox_rol.Text = "ADMINISTRATIVO";
+                this.comboBox_rol.Text = "ADMINISTRADOR GENERAL";
             }
             catch (Exception ex)
             {
@@ -118,12 +119,13 @@ namespace ClinicaFrba
                 MessageBox.Show("Login Exitoso", "Log_In", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 habilitar_componentes();
-
+                label_bienvenido.Visible = true;
                 //Deshabilito Loguear
                 /*
                 this.textBox_usuario.Enabled = false;
                 this.textBox_password.Enabled = false;
                 this.comboBox_rol.Enabled = false;
+                this.logInToolStripMenuItem.Enabled = false;
                 */
             }
             catch (Exception ex)

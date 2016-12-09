@@ -82,56 +82,52 @@ namespace ClinicaFrba.AgendaMedico
 
         private void AgendaMedico_Load(object sender, EventArgs e)
         {
+            diasAgenda.Clear();
+            especialidadCombo.Items.Clear();
+            diasSemanaCombo.Items.Clear();
+            horariosPorDiaList.Items.Clear();
+
+            List<string> keyList = new List<string>(this.diasSemana.Keys);
+            ComboData.llenarCombo(diasSemanaCombo, keyList);
+            diasSemanaCombo.SelectedItem = diasSemanaCombo.Items[0];
+
+            horarioDesdeCombo.Items.Clear();
+            horarioHastaCombo.Items.Clear();
+            this.llenarHorariosDesde(horarioDesdeCombo, false);
+            this.llenarHorariosHasta(horarioHastaCombo, false);
+            horarioDesdeCombo.SelectedItem = horarioDesdeCombo.Items[0];
+            horarioHastaCombo.SelectedItem = horarioHastaCombo.Items[0];
+
             try
             {
-                List<string> keyList = new List<string>(this.diasSemana.Keys);
-                ComboData.llenarCombo(diasSemanaCombo, keyList);
-                diasSemanaCombo.SelectedItem = diasSemanaCombo.Items[0];
-
-                horarioDesdeCombo.Items.Clear();
-                horarioHastaCombo.Items.Clear();
-                this.llenarHorariosDesde(horarioDesdeCombo, false);
-                this.llenarHorariosHasta(horarioHastaCombo, false);
-                horarioDesdeCombo.SelectedItem = horarioDesdeCombo.Items[0];
-                horarioHastaCombo.SelectedItem = horarioHastaCombo.Items[0];
-
-                try
-                {
-                    this.idProfesional = Base_de_Datos.BD_Profesional.obtenerID_profesional(usuario.id);
-                    List<string> especialidades = Base_de_Datos.BD_Profesional.getEspecialidadesProfesional(this.idProfesional);
-                    ComboData.llenarCombo(especialidadCombo, especialidades);
-                    especialidadCombo.SelectedItem = especialidadCombo.Items[0];
-
-
-                    DateTime maxFechaAgendaExistente = Base_de_Datos.BD_Profesional.getUltimaFechaAgenda(this.idProfesional);
-                    if(maxFechaAgendaExistente != null)
-                    {
-                        DateTime minDate = maxFechaAgendaExistente.AddDays(1);
-                        fechaDesdePicker.MinDate = minDate;
-                        fechaDesdePicker.Value = minDate;
-                        fechaHastaPicker.MinDate = minDate;
-                        fechaHastaPicker.Value = minDate;
-                    }
-                    else
-                    {
-                        DateTime tomorrow = DateTime.ParseExact(Configuracion_Global.fecha_actual, "yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture).AddDays(1);
-                        fechaDesdePicker.MinDate = tomorrow;
-                        fechaDesdePicker.Value = tomorrow;
-                        fechaHastaPicker.MinDate = tomorrow;
-                        fechaHastaPicker.Value = tomorrow;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("No se obtuvieron las especialidades del profesional. " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                this.idProfesional = Base_de_Datos.BD_Profesional.obtenerID_profesional(usuario.id);
+                List<string> especialidades = Base_de_Datos.BD_Profesional.getEspecialidadesProfesional(this.idProfesional);
+                ComboData.llenarCombo(especialidadCombo, especialidades);
+                especialidadCombo.SelectedItem = especialidadCombo.Items[0];
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Cargar Form: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se obtuvieron las especialidades del profesional. " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
+            DateTime maxFechaAgendaExistente = Base_de_Datos.BD_Profesional.getUltimaFechaAgenda(this.idProfesional);
+            if(maxFechaAgendaExistente != null)
+            {
+                DateTime minDate = maxFechaAgendaExistente.AddDays(1);
+                fechaDesdePicker.MinDate = minDate;
+                fechaDesdePicker.Value = minDate;
+                fechaHastaPicker.MinDate = minDate;
+                fechaHastaPicker.Value = minDate;
+            }
+            else
+            {
+                DateTime tomorrow = DateTime.ParseExact(Configuracion_Global.fecha_actual, "yyyy.MM.dd", System.Globalization.CultureInfo.InvariantCulture).AddDays(1);
+                fechaDesdePicker.MinDate = tomorrow;
+                fechaDesdePicker.Value = tomorrow;
+                fechaHastaPicker.MinDate = tomorrow;
+                fechaHastaPicker.Value = tomorrow;
+            }
         }
 
 

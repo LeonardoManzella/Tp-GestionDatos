@@ -56,10 +56,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBox_usuario = new System.Windows.Forms.TextBox();
             this.textBox_password = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.label_bienvenido = new System.Windows.Forms.Label();
             this.boton_loguear = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.comboBox_rol = new System.Windows.Forms.ComboBox();
+            this.label_fecha = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -290,15 +291,16 @@
             this.textBox_password.TabIndex = 2;
             this.textBox_password.Text = "W23E";
             // 
-            // label3
+            // label_bienvenido
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(92, 53);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(270, 25);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Bienvenido a Clinica FRBA";
+            this.label_bienvenido.AutoSize = true;
+            this.label_bienvenido.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_bienvenido.Location = new System.Drawing.Point(92, 53);
+            this.label_bienvenido.Name = "label_bienvenido";
+            this.label_bienvenido.Size = new System.Drawing.Size(270, 25);
+            this.label_bienvenido.TabIndex = 4;
+            this.label_bienvenido.Text = "Bienvenido a Clinica FRBA";
+            this.label_bienvenido.Visible = false;
             // 
             // boton_loguear
             // 
@@ -327,17 +329,27 @@
             this.comboBox_rol.Name = "comboBox_rol";
             this.comboBox_rol.Size = new System.Drawing.Size(212, 21);
             this.comboBox_rol.TabIndex = 3;
-            this.comboBox_rol.Text = "ADMINISTRATIVO";
+            this.comboBox_rol.Text = "ADMINISTRADOR GENERAL";
+            // 
+            // label_fecha
+            // 
+            this.label_fecha.AutoSize = true;
+            this.label_fecha.Location = new System.Drawing.Point(429, 272);
+            this.label_fecha.Name = "label_fecha";
+            this.label_fecha.Size = new System.Drawing.Size(62, 13);
+            this.label_fecha.TabIndex = 7;
+            this.label_fecha.Text = "label_fecha";
             // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(563, 294);
+            this.Controls.Add(this.label_fecha);
             this.Controls.Add(this.comboBox_rol);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.boton_loguear);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label_bienvenido);
             this.Controls.Add(this.textBox_password);
             this.Controls.Add(this.textBox_usuario);
             this.Controls.Add(this.label2);
@@ -385,9 +397,10 @@
         private System.Windows.Forms.ToolStripMenuItem atencionMedicaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem registrarLlegadaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem registrarResultadoDiagnosticoToolStripMenuItem;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label_bienvenido;
         private System.Windows.Forms.Button boton_loguear;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboBox_rol;
+        private System.Windows.Forms.Label label_fecha;
     }
 }

@@ -222,7 +222,7 @@ CREATE TABLE KFC.atenciones
                     atencion_id  INT PRIMARY KEY IDENTITY(1,1)
                   , turno_id     INT NOT NULL REFERENCES KFC.turnos
                   , hora_llegada	DATETIME NOT NULL
-				  , hora_atencion	DATETIME NOT NULL
+				  , hora_atencion	DATETIME NULL		-- Debe Ser Nullable para poder ingresar solamente hora llegada
                   , sintomas     VARCHAR(255)
                   , diagnostico  VARCHAR(255)
                   , bono_id      INT NOT NULL REFERENCES KFC.bonos
@@ -326,29 +326,55 @@ GO
 --
 --Egreso: el identificador del usuario. Devuelve -1 si no existe el usuario
 ------------------VALIDAR_USUARIO------------------
-CREATE FUNCTION KFC.fun_validar_usuario(@usuario VARCHAR(30),
-@contrasenia                                 VARCHAR(30)
-, @rol_desc	VARCHAR(50)
-)
-returns INT AS
-BEGIN
-          DECLARE @id INT;
-          SELECT
-                    @id = ISNULL(us.us_id,-1)
-          FROM
-                    KFC.usuarios us
+CREATE PROCEDURE KFC.pro_validar_usuario(@usuario VARCHAR(30), @contrasenia VARCHAR(30), @rol_desc	VARCHAR(50), @id INT OUTPUT)
+AS BEGIN
+		BEGIN TRY
+			SET  @id = -1;
+			
+			--Validaciones
+			IF NOT EXISTS( SELECT * FROM KFC.usuarios WHERE nick=@usuario ) RAISERROR('Usuario Inexistente',16,1);
+
+			IF NOT EXISTS( SELECT * FROM KFC.usuarios WHERE nick=@usuario AND habilitado=1 ) RAISERROR('Usuario Desactivado',16,1);
+
+			IF NOT EXISTS	( 
+							SELECT * FROM KFC.usuarios WHERE nick=@usuario AND pass=HASHBYTES('SHA2_256', @contrasenia) 
+							) 
+							RAISERROR('Esta Mal la Contrasenia',16,1);
+
+
+			IF NOT EXISTS	(
+							SELECT * FROM KFC.usuarios U 
+							INNER JOIN KFC.roles_usuarios ru	ON ru.us_id=u.us_id 
+							INNER JOIN KFC.roles r				ON r.rol_id= ru.rol_id
+							WHERE U.nick=@usuario AND   UPPER(r.descripcion) =  UPPER(@rol_desc)
+							) 
+							RAISERROR('El Usuario no tiene Asignado ese Rol',16,1);
+
+
+			SELECT
+					@id = ISNULL(us.us_id,-1)
+			FROM
+					KFC.usuarios us
 					INNER JOIN KFC.roles_usuarios ru
 					ON	ru.us_id = us.us_id
 					INNER JOIN KFC.roles r
 					ON ru.rol_id = r.rol_id
-          WHERE
-                    us.nick           = @usuario
-                    AND us.pass       = HASHBYTES('SHA2_256', @contrasenia)
-                    AND us.habilitado = 1
+			WHERE
+					us.nick           = @usuario
+					AND us.pass       = HASHBYTES('SHA2_256', @contrasenia)
+					AND us.habilitado = 1
 					AND UPPER(r.descripcion) = UPPER(@rol_desc)
-          ;
-          
-          RETURN @id;
+			;
+
+			if (@@ROWCOUNT <= 0) RAISERROR('No Pudo Encontrarse un Usuario Activo con ese Nombre, Contrasenia y Rol',16,1);
+			if (@id = -1)	RAISERROR('ID Invalido, No Pudo Encontrarse un Usuario Activo con ese Nombre, Contrasenia y Rol',16,1);
+
+		END TRY
+		BEGIN CATCH
+                    --IF @@trancount > 0
+                    --ROLLBACK TRANSACTION;
+                    ;THROW
+        END CATCH
 END;
 GO
 
@@ -856,7 +882,7 @@ returns TABLE
 RETURN
 (
           SELECT
-                    b.bono_id
+                    CONVERT( VARCHAR, b.bono_id) AS numero_bono
           FROM
                     kfc.bonos b
           WHERE
@@ -916,11 +942,13 @@ returns TABLE
 RETURN
 (
           SELECT
-                    t.turno_id,
-					Afi.afil_id, Afi.nombre, Afi.apellido--, Afi.numero_doc
-					, t.fecha_hora--, t.hora
-					, planes.plan_id, planes.descripcion--, planes.precio_bono_consulta
-					
+					Afi.nombre AS "Afil_Nombre", Afi.apellido AS "Afil_Apellido"
+					, planes.descripcion
+					, t.hora
+					, prof.nombre AS "Prof_Nombre", prof.apellido AS "Prof_Apellido"
+					, t.turno_id
+					, Afi.afil_id
+					, planes.plan_id
           FROM
                     KFC.afiliados Afi
 					INNER JOIN KFC.planes planes
@@ -949,6 +977,7 @@ RETURN
 GO
 
 --SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','lara','GIMÉNEZ','')
+--SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','','','')
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.fun_retornar_id_afildo(@nombre VARCHAR(255), @apellido VARCHAR(255), @dni INT)
@@ -1433,10 +1462,8 @@ BEGIN
 	FROM	KFC.agenda a
 			INNER JOIN KFC.profesionales p
 			ON a.prof_id = p.prof_id
-			INNER JOIN KFC.especialidades_profesional ep
-			ON ep.prof_id = p.prof_id
 			INNER JOIN KFC.especialidades e
-			ON e.espe_id = ep.espe_id
+			ON e.espe_id = a.espe_id
 	WHERE	p.nombre         LIKE '%' + UPPER(@prof_nombre)		+ '%'
 	AND		p.apellido       LIKE '%' + UPPER(@prof_apellido)	+ '%'
 	AND		DATEPART(WEEKDAY, @fecha) = dia
@@ -1454,10 +1481,8 @@ BEGIN
 					FROM	KFC.agenda a
 							INNER JOIN KFC.profesionales p
 							ON a.prof_id = p.prof_id
-							INNER JOIN KFC.especialidades_profesional ep
-							ON ep.prof_id = p.prof_id
 							INNER JOIN KFC.especialidades e
-							ON e.espe_id = ep.espe_id
+							ON e.espe_id = a.espe_id
 					WHERE	a.hora_desde		<= @hora_desde
 							AND a.hora_hasta	>= @hora_desde
 							AND DATEPART(WEEKDAY, @fecha) = dia
@@ -1492,7 +1517,7 @@ BEGIN
 END;
 GO
 
---Select DISTINCT * from KFC.fun_obtener_turnos_profesional('','',  '', CONVERT(DATE, '2016.01.01', 102) );
+--Select * from KFC.fun_obtener_turnos_profesional('','',  '', CONVERT(DATE, '2016.01.01', 102) );
 
 
 
@@ -2058,15 +2083,18 @@ as
 SELECT pl.plan_id id, pl.descripcion FROM kfc.planes pl;
 go
 
-CREATE PROCEDURE KFC.registrar_llegada (@id_afiliado int, @id_turno int, @id_bono int, @hora time)
+CREATE PROCEDURE KFC.registrar_llegada (@id_afiliado int, @id_turno int, @id_bono int, @hora time, @fecha Datetime)
 AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION
 
+			DECLARE @fecha_sumada DATETIME
+			SET @fecha_sumada = @fecha + CONVERT(DATETIME, @hora)
+
 			insert into kfc.atenciones(turno_id, hora_llegada, bono_id)
 			values
-			(@id_turno, @hora, @id_bono);
+			(@id_turno, @fecha_sumada, @id_bono);
 
 			update kfc.bonos
 			set consumido = 1
@@ -2075,8 +2103,9 @@ BEGIN
 		COMMIT;
 	END TRY
 	BEGIN CATCH
-		ROLLBACK TRANSACTION;
-		PRINT 'LLegada Turno No Ingresada. Hora ' + CONVERT(varchar,@hora,102)
+		IF @@trancount > 0
+        ROLLBACK TRANSACTION;
+		PRINT 'LLegada Turno No Ingresada'
 		;THROW
 	END CATCH
 END;
@@ -2296,6 +2325,7 @@ PRINT '- Llenando Tabla roles...'
 INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('AFILIADO', @true)
 INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('PROFESIONAL', @true)
 INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('ADMINISTRATIVO', @true)
+INSERT INTO KFC.roles(descripcion, habilitado) VALUES ('ADMINISTRADOR GENERAL', @true)
 
 -- Insercion Funcionalidades por Roles
 PRINT '- Llenando Tabla funcionalidades_roles...'
@@ -2320,7 +2350,6 @@ WHERE	R.descripcion = 'PROFESIONAL'
 AND		(
 		F.descripcion	 = 'CREAR_AGENDA'
 		OR F.descripcion = 'CANCELAR_TURNOS_AGENDA'
-		OR F.descripcion = 'REGISTRAR_LLEGADA'
 		OR F.descripcion = 'REGISTRAR_DIAGNOSTICO'
 		)
 
@@ -2334,6 +2363,23 @@ AND		(
 		F.descripcion	 = 'ALTA_AFILIADO'
 		OR F.descripcion = 'MODIFICAR_AFILIADO'
 		OR F.descripcion = 'BAJA_AFILIADO'
+		OR F.descripcion = 'REGISTRAR_LLEGADA'
+		OR F.descripcion = 'CREAR_ROL'
+		OR F.descripcion = 'MODIFICAR_ROL'
+		OR F.descripcion = 'COMPRA_BONO_ADMINISTRADOR'
+		)
+
+INSERT INTO KFC.funcionalidades_roles(rol_id, func_id)
+SELECT	r.rol_id, f.func_id
+FROM	KFC.roles R,
+		KFC.funcionalidades F
+WHERE	R.descripcion = 'ADMINISTRADOR GENERAL'
+--Uso un OR para no crear multiples Insert
+AND		(
+		F.descripcion	 = 'ALTA_AFILIADO'
+		OR F.descripcion = 'MODIFICAR_AFILIADO'
+		OR F.descripcion = 'BAJA_AFILIADO'
+		OR F.descripcion = 'REGISTRAR_LLEGADA'
 		OR F.descripcion = 'CREAR_ROL'
 		OR F.descripcion = 'MODIFICAR_ROL'
 		OR F.descripcion = 'COMPRA_BONO_ADMINISTRADOR'
@@ -2341,10 +2387,10 @@ AND		(
 		)
 
 
-
 -- Insercion Usuarios del Enunciado
 PRINT '- Llenando Tabla usuarios...'
 INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('ADMIN', HASHBYTES('SHA2_256','W23E'), @true)
+INSERT INTO KFC.usuarios(nick,pass,habilitado) VALUES ('RECEPCION', HASHBYTES('SHA2_256','RECEPCION'), @true)
 
 --Agrego Usuarios para Afiliados, pedido por el Enunciado
 INSERT INTO KFC.usuarios
@@ -2380,11 +2426,7 @@ WHERE
 
 -- Insercion Roles por Usuario
 PRINT '- Llenando Tabla roles_usuarios...'
-INSERT INTO KFC.roles_usuarios
-          (
-			  us_id
-			, rol_id
-          )
+INSERT INTO KFC.roles_usuarios (us_id, rol_id)
 SELECT
           u.us_id
         , r.rol_id
@@ -2393,7 +2435,20 @@ FROM
         , KFC.roles    r
 WHERE
         UPPER(r.descripcion) =   UPPER('ADMINISTRATIVO')
+        AND   UPPER(u.nick)    =   UPPER('RECEPCION')
+
+
+INSERT INTO KFC.roles_usuarios (us_id, rol_id)
+SELECT
+          u.us_id
+        , r.rol_id
+FROM
+          KFC.usuarios u
+        , KFC.roles    r
+WHERE
+        UPPER(r.descripcion) =   UPPER('ADMINISTRADOR GENERAL')
         AND   UPPER(u.nick)    =   UPPER('ADMIN')
+
 
 
 -- Insercion Roles para Afiliados
@@ -2803,6 +2858,13 @@ WHERE
 ORDER BY
           Turno_Numero
  
+
+ ---Actualizo Bonos Consumidos
+UPDATE KFC.bonos SET consumido = 1
+WHERE  bono_id IN ( SELECT bono_id FROM KFC.atenciones  )
+
+
+
  PRINT 'TABLAS POBLADAS'
 
 

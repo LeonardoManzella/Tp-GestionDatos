@@ -114,13 +114,15 @@ namespace ClinicaFrba.Base_de_Datos
 
                 var reader = InteraccionDB.ejecutar_funcion(funcion, parametros);
 
-                List<string> especialidades = InteraccionDB.ObtenerStringsReader(reader, 1);
+                List<string> bonos = InteraccionDB.ObtenerStringsReader(reader, 0);
 
-                return especialidades;
+                return bonos;
             }
             catch (Exception e)
             {
                 InteraccionDB.ImprimirExcepcion(e);
+                if (e.Message.Contains("Resultado Vacio")) throw new Exception("No hay Bonos Disponibles para el Afiliado");
+
                 throw e;
             }
         }

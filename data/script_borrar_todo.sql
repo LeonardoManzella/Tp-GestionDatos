@@ -1,3 +1,79 @@
+PRINT 'Borrando Triggers...'
+
+IF OBJECT_ID('KFC.existe_afiliado_principal') IS NOT NULL
+DROP TRIGGER KFC.existe_afiliado_principal;
+GO
+
+IF OBJECT_ID('KFC.rol_nueva_funcionalidad') IS NOT NULL
+DROP TRIGGER KFC.rol_nueva_funcionalidad;
+GO
+
+IF OBJECT_ID('KFC.existe_rol_habilitar_deshabilitar') IS NOT NULL
+DROP TRIGGER KFC.existe_rol_habilitar_deshabilitar;
+GO
+
+IF OBJECT_ID('KFC.nueva_agenda_profesional') IS NOT NULL
+DROP TRIGGER KFC.nueva_agenda_profesional;
+GO
+
+IF OBJECT_ID('KFC.impresion_bono') IS NOT NULL
+DROP TRIGGER KFC.impresion_bono;
+GO
+
+IF OBJECT_ID('KFC.nuevo_turno') IS NOT NULL
+DROP TRIGGER KFC.nuevo_turno;
+GO
+
+IF OBJECT_ID('KFC.nuevo_bono') IS NOT NULL
+DROP TRIGGER KFC.nuevo_bono;
+GO
+
+PRINT 'Triggers Borrados'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 PRINT 'Borrando Procedures...'
 
 IF OBJECT_ID('KFC.pro_deshabilitar_rol_usuarios') IS NOT NULL
@@ -96,6 +172,11 @@ GO
 IF OBJECT_ID('KFC.pro_crear_agenda_profesional') IS NOT NULL
 DROP PROCEDURE KFC.pro_crear_agenda_profesional;
 GO
+
+IF OBJECT_ID('KFC.pro_validar_usuario') IS NOT NULL
+DROP PROCEDURE KFC.pro_validar_usuario;
+GO
+
 PRINT 'Procedures Borrados'
 
 
@@ -108,9 +189,6 @@ PRINT 'Borrando Funciones...'
 
 IF OBJECT_ID('KFC.fun_obtener_roles_usuario') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_roles_usuario;
-GO
-IF OBJECT_ID('KFC.fun_validar_usuario') IS NOT NULL
-DROP FUNCTION KFC.fun_validar_usuario;
 GO
 IF OBJECT_ID('KFC.fun_obtener_funcion_rol') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_funcion_rol;
@@ -235,5 +313,194 @@ IF OBJECT_ID('KFC.fun_obtener_turnos_sin_diagnostico_profesional') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_turnos_sin_diagnostico_profesional;
 GO
 
-
 PRINT 'Funciones Borradas'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PRINT 'Borrando Tablas...'
+
+
+/* :::::: Importante :::::
+Recordar que hay que borrar las tablas en orden inverso a la creacion, por las FK
+Explicacion porque lo ha  asi: http://stackoverflow.com/questions/7887011/how-to-drop-a-table-if-it-exists-in-sql-server
+*/
+
+BEGIN
+IF OBJECT_ID('kfc.atenciones', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.atenciones;
+          
+          DROP TABLE kfc.atenciones;
+
+END
+IF OBJECT_ID('kfc.bonos', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.bonos;
+          
+          DROP TABLE kfc.bonos;
+
+END 
+IF OBJECT_ID('kfc.cancelaciones', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.cancelaciones;
+          
+          DROP TABLE kfc.cancelaciones;
+
+END  
+IF OBJECT_ID('kfc.tipos_cancelaciones', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.tipos_cancelaciones;
+          
+          DROP TABLE kfc.tipos_cancelaciones;
+
+END  
+IF OBJECT_ID('kfc.turnos', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.turnos;
+          
+          DROP TABLE kfc.turnos;
+
+END  
+IF OBJECT_ID('kfc.agenda', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.agenda;
+          
+          DROP TABLE kfc.agenda;
+
+END  
+IF OBJECT_ID('kfc.especialidades_profesional', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.especialidades_profesional;
+          
+          DROP TABLE kfc.especialidades_profesional;
+
+END  
+IF OBJECT_ID('kfc.especialidades', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.especialidades;
+          
+          DROP TABLE kfc.especialidades;
+
+END  
+IF OBJECT_ID('kfc.tipos_especialidades', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.tipos_especialidades;
+          
+          DROP TABLE kfc.tipos_especialidades;
+
+END  
+IF OBJECT_ID('kfc.profesionales', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.profesionales;
+          
+          DROP TABLE kfc.profesionales;
+
+END  
+IF OBJECT_ID('kfc.historial_afiliados', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.historial_afiliados;
+          
+          DROP TABLE kfc.historial_afiliados;
+
+END  
+IF OBJECT_ID('kfc.afiliados', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.afiliados;
+          
+          DROP TABLE kfc.afiliados;
+
+END  
+IF OBJECT_ID('kfc.estado_civil', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.estado_civil;
+          
+          DROP TABLE kfc.estado_civil;
+
+END  
+IF OBJECT_ID('kfc.planes', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.planes;
+          
+          DROP TABLE kfc.planes;
+
+END  
+IF OBJECT_ID('kfc.funcionalidades_roles', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.funcionalidades_roles;
+          
+          DROP TABLE kfc.funcionalidades_roles;
+
+END  
+IF OBJECT_ID('kfc.funcionalidades', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.funcionalidades;
+          
+          DROP TABLE kfc.funcionalidades;
+
+END  
+IF OBJECT_ID('kfc.roles_usuarios', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.roles_usuarios;
+          
+          DROP TABLE kfc.roles_usuarios;
+
+END  
+IF OBJECT_ID('kfc.roles', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.roles;
+          
+          DROP TABLE kfc.roles;
+
+END  
+IF OBJECT_ID('kfc.usuarios', 'U') IS NOT NULL
+BEGIN
+          TRUNCATE TABLE kfc.usuarios;
+          
+          DROP TABLE kfc.usuarios;
+
+END  
+
+PRINT 'Tablas Borradas'
+PRINT 'Borrando Esquema..'
+
+DROP SCHEMA KFC;
+END
+
+PRINT 'Esquema Borrado'
+

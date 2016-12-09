@@ -38,6 +38,7 @@
             this.label_Usuario = new System.Windows.Forms.Label();
             this.groupBox_filtros = new System.Windows.Forms.GroupBox();
             this.dataGridView_resultados_filtros = new System.Windows.Forms.DataGridView();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox_filtros.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).BeginInit();
             this.SuspendLayout();
@@ -51,6 +52,7 @@
             this.button_Buscar.TabIndex = 19;
             this.button_Buscar.Text = "Buscar Afiliado";
             this.button_Buscar.UseVisualStyleBackColor = true;
+            this.button_Buscar.Click += new System.EventHandler(this.button_Buscar_Click);
             // 
             // textBox_Apellido
             // 
@@ -133,11 +135,22 @@
             this.dataGridView_resultados_filtros.Size = new System.Drawing.Size(740, 181);
             this.dataGridView_resultados_filtros.TabIndex = 21;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(59, 309);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(550, 25);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "Consejo: Copiar y Pegar cosas desde Registrar Llegada";
+            // 
             // RegistrarResultado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(766, 494);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.dataGridView_resultados_filtros);
             this.Controls.Add(this.groupBox_filtros);
             this.Controls.Add(this.button_Buscar);
@@ -148,6 +161,7 @@
             this.groupBox_filtros.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -163,5 +177,6 @@
         private System.Windows.Forms.Label label_Usuario;
         private System.Windows.Forms.GroupBox groupBox_filtros;
         private System.Windows.Forms.DataGridView dataGridView_resultados_filtros;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -229,6 +229,7 @@
             this.Controls.Add(this.agregarHorarioButton);
             this.Controls.Add(this.horariosPorDiaList);
             this.Name = "AgendaMedico";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Registrar Agenda";
             this.Load += new System.EventHandler(this.AgendaMedico_Load);
             this.ResumeLayout(false);

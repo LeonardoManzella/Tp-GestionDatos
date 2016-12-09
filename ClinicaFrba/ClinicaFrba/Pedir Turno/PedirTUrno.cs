@@ -47,6 +47,8 @@ namespace ClinicaFrba.Pedir_Turno
         {
             try
             {
+                Comunes.limpiarDataGrid(dataGridView_resultados_filtros);
+
                 if (eligioFecha == false)
                 {
                     MessageBox.Show("Por Favor Elija una Fecha, es Obligatorio", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -129,7 +131,7 @@ namespace ClinicaFrba.Pedir_Turno
             comboEspecialidades.Text = "";
             textBox_nombre.Text = "";
             textBox_apellido.Text = "";
-            actualizar_datagrid();
+            Comunes.limpiarDataGrid(dataGridView_resultados_filtros);
         }
 
     }

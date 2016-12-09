@@ -2110,166 +2110,247 @@ BEGIN
 	END CATCH
 END;
 GO
-
 CREATE PROCEDURE KFC.alta_afiliado( @nombre VARCHAR(255),
-									@apellido                                   VARCHAR(255),
-									@tipo_doc                                   VARCHAR(25),
-									@nro_doc                                    NUMERIC(18,0),
-									@direccion                                  VARCHAR(255),
-									@telefono                                   NUMERIC(18,0),
-									@mail                                       VARCHAR(255),
-									@sexo                                       CHAR(1),
-									@fecha_nac                                  DATETIME,
-									@estado                                     INT,
-									@plan                                       INT,
-									@usuario                                    INT,
-									@afil_id									NUMERIC(18,0) OUTPUT )
+@apellido                                   VARCHAR(255),
+@tipo_doc                                   VARCHAR(25),
+@nro_doc                                    NUMERIC(18,0),
+@direccion                                  VARCHAR(255),
+@telefono                                   NUMERIC(18,0),
+@mail                                       VARCHAR(255),
+@sexo                                       CHAR(1),
+@fecha_nac                                  DATETIME,
+@estado                                     INT,
+@plan                                       INT,
+@usuario                                    INT,
+@afil_id                                    NUMERIC(18,0) OUTPUT )
 AS
-BEGIN
-        SET @afil_id = -1;
-        BEGIN TRY
-                    BEGIN TRANSACTION
+          BEGIN
+                    SET @afil_id = -1;
+                    BEGIN TRY
+                              BEGIN TRANSACTION
+                              BEGIN
 
-					
-					BEGIN
-					insert into kfc.usuarios(nick, pass, habilitado, intentos) values(@mail,HASHBYTES('SHA2_256',@mail),1,0);
-					SELECT @usuario = @@IDENTITY
-					END;
+							  --Insercion del usuario
+                                        INSERT INTO kfc.usuarios
+                                                  (
+                                                            nick
+                                                          , pass
+                                                          , habilitado
+                                                          , intentos
+                                                  )
+                                                  VALUES
+                                                  (
+                                                            @mail
+                                                          , HASHBYTES('SHA2_256',@mail), 1, 0
+                                                  )
+                                        ;
+                                        
+                              SELECT @usuario = @@IDENTITY
+                              END;
 
-                    INSERT INTO kfc.afiliados
-                            (
-                                      nombre
-                                    , apellido
-                                    , tipo_doc
-                                    , numero_doc
-                                    , direccion
-                                    , telefono
-                                    , mail
-                                    , sexo
-                                    , fecha_nacimiento
-                                    , estado_id
-                                    , plan_id
-                                    , us_id
-                                    , habilitado
-                            )
-                            VALUES
-                            (
-                                        @nombre
-                                    , @apellido
-                                    , @tipo_doc
-                                    , @nro_doc
-                                    , @direccion
-                                    , @telefono
-                                    , @mail
-                                    , @sexo
-                                    , @fecha_nac
-                                    , @estado
-                                    , @plan
-                                    , @usuario
-                                    , 1
-                            )
-                    ;
+							  --Insercion Afiliado
+                              INSERT INTO kfc.afiliados
+                                        (
+                                                  nombre
+                                                , apellido
+                                                , tipo_doc
+                                                , numero_doc
+                                                , direccion
+                                                , telefono
+                                                , mail
+                                                , sexo
+                                                , fecha_nacimiento
+                                                , estado_id
+                                                , plan_id
+                                                , us_id
+                                                , habilitado
+                                        )
+                                        VALUES
+                                        (
+                                                  @nombre
+                                                , @apellido
+                                                , @tipo_doc
+                                                , @nro_doc
+                                                , @direccion
+                                                , @telefono
+                                                , @mail
+                                                , @sexo
+                                                , @fecha_nac
+                                                , @estado
+                                                , @plan
+                                                , @usuario
+                                                , 1
+                                        )
+                              ;
                               
-                    SELECT @afil_id = @@IDENTITY;
+                              SELECT @afil_id = @@IDENTITY;
                               
-                    COMMIT;
-                    RETURN
-        END TRY
-        BEGIN CATCH
-                    IF @@trancount > 0
-                    ROLLBACK TRANSACTION;
-                    PRINT 'Afiliado No Ingresado.';
-                    THROW
-        END CATCH
-END;
+                              --Inserto Rol al usuario Creado para poder Loguearse
+                              INSERT INTO KFC.roles_usuarios
+                                        (
+                                                  us_id
+                                                , rol_id
+                                        )
+                              SELECT DISTINCT a.us_id
+                                      , ru.rol_id
+                              FROM
+                                        KFC.roles_usuarios ru
+                                        INNER JOIN
+                                                  KFC.roles r
+                                        ON
+                                                  r.rol_id = ru.rol_id
+                                                , KFC.afiliados a
+                              WHERE
+                                        UPPER(r.descripcion) = 'AFILIADO'
+                                        AND a.us_id          = @usuario
+                              COMMIT;
+                              RETURN
+                    END TRY
+                    BEGIN CATCH
+                              IF @@trancount > 0
+                              ROLLBACK TRANSACTION;
+                              PRINT 'Afiliado No Ingresado.';
+                              THROW
+                    END CATCH
+          END;
 GO
+
 
 CREATE PROCEDURE KFC.alta_afiliado_adjunto ( @nombre VARCHAR(255),
-									@apellido                                   VARCHAR(255),
-									@tipo_doc                                   VARCHAR(25),
-									@nro_doc                                    NUMERIC(18,0),
-									@direccion                                  VARCHAR(255),
-									@telefono                                   NUMERIC(18,0),
-									@mail                                       VARCHAR(255),
-									@sexo                                       CHAR(1),
-									@fecha_nac                                  DATETIME,
-									@estado                                     INT,
-									@plan                                       INT,
-									@afil_id_titular							INT,
-									@afil_id									NUMERIC(18,0) OUTPUT)
+@apellido                                            VARCHAR(255),
+@tipo_doc                                            VARCHAR(25),
+@nro_doc                                             NUMERIC(18,0),
+@direccion                                           VARCHAR(255),
+@telefono                                            NUMERIC(18,0),
+@mail                                                VARCHAR(255),
+@sexo                                                CHAR(1),
+@fecha_nac                                           DATETIME,
+@estado                                              INT,
+@plan                                                INT,
+@afil_id_titular                                     INT,
+@afil_id                                             NUMERIC(18,0) OUTPUT)
 AS
-declare
- @id int;
-declare
- @usuario int;
-begin 
-select @id= MAX(af.afil_id) +1 from kfc.afiliados af where Floor(af.afil_id/100) = Floor(@afil_id_titular/100)
-select @usuario = us_id from kfc.afiliados where afil_id = @afil_id_titular;
+BEGIN
+          DECLARE @id      INT;
+          DECLARE @usuario INT;
+          
+                    --Calculo ID de Usuario No Titular
+					SELECT
+                              @id= MAX(af.afil_id) +1
+                    FROM
+                              kfc.afiliados af
+                    WHERE
+                              Floor(af.afil_id/100) = Floor(@afil_id_titular/100)
+                    --SELECT @usuario = us_id FROM kfc.afiliados WHERE afil_id = @afil_id_titular;
+					--Insercion del usuario
+                                        INSERT INTO kfc.usuarios
+                                                  (
+                                                            nick
+                                                          , pass
+                                                          , habilitado
+                                                          , intentos
+                                                  )
+                                                  VALUES
+                                                  (
+                                                            @mail
+                                                          , HASHBYTES('SHA2_256',@mail), 1, 0
+                                                  )
+                                        ;
+                                        
+                              SELECT @usuario = @@IDENTITY
+                              END;
 
-SET IDENTITY_INSERT KFC.afiliados ON
-BEGIN TRANSACTION
-	BEGIN TRY
-	INSERT INTO KFC.afiliados
-			  (         afil_id
-	    ,  nombre
-                      , apellido
-    	    , tipo_doc
-                      , numero_doc
-                      , direccion
-                      , telefono
-                      , mail
-                      , sexo
-                      , fecha_nacimiento
-                      , estado_id
-                      , plan_id
-                      , us_id
-                      , habilitado
-			  ) VALUES
-				(		@id
-				,@nombre
-				, @apellido
-				, @tipo_doc
-				, @nro_doc
-				, @direccion
-				, @telefono
-				, @mail
-				, @sexo
-				, @fecha_nac
-				, @estado
-				, @plan
-				, @usuario
-				, 1
-				);
+					 --Insercion Afiliado
+                    SET IDENTITY_INSERT KFC.afiliados ON
+                    BEGIN TRANSACTION
+                    BEGIN TRY
+                              INSERT INTO KFC.afiliados
+                                        (
+                                                  afil_id
+                                                , nombre
+                                                , apellido
+                                                , tipo_doc
+                                                , numero_doc
+                                                , direccion
+                                                , telefono
+                                                , mail
+                                                , sexo
+                                                , fecha_nacimiento
+                                                , estado_id
+                                                , plan_id
+                                                , us_id
+                                                , habilitado
+                                        )
+                                        VALUES
+                                        (
+                                                  @id
+                                                , @nombre
+                                                , @apellido
+                                                , @tipo_doc
+                                                , @nro_doc
+                                                , @direccion
+                                                , @telefono
+                                                , @mail
+                                                , @sexo
+                                                , @fecha_nac
+                                                , @estado
+                                                , @plan
+                                                , @usuario
+                                                , 1
+                                        )
+                              ;
+                              
+                              SELECT @afil_id = @id;
+                              
+							  --Actualizo usuario Titular personas a cargo
+                              SET IDENTITY_INSERT KFC.afiliados OFF;
+                              UPDATE
+                                        kfc.afiliados
+                              SET       personas_a_car = ISNULL(personas_a_car,0)+1
+                              WHERE
+                                        afil_id = @afil_id_titular
+                              ;
 
-	 select @afil_id = @id;
-	SET IDENTITY_INSERT KFC.afiliados OFF;
-
-	
-     Update kfc.afiliados 
-	 set personas_a_car = ISNULL(personas_a_car,0)+1
-	 where afil_id = @afil_id_titular;
-
-	 commit;
-	END TRY
-BEGIN CATCH
-		ROLLBACK;
-		THROW;
-END CATCH
-end
+							  --Inserto Rol al usuario Creado para poder Loguearse
+                              INSERT INTO KFC.roles_usuarios
+                                        (
+                                                  us_id
+                                                , rol_id
+                                        )
+                              SELECT DISTINCT a.us_id
+                                      , ru.rol_id
+                              FROM
+                                        KFC.roles_usuarios ru
+                                        INNER JOIN
+                                                  KFC.roles r
+                                        ON
+                                                  r.rol_id = ru.rol_id
+                                                , KFC.afiliados a
+                              WHERE
+                                        UPPER(r.descripcion) = 'AFILIADO'
+                                        AND a.us_id          = @usuario
+                              
+                              COMMIT;
+                    END TRY
+                    BEGIN CATCH
+                              ROLLBACK;
+                              THROW;
+                    END CATCH
+          END
 GO
 
-create procedure KFC.get_afiliado( @id_afiliado int)
-as
-select * from kfc.afiliados a
-where a.afil_id = @id_afiliado;
+
+
+CREATE PROCEDURE KFC.get_afiliado( @id_afiliado INT)
+AS
+          SELECT * FROM kfc.afiliados a WHERE a.afil_id = @id_afiliado;
+
 GO
 
-create procedure KFC.get_cmb_estado_civil
-as
-SELECT DISTINCT c.estado_id
-		, c.descripcion 
-FROM
-	kfc.estado_civil c;
+CREATE PROCEDURE KFC.get_cmb_estado_civil
+AS
+          SELECT DISTINCT c.estado_id , c.descripcion FROM kfc.estado_civil c;
+
 GO
 
 CREATE PROCEDURE KFC.modifica_afiliado( 
@@ -2321,7 +2402,7 @@ AS
 declare @interno int
 BEGIN
 	DECLARE adjuntos CURSOR FOR   
-	select afil_id from afiliados where floor(afil_id/100) = floor(@afiliado/100) and habilitado = 1  
+	SELECT afil_id FROM afiliados WHERE floor(afil_id/100) = floor(@afiliado/100) and habilitado = 1  
 	
 	OPEN adjuntos  
   	FETCH NEXT FROM adjuntos
@@ -2351,16 +2432,16 @@ BEGIN TRY
 		WHERE afil_id = @afiliado;
 	
 		
-	DELETE FROM kfc.turnos 
-	WHERE afil_id = @afiliado and YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
-	and DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada) 
-	and turno_id not in (
+		DELETE FROM kfc.turnos 
+		WHERE afil_id = @afiliado and YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
+		and DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada) 
+		and turno_id not in (
 
- SELECT tu.turno_id from kfc.turnos tu
-  inner join kfc.atenciones ate on tu.turno_id = ate.turno_id
-  WHERE afil_id = @afiliado
-and YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
-and DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada)
+			SELECT tu.turno_id from kfc.turnos tu
+			  inner join kfc.atenciones ate on tu.turno_id = ate.turno_id
+			  WHERE afil_id = @afiliado
+			AND YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
+			AND DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada)
 );
 	
 	IF (floor(@afiliado/100)*100+1) = @afiliado

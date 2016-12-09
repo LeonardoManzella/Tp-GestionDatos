@@ -181,7 +181,7 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
-                string funcion = "SELECT  * FROM KFC.fun_obtener_turnos_profesional(@prof_nombre, @prof_apellido,@desc_esp,  @fecha)";
+                string funcion = "SELECT  * FROM KFC.fun_obtener_turnos_profesional(@prof_nombre, @prof_apellido, @desc_esp,  @fecha)";
                 SqlParameter parametro1 = new SqlParameter("@prof_nombre", SqlDbType.Text);
                 parametro1.Value = nombre;
                 SqlParameter parametro2 = new SqlParameter("@prof_apellido", SqlDbType.Text);

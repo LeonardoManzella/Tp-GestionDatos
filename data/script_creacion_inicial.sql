@@ -1461,10 +1461,8 @@ BEGIN
 	FROM	KFC.agenda a
 			INNER JOIN KFC.profesionales p
 			ON a.prof_id = p.prof_id
-			INNER JOIN KFC.especialidades_profesional ep
-			ON ep.prof_id = p.prof_id
 			INNER JOIN KFC.especialidades e
-			ON e.espe_id = ep.espe_id
+			ON e.espe_id = a.espe_id
 	WHERE	p.nombre         LIKE '%' + UPPER(@prof_nombre)		+ '%'
 	AND		p.apellido       LIKE '%' + UPPER(@prof_apellido)	+ '%'
 	AND		DATEPART(WEEKDAY, @fecha) = dia
@@ -1482,10 +1480,8 @@ BEGIN
 					FROM	KFC.agenda a
 							INNER JOIN KFC.profesionales p
 							ON a.prof_id = p.prof_id
-							INNER JOIN KFC.especialidades_profesional ep
-							ON ep.prof_id = p.prof_id
 							INNER JOIN KFC.especialidades e
-							ON e.espe_id = ep.espe_id
+							ON e.espe_id = a.espe_id
 					WHERE	a.hora_desde		<= @hora_desde
 							AND a.hora_hasta	>= @hora_desde
 							AND DATEPART(WEEKDAY, @fecha) = dia
@@ -1520,7 +1516,7 @@ BEGIN
 END;
 GO
 
---Select DISTINCT * from KFC.fun_obtener_turnos_profesional('','',  '', CONVERT(DATE, '2016.01.01', 102) );
+--Select * from KFC.fun_obtener_turnos_profesional('','',  '', CONVERT(DATE, '2016.01.01', 102) );
 
 
 

@@ -2182,7 +2182,7 @@ BEGIN
                     THROW
         END CATCH
 END;
-
+GO
 
 CREATE PROCEDURE KFC.alta_afiliado_adjunto ( @nombre VARCHAR(255),
 									@apellido                                   VARCHAR(255),
@@ -2256,9 +2256,9 @@ BEGIN CATCH
 		THROW;
 END CATCH
 end
+GO
 
-
-create procedure KFC.get_afiliado @id_afiliado int
+create procedure KFC.get_afiliado( @id_afiliado int)
 as
 select * from kfc.afiliados a
 where a.afil_id = @id_afiliado;
@@ -2314,8 +2314,30 @@ Begin
 			THROW
 			END CATCH
 end;
+go
 
-CREATE PROCEDURE KFC.baja_afiliado @afiliado INT, @fecha VARCHAR(30) 
+CREATE PROCEDURE KFC.baja_grupo_afiliado ( @afiliado INT, @fecha DATETIME)
+AS
+declare @interno int
+BEGIN
+	DECLARE adjuntos CURSOR FOR   
+	select afil_id from afiliados where floor(afil_id/100) = floor(@afiliado/100) and habilitado = 1  
+	
+	OPEN adjuntos  
+  	FETCH NEXT FROM adjuntos
+	INTO @interno
+
+	WHILE @@FETCH_STATUS = 0  
+	BEGIN 
+	EXECUTE KFC.baja_afiliado @interno, @fecha
+	FETCH NEXT FROM adjuntos
+	INTO @interno
+	END 
+END
+go
+
+
+CREATE PROCEDURE KFC.baja_afiliado( @afiliado INT, @fecha VARCHAR(30) )
 AS
 DECLARE @plan INT
 DECLARE @fecha_formateada DATETIME
@@ -2356,29 +2378,7 @@ BEGIN CATCH
        THROW
 END CATCH
 END
-
-
-
-
-CREATE PROCEDURE KFC.baja_grupo_afiliado @afiliado INT, @fecha DATETIME
-PROCEDURE KFC.baja_grupo_afiliado @afiliado INT, @fecha DATETIME
-AS
-declare @interno int
-BEGIN
-	DECLARE adjuntos CURSOR FOR   
-	select afil_id from afiliados where floor(afil_id/100) = floor(@afiliado/100) and habilitado = 1  
-	
-	OPEN adjuntos  
-  	FETCH NEXT FROM adjuntos
-	INTO @interno
-
-	WHILE @@FETCH_STATUS = 0  
-	BEGIN 
-	EXECUTE KFC.baja_afiliado @interno, @fecha
-	FETCH NEXT FROM adjuntos
-	INTO @interno
-	END 
-END
+go
 
 
 PRINT 'Creadas Funciones y Procedures Deploy'

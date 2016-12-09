@@ -94,7 +94,8 @@ PRINT '- Creada Tabla estado_civil'
            
 CREATE TABLE KFC.afiliados
           (
-                    afil_id          INT PRIMARY KEY IDENTITY(1,1)
+                    --afil_id          INT PRIMARY KEY IDENTITY(1,1)
+	  afil_id          INT PRIMARY KEY IDENTITY(1,100)
                   , nombre           VARCHAR(255) NOT NULL
                   , apellido         VARCHAR(255) NOT NULL
                   , tipo_doc         VARCHAR(25) NOT NULL CHECK (tipo_doc IN ('DNI', 'LC', 'LE', 'CI', 'PAS')) 

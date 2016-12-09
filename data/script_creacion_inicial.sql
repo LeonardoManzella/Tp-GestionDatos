@@ -2129,9 +2129,16 @@ BEGIN
         SET @afil_id = -1;
         BEGIN TRY
                     BEGIN TRANSACTION
+
+					
+					BEGIN
+					insert into kfc.usuarios(nick, pass, habilitado, intentos) values(@mail,HASHBYTES('SHA2_256',@mail),1,0);
+					SELECT @usuario = @@IDENTITY
+					END;
+
                     INSERT INTO kfc.afiliados
                             (
-                                        nombre
+                                      nombre
                                     , apellido
                                     , tipo_doc
                                     , numero_doc
@@ -2175,7 +2182,81 @@ BEGIN
                     THROW
         END CATCH
 END;
-GO
+
+
+CREATE PROCEDURE KFC.alta_afiliado_adjunto ( @nombre VARCHAR(255),
+									@apellido                                   VARCHAR(255),
+									@tipo_doc                                   VARCHAR(25),
+									@nro_doc                                    NUMERIC(18,0),
+									@direccion                                  VARCHAR(255),
+									@telefono                                   NUMERIC(18,0),
+									@mail                                       VARCHAR(255),
+									@sexo                                       CHAR(1),
+									@fecha_nac                                  DATETIME,
+									@estado                                     INT,
+									@plan                                       INT,
+									@afil_id_titular							INT,
+									@afil_id									NUMERIC(18,0) OUTPUT)
+AS
+declare
+ @id int;
+declare
+ @usuario int;
+begin 
+select @id= MAX(af.afil_id) +1 from kfc.afiliados af where Floor(af.afil_id/100) = Floor(@afil_id_titular/100)
+select @usuario = us_id from kfc.afiliados where afil_id = @afil_id_titular;
+
+SET IDENTITY_INSERT KFC.afiliados ON
+BEGIN TRANSACTION
+	BEGIN TRY
+	INSERT INTO KFC.afiliados
+			  (         afil_id
+	    ,  nombre
+                      , apellido
+    	    , tipo_doc
+                      , numero_doc
+                      , direccion
+                      , telefono
+                      , mail
+                      , sexo
+                      , fecha_nacimiento
+                      , estado_id
+                      , plan_id
+                      , us_id
+                      , habilitado
+			  ) VALUES
+				(		@id
+				,@nombre
+				, @apellido
+				, @tipo_doc
+				, @nro_doc
+				, @direccion
+				, @telefono
+				, @mail
+				, @sexo
+				, @fecha_nac
+				, @estado
+				, @plan
+				, @usuario
+				, 1
+				);
+
+	 select @afil_id = @id;
+	SET IDENTITY_INSERT KFC.afiliados OFF;
+
+	
+     Update kfc.afiliados 
+	 set personas_a_car = ISNULL(personas_a_car,0)+1
+	 where afil_id = @afil_id_titular;
+
+	 commit;
+	END TRY
+BEGIN CATCH
+		ROLLBACK;
+		THROW;
+END CATCH
+end
+
 
 create procedure KFC.get_afiliado @id_afiliado int
 as
@@ -2191,38 +2272,40 @@ FROM
 	kfc.estado_civil c;
 GO
 
-create procedure KFC.modifica_afiliado( 
+CREATE PROCEDURE KFC.modifica_afiliado( 
 								 @afiliado int,
-								 @nombre varchar(255),
-								 @apellido varchar(255),
 								 @tipo_doc varchar(25),
 								 @direccion varchar(255),
 								 @telefono numeric(18,0),
 								 @mail  varchar(255),
 								 @sexo char(1),
-								 @fecha_nac datetime,
 								 @estado int,
 								 @plan int,
-								 @usuario int
+								 @fecha VARCHAR(30) 
 								 )
 as
+DECLARE @fecha_formateada datetime;
+DECLARE @plan_anterior int;
 Begin
 		BEGIN TRY
 			BEGIN TRANSACTION
+			SET @fecha_formateada = CONVERT(DATETIME, @fecha, 102);
+			select @plan_anterior= afi.plan_id from afiliados afi where afi.afil_id = @afiliado and habilitado=1;
+			IF (@plan_anterior <> @plan )
+			insert into kfc.historial_afiliados(afil_id,plan_activo,fecha,motivo_cambio)
+			values(@afiliado,@plan_anterior,@fecha_formateada,'El afiliado cambio su plan')
+
 			Update kfc.afiliados
-			set nombre = @nombre,
-				apellido = @apellido,
-				tipo_doc = @tipo_doc,
+			set tipo_doc = @tipo_doc,
 				direccion = @direccion,
 				telefono = @telefono,
 				mail = @mail,
 				sexo = @sexo,
-				fecha_nacimiento = @fecha_nac,
 				estado_id = @estado,
-				plan_id = @plan,
-				us_id = @usuario
+				plan_id = @plan
 				where afil_id = @afiliado;
 
+			
 			Commit;
 			End try
 			BEGIN CATCH
@@ -2231,6 +2314,71 @@ Begin
 			THROW
 			END CATCH
 end;
+
+CREATE PROCEDURE KFC.baja_afiliado @afiliado INT, @fecha VARCHAR(30) 
+AS
+DECLARE @plan INT
+DECLARE @fecha_formateada DATETIME
+BEGIN
+BEGIN TRY
+	SET @fecha_formateada = CONVERT(DATETIME, @fecha, 102);
+	BEGIN TRANSACTION
+		UPDATE kfc.afiliados
+		SET habilitado = 0,
+			@plan = plan_id
+		WHERE afil_id = @afiliado;
+	
+		
+	DELETE FROM kfc.turnos 
+	WHERE afil_id = @afiliado and YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
+	and DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada) 
+	and turno_id not in (
+
+ SELECT tu.turno_id from kfc.turnos tu
+  inner join kfc.atenciones ate on tu.turno_id = ate.turno_id
+  WHERE afil_id = @afiliado
+and YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
+and DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada)
+);
+	
+	IF (floor(@afiliado/100)*100+1) = @afiliado
+	EXECUTE	KFC.baja_grupo_afiliado @afiliado , @fecha_formateada;
+
+
+	Insert Into kfc.historial_afiliados values(@afiliado, @fecha_formateada ,@plan,'El afiliado ha sido dado de baja');
+	
+COMMIT;
+END TRY
+BEGIN CATCH 
+       IF @@trancount > 0
+       ROLLBACK TRANSACTION;
+       PRINT 'Afiliado No Eliminado.';
+       THROW
+END CATCH
+END
+
+
+
+
+CREATE PROCEDURE KFC.baja_grupo_afiliado @afiliado INT, @fecha DATETIME
+PROCEDURE KFC.baja_grupo_afiliado @afiliado INT, @fecha DATETIME
+AS
+declare @interno int
+BEGIN
+	DECLARE adjuntos CURSOR FOR   
+	select afil_id from afiliados where floor(afil_id/100) = floor(@afiliado/100) and habilitado = 1  
+	
+	OPEN adjuntos  
+  	FETCH NEXT FROM adjuntos
+	INTO @interno
+
+	WHILE @@FETCH_STATUS = 0  
+	BEGIN 
+	EXECUTE KFC.baja_afiliado @interno, @fecha
+	FETCH NEXT FROM adjuntos
+	INTO @interno
+	END 
+END
 
 
 PRINT 'Creadas Funciones y Procedures Deploy'

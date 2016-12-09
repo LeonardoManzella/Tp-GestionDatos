@@ -108,7 +108,7 @@ namespace ClinicaFrba.Abm_Afiliado
                                 MessageBox.Show("Se ha realizado el alta correctamente");
                                 funcionalidad = tipos_funcionalidad.MODIFICACION;
                                 bloquearNoEditable();
-                        }
+                            }
 
                         }
                         else
@@ -119,27 +119,27 @@ namespace ClinicaFrba.Abm_Afiliado
                             if (id_us > 0)
                             {
 
-                            int i = 0;
+                                int i = 0;
                                 //Si se agrega una nueva ventana a traves de un botón que 
                                 //llame a la misma pantalla podría adjuntar a una lista el grupo familiar
                                 var sin_problema = true;
-                            for (i = 0; i < afiliados_a_cargo.Count; i++)
-                            {
+                                for (i = 0; i < afiliados_a_cargo.Count; i++)
+                                {
                                     var id_us_sec = Negocio.ABMAFIL.alta_afiliado_adjunto(afiliados_a_cargo[i]);
                                     if (id_us_sec <= 0)
                                     {
                                         sin_problema = false;
                                         MessageBox.Show("No se ha realizado el alta correctamente");
-                        }
-                    }
+                                    }
+                                }
 
                                 if (sin_problema)
                                 {
-                    this.txtAfilId.Text = id_us.ToString();
-                    this.Text = "MODIFICA AFILIADO";
+                                    this.txtAfilId.Text = id_us.ToString();
+                                    this.Text = "MODIFICA AFILIADO";
 
-                    MessageBox.Show("Se ha realizado el alta correctamente");
-                    funcionalidad = tipos_funcionalidad.MODIFICACION;
+                                    MessageBox.Show("Se ha realizado el alta correctamente");
+                                    funcionalidad = tipos_funcionalidad.MODIFICACION;
                                     bloquearNoEditable();
                                 }
                             }
@@ -362,7 +362,7 @@ namespace ClinicaFrba.Abm_Afiliado
             {
                 txtAfilId.Text = (afiliado.id == 0) ? string.Empty : afiliado.id.ToString();
                 txtNombre.Text = afiliado.nombre;
-            txtApellido.Text = afiliado.apellido;
+                txtApellido.Text = afiliado.apellido;
                 dtFNac.Value = dtFNac.MinDate;
                 txtNroDoc.Text = (afiliado.nro_doc == 0) ? string.Empty : afiliado.nro_doc.ToString();
             }

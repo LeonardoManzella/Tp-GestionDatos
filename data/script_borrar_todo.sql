@@ -136,6 +136,16 @@ GO
 IF OBJECT_ID('KFC.alta_afiliado') IS NOT NULL
 DROP PROCEDURE KFC.alta_afiliado;
 GO
+IF OBJECT_ID('KFC.alta_afiliado_adjunto') IS NOT NULL
+DROP PROCEDURE KFC.alta_afiliado_adjunto;
+GO
+IF OBJECT_ID('KFC.baja_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.baja_afiliado;
+GO
+
+IF OBJECT_ID('KFC.baja_grupo_afiliado') IS NOT NULL
+DROP PROCEDURE KFC.baja_grupo_afiliado;
+GO
 
 IF OBJECT_ID('KFC.get_cmb_planes_sociales') IS NOT NULL
 DROP PROCEDURE KFC.get_cmb_planes_sociales;

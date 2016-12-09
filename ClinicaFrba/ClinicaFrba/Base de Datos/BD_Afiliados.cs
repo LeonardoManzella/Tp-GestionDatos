@@ -1,12 +1,8 @@
-﻿using System;
+﻿using ClinicaFrba.Clases;
+using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ClinicaFrba.Clases;
-using ClinicaFrba.Base_de_Datos;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace ClinicaFrba.Base_de_Datos
 {
@@ -259,7 +255,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro7 = new SqlParameter("@sexo", SqlDbType.Char);
                 var parametro9 = new SqlParameter("@estado", SqlDbType.Int);
                 var parametro10 = new SqlParameter("@plan", SqlDbType.Int);
-                var parametro12 = new SqlParameter("@fecha", SqlDbType.DateTime);
+                var parametro12 = new SqlParameter("@fecha", SqlDbType.VarChar);
 
                 parametro0.Value = afiliado.id;
                 parametro3.Value = afiliado.tipo_doc.ToUpper();               
@@ -269,7 +265,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro7.Value = afiliado.sexo;
                 parametro9.Value = afiliado.estado_civil;
                 parametro10.Value = afiliado.plan_id;
-                parametro12.Value = DateTime.Now;//DateTime.Parse(Configuracion_Global.fecha_actual);
+                parametro12.Value = Configuracion_Global.fecha_actual;
 
                 comando_sql.Parameters.Add(parametro0);
                 comando_sql.Parameters.Add(parametro3);
@@ -358,10 +354,10 @@ namespace ClinicaFrba.Base_de_Datos
 
                 SqlCommand comando_sql = new SqlCommand("kfc.baja_afiliado @afiliado, @fecha", conexion);
                 var parametro0 = new SqlParameter("@afiliado", SqlDbType.Int);
-                var parametro1 = new SqlParameter("@fecha", SqlDbType.DateTime);
+                var parametro1 = new SqlParameter("@fecha", SqlDbType.VarChar);
 
                 parametro0.Value = afil_id;
-                parametro1.Value = DateTime.Now;//DateTime.Parse(Configuracion_Global.fecha_actual);
+                parametro1.Value =Configuracion_Global.fecha_actual;
 
                 comando_sql.Parameters.Add(parametro0);
                 comando_sql.Parameters.Add(parametro1);

@@ -45,12 +45,22 @@ namespace ClinicaFrba.CancelarTurno
                 DateTime fechaDesde = fechaDesdePicker.Value;
                 DateTime fechaHasta = fechaHastaPicker.Value.AddDays(1);
                 string motivo = motivoTextBox.Text.ToString();
+                DateTime fechaActual = DateTime.Parse(Configuracion_Global.fecha_actual);
 
                 if (motivo.Trim().Equals(""))
                 {
                     MessageBox.Show("Debe completar todos los campos del formulario", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
+
+                /*
+                if ( (fechaActual.CompareTo(fechaDesde)<0) && (fechaActual.CompareTo(fechaHasta) < 0))
+                {
+                    MessageBox.Show("Las Fechas deben ser Menor a la Actual", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                */
+
 
                 Base_de_Datos.BD_Turnos.cancelar_turnos_pro(fechaDesde, fechaHasta, motivo, usuario.id);
 

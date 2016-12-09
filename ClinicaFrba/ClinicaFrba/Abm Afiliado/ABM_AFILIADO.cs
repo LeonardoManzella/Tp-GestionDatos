@@ -173,7 +173,10 @@ namespace ClinicaFrba.Abm_Afiliado
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string mensaje = "Ha ocurrido un Error. Pruebe modificar los datos";
+                if(  ex.Message.Contains("Ya existe el Afiliado")  ) mensaje = ex.Message;
+
+                MessageBox.Show(mensaje, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }

@@ -215,7 +215,11 @@
             // 
             // dtFNac
             // 
+            this.dtFNac.CustomFormat = "MM\'/\'dd\'/\'yyyy";
+            this.dtFNac.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.dtFNac.Location = new System.Drawing.Point(11, 95);
+            this.dtFNac.MaxDate = new System.DateTime(2200, 12, 31, 0, 0, 0, 0);
+            this.dtFNac.MinDate = new System.DateTime(1910, 1, 1, 0, 0, 0, 0);
             this.dtFNac.Name = "dtFNac";
             this.dtFNac.Size = new System.Drawing.Size(255, 20);
             this.dtFNac.TabIndex = 21;

@@ -881,16 +881,16 @@ CREATE FUNCTION KFC.fun_obtener_bonos_afiliado(@afiliado_id INT)
 returns TABLE
 RETURN
 (
-          SELECT
+  SELECT
                     CONVERT( VARCHAR, b.bono_id) AS numero_bono
           FROM
                     kfc.bonos b
           WHERE
-                    b.afil_id       = @afiliado_id
+                    b.afil_id  in (
+								--Esto devuelve el grupo familiar completo.
+								select afil_id from afiliados 
+								where floor(afil_id/100) = floor(@afiliado_id/100) and habilitado = 1 )
                     AND b.consumido = 0
-);
-GO
-
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.fun_retornar_id_afildo_por_id(@nombre VARCHAR(255), @apellido VARCHAR(255), @us_id INT)
@@ -2233,14 +2233,15 @@ AS
 BEGIN
           DECLARE @id      INT;
           DECLARE @usuario INT;
-          
+          BEGIN TRANSACTION
+			    BEGIN TRY
                     --Calculo ID de Usuario No Titular
 					SELECT
                               @id= MAX(af.afil_id) +1
                     FROM
                               kfc.afiliados af
                     WHERE
-                              Floor(af.afil_id/100) = Floor(@afil_id_titular/100)
+                              Floor(af.afil_id/100) = Floor(@afil_id_titular/100);
                     --SELECT @usuario = us_id FROM kfc.afiliados WHERE afil_id = @afil_id_titular;
 					--Insercion del usuario
                                         INSERT INTO kfc.usuarios
@@ -2254,16 +2255,14 @@ BEGIN
                                                   (
                                                             @mail
                                                           , HASHBYTES('SHA2_256',@mail), 1, 0
-                                                  )
-                                        ;
+                                                  );
                                         
                               SELECT @usuario = @@IDENTITY
-                              END;
 
 					 --Insercion Afiliado
                     SET IDENTITY_INSERT KFC.afiliados ON
-                    BEGIN TRANSACTION
-                    BEGIN TRY
+                    
+   
                               INSERT INTO KFC.afiliados
                                         (
                                                   afil_id
@@ -2302,8 +2301,9 @@ BEGIN
                               
                               SELECT @afil_id = @id;
                               
-							  --Actualizo usuario Titular personas a cargo
                               SET IDENTITY_INSERT KFC.afiliados OFF;
+							  
+							  --Actualizo usuario Titular personas a cargo
                               UPDATE
                                         kfc.afiliados
                               SET       personas_a_car = ISNULL(personas_a_car,0)+1
@@ -2313,8 +2313,7 @@ BEGIN
 
 							  --Inserto Rol al usuario Creado para poder Loguearse
                               INSERT INTO KFC.roles_usuarios
-                                        (
-                                                  us_id
+                                        (        us_id
                                                 , rol_id
                                         )
                               SELECT DISTINCT a.us_id
@@ -2331,14 +2330,13 @@ BEGIN
                                         AND a.us_id          = @usuario
                               
                               COMMIT;
-                    END TRY
-                    BEGIN CATCH
-                              ROLLBACK;
-                              THROW;
-                    END CATCH
-          END
+                END TRY
+                BEGIN CATCH
+                       ROLLBACK;
+                       THROW;
+                END CATCH
+          END;
 GO
-
 
 
 CREATE PROCEDURE KFC.get_afiliado( @id_afiliado INT)
@@ -2397,25 +2395,6 @@ Begin
 end;
 go
 
-CREATE PROCEDURE KFC.baja_grupo_afiliado ( @afiliado INT, @fecha DATETIME)
-AS
-declare @interno int
-BEGIN
-	DECLARE adjuntos CURSOR FOR   
-	SELECT afil_id FROM afiliados WHERE floor(afil_id/100) = floor(@afiliado/100) and habilitado = 1  
-	
-	OPEN adjuntos  
-  	FETCH NEXT FROM adjuntos
-	INTO @interno
-
-	WHILE @@FETCH_STATUS = 0  
-	BEGIN 
-	EXECUTE KFC.baja_afiliado @interno, @fecha
-	FETCH NEXT FROM adjuntos
-	INTO @interno
-	END 
-END
-go
 
 
 CREATE PROCEDURE KFC.baja_afiliado( @afiliado INT, @fecha VARCHAR(30) )
@@ -2461,6 +2440,26 @@ END CATCH
 END
 go
 
+
+CREATE PROCEDURE KFC.baja_grupo_afiliado ( @afiliado INT, @fecha DATETIME)
+AS
+declare @interno int
+BEGIN
+	DECLARE adjuntos CURSOR FOR   
+	SELECT afil_id FROM afiliados WHERE floor(afil_id/100) = floor(@afiliado/100) and habilitado = 1  
+	
+	OPEN adjuntos  
+  	FETCH NEXT FROM adjuntos
+	INTO @interno
+
+	WHILE @@FETCH_STATUS = 0  
+	BEGIN 
+	EXECUTE KFC.baja_afiliado @interno, @fecha
+	FETCH NEXT FROM adjuntos
+	INTO @interno
+	END 
+END
+go
 
 PRINT 'Creadas Funciones y Procedures Deploy'
 GO

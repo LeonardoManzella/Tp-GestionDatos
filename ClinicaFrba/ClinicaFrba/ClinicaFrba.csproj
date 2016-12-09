@@ -184,6 +184,9 @@
     <EmbeddedResource Include="Crear Agenda Medico\AgendaMedico.resx">
       <DependentUpon>AgendaMedico.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Estadisticas\Estadisticas.resx">
+      <DependentUpon>Estadisticas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Home.resx">
       <DependentUpon>Home.cs</DependentUpon>
     </EmbeddedResource>

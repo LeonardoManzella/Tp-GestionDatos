@@ -27,12 +27,12 @@ namespace ClinicaFrba.AgendaMedico
             {
 
                 InitializeComponent();
-                this.diasSemana.Add("Lunes", 2);
-                this.diasSemana.Add("Martes", 3);
-                this.diasSemana.Add("Miercoles", 4);
-                this.diasSemana.Add("Jueves", 5);
-                this.diasSemana.Add("Viernes", 6);
-                this.diasSemana.Add("Sabado", 7);
+                this.diasSemana.Add("Lunes", 1);
+                this.diasSemana.Add("Martes", 2);
+                this.diasSemana.Add("Miercoles", 3);
+                this.diasSemana.Add("Jueves", 4);
+                this.diasSemana.Add("Viernes", 5);
+                this.diasSemana.Add("Sabado", 6);
 
                 this.horariosComun.Add("07:00");
                 this.horariosComun.Add("07:30");

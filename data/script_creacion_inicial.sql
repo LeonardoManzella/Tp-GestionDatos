@@ -1599,10 +1599,21 @@ AS
 								
 				)
 
-				IF(@turno_id IS NULL) RAISERROR('No encuentro Turno',16,1)
+				IF(@turno_id IS NULL) RAISERROR('No encontro Turno',16,1)
 
 				INSERT INTO KFC.cancelaciones
 				SELECT @turno_id, @motivo, @fecha_actual, CASE WHEN @tipo = 'USUARIO' THEN 1 ELSE 2 END
+
+				--Vuelvo restablecer Bono Consumido
+				UPDATE KFC.bonos	SET consumido = 0
+				WHERE bono_id IN	(
+									SELECT	a.bono_id
+									FROM	KFC.atenciones a
+											INNER JOIN KFC.turnos t
+											ON t.turno_id = a.turno_id
+									WHERE	t.prof_id = @prof_id
+									AND		@fecha = t.fecha_hora
+									)
 
 			COMMIT;
 		END TRY
@@ -1652,6 +1663,19 @@ AS
 				IF @@ROWCOUNT = 0			
                     RAISERROR ('No hay turnos a cancelar',16,1);
 
+				--Vuelvo restablecer Bonos Consumidos
+				UPDATE KFC.bonos	SET consumido = 0
+				WHERE bono_id IN	(
+									SELECT	a.bono_id
+									FROM	KFC.atenciones a
+											INNER JOIN KFC.turnos t
+											ON t.turno_id = a.turno_id
+									WHERE	t.prof_id = @prof_id
+									AND		@fechaDesde >= t.fecha_hora
+									AND		@fechaHasta <= t.fecha_hora
+									)
+
+
 				--Elimina Agenda Profesional para Que no hayan nuevos turnos
 				DELETE KFC.agenda
 					FROM	KFC.agenda a
@@ -1691,25 +1715,35 @@ CREATE FUNCTION kfc.fun_obtener_turnos_cancelables( @afil_id INT, @fecha_formato
 RETURNS TABLE AS
 RETURN
 SELECT
-	CONCAT(P.apellido,', ', P.nombre) profesional,
-	CONCAT(DAY(T.fecha_hora), '/', MONTH(T.fecha_hora), '/', YEAR(T.fecha_hora)) fecha,
-	T.hora hora,
-	E.descripcion
+                    CONCAT(P.apellido,', ', P.nombre)                                  profesional
+        , CONCAT(DAY(T.fecha_hora), '/', MONTH(T.fecha_hora), '/', YEAR(T.fecha_hora)) fecha
+        , T.hora                                                                       hora
+        , E.descripcion
 FROM
-	KFC.turnos T
-FULL OUTER JOIN 
-	KFC.cancelaciones C
-	ON C.turno_id = T.turno_id
-INNER JOIN
-	KFC.profesionales P
-	ON P.prof_id = T.prof_id
-INNER JOIN
-	KFC.especialidades E
-	ON E.espe_id = T.espe_id
-WHERE T.afil_id = @afil_id
-AND (T.turno_id IS NULL OR C.turno_id IS NULL)
-AND DATEDIFF(day, CONVERT(DATETIME, @fecha_formato_string, 102), t.fecha_hora) >= 1;
+          KFC.turnos T
+          FULL OUTER JOIN
+                    KFC.cancelaciones C
+          ON
+                    C.turno_id = T.turno_id
+          INNER JOIN
+                    KFC.profesionales P
+          ON
+                    P.prof_id = T.prof_id
+          INNER JOIN
+                    KFC.especialidades E
+          ON
+                    E.espe_id = T.espe_id
+WHERE
+          T.afil_id = @afil_id
+          AND
+          (
+                    T.turno_id    IS NULL
+                    OR C.turno_id IS NULL
+          )
+          AND DATEDIFF(DAY, CONVERT(DATETIME, @fecha_formato_string, 102), t.fecha_hora) >= 1
+;
 GO
+
 
 CREATE FUNCTION kfc.fun_obtener_rango_agenda(@prof_id INT)
 RETURNS DATETIME AS
@@ -1735,33 +1769,44 @@ CREATE PROCEDURE kfc.pro_crear_agenda_profesional
           ,
           @fecha_hasta DATETIME
 AS
-          BEGIN
-                    BEGIN TRANSACTION
-                    INSERT INTO KFC.agenda
-                              (
-                                        espe_id
-                                      , prof_id
-                                      , dia
-                                      , fecha_desde
-                                      , fecha_hasta
-                                      , hora_desde
-                                      , hora_hasta
-                              )
-                              VALUES
-                              (
-                                        KFC.fun_obtener_id_especialidad(@especialidad)
-                                      , @prof_id
-                                      , @dia
-                                      , @fecha_desde
-                                      , @fecha_hasta
-                                      , CONVERT(TIME(0), @fecha_desde)
-                                      , CONVERT(TIME(0), @fecha_hasta)
-                              )
-                    ;
+BEGIN
+	BEGIN TRY
+		BEGIN TRANSACTION
+
+		INSERT INTO KFC.agenda
+					(
+							espe_id
+							, prof_id
+							, dia
+							, fecha_desde
+							, fecha_hasta
+							, hora_desde
+							, hora_hasta
+					)
+					VALUES
+					(
+							KFC.fun_obtener_id_especialidad(@especialidad)
+							, @prof_id
+							, @dia
+							, @fecha_desde
+							, @fecha_hasta
+							, CONVERT(TIME(0), @fecha_desde)
+							, CONVERT(TIME(0), @fecha_hasta)
+					)
+		;
                     
-                    COMMIT;
-          END;
+		COMMIT;
+	END TRY
+	BEGIN CATCH
+		IF @@trancount > 0
+		ROLLBACK TRANSACTION;
+		;THROW
+	END CATCH
+END;
 GO
+
+EXECUTE PROC kfc.pro_crear_agenda_profesional 'ALERGOLOGÍA', 6, 1, 
+
 
 PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'
 PRINT 'CREANDO FUNCIONES Y PROCEDURES PARA ESTADISTICAS...'
@@ -2130,6 +2175,9 @@ AS
                               BEGIN TRANSACTION
                               BEGIN
 
+							  IF EXISTS( SELECT 1 FROM KFC.afiliados a WHERE a.nombre=@nombre AND a.apellido=@apellido AND a.numero_doc=@nro_doc ) RAISERROR('Ya existe el Afiliado',16,1);
+
+
 							  --Insercion del usuario
                                         INSERT INTO kfc.usuarios
                                                   (
@@ -2234,7 +2282,9 @@ BEGIN
           DECLARE @id      INT;
           DECLARE @usuario INT;
           
-                    --Calculo ID de Usuario No Titular
+                    IF EXISTS( SELECT 1 FROM KFC.afiliados a WHERE a.nombre=@nombre AND a.apellido=@apellido AND a.numero_doc=@nro_doc ) RAISERROR('Ya existe el Afiliado',16,1);
+					
+					--Calculo ID de Usuario No Titular
 					SELECT
                               @id= MAX(af.afil_id) +1
                     FROM

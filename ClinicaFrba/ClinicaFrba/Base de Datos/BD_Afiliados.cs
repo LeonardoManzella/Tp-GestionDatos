@@ -250,48 +250,36 @@ namespace ClinicaFrba.Base_de_Datos
                 //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
                 SqlConnection conexion = Conexion.Instance.get();
 
-                SqlCommand comando_sql = new SqlCommand("kfc.modifica_afiliado @afiliado, @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @usuario", conexion);
+                SqlCommand comando_sql = new SqlCommand("kfc.modifica_afiliado @afiliado, @tipo_doc, @direccion, @telefono, @mail, @sexo, @estado, @plan, @fecha", conexion);
                 var parametro0 = new SqlParameter("@afiliado", SqlDbType.Int);
-                var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
-                var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
                 var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
-                var parametro3_5 = new SqlParameter("@nro_doc", SqlDbType.Int);
                 var parametro4 = new SqlParameter("@direccion", SqlDbType.Text);
                 var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
                 var parametro6 = new SqlParameter("@mail", SqlDbType.Text);
                 var parametro7 = new SqlParameter("@sexo", SqlDbType.Char);
-                var parametro8 = new SqlParameter("@fecha_nac", SqlDbType.DateTime);
                 var parametro9 = new SqlParameter("@estado", SqlDbType.Int);
                 var parametro10 = new SqlParameter("@plan", SqlDbType.Int);
-                var parametro11 = new SqlParameter("@usuario", SqlDbType.Int);
+                var parametro12 = new SqlParameter("@fecha", SqlDbType.DateTime);
 
                 parametro0.Value = afiliado.id;
-                parametro1.Value = afiliado.nombre.ToUpper();
-                parametro2.Value = afiliado.apellido.ToUpper();
-                parametro3.Value = afiliado.tipo_doc.ToUpper();
-                parametro3_5.Value = afiliado.nro_doc;
+                parametro3.Value = afiliado.tipo_doc.ToUpper();               
                 parametro4.Value = afiliado.direccion.ToUpper();
                 parametro5.Value = afiliado.telefono.ToUpper();
                 parametro6.Value = afiliado.e_mail.ToUpper();
                 parametro7.Value = afiliado.sexo;
-                parametro8.Value = afiliado.fecha_nac;
                 parametro9.Value = afiliado.estado_civil;
                 parametro10.Value = afiliado.plan_id;
-                parametro11.Value = afiliado.usuario;
+                parametro12.Value = DateTime.Now;//DateTime.Parse(Configuracion_Global.fecha_actual);
 
                 comando_sql.Parameters.Add(parametro0);
-                comando_sql.Parameters.Add(parametro1);
-                comando_sql.Parameters.Add(parametro2);
                 comando_sql.Parameters.Add(parametro3);
-                comando_sql.Parameters.Add(parametro3_5);
                 comando_sql.Parameters.Add(parametro4);
                 comando_sql.Parameters.Add(parametro5);
                 comando_sql.Parameters.Add(parametro6);
                 comando_sql.Parameters.Add(parametro7);
-                comando_sql.Parameters.Add(parametro8);
                 comando_sql.Parameters.Add(parametro9);
                 comando_sql.Parameters.Add(parametro10);
-                comando_sql.Parameters.Add(parametro11);
+                comando_sql.Parameters.Add(parametro12);
 
                 comando_sql.ExecuteReader();
 
@@ -373,7 +361,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro1 = new SqlParameter("@fecha", SqlDbType.DateTime);
 
                 parametro0.Value = afil_id;
-                parametro1.Value = DateTime.Now;
+                parametro1.Value = DateTime.Now;//DateTime.Parse(Configuracion_Global.fecha_actual);
 
                 comando_sql.Parameters.Add(parametro0);
                 comando_sql.Parameters.Add(parametro1);

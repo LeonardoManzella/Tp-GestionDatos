@@ -33,8 +33,17 @@ namespace ClinicaFrba.Abm_Afiliado
             if (string.IsNullOrWhiteSpace(txtApellido.Text.Trim()))
                 error += "El Campo apellido no puede quedar vacío \r\n";
 
-            if (ComboData.obtener_identificador(cmbEstadoCiv) < 0)
+            if (cmbEstadoCiv.SelectedIndex < 0)
                 error += "El estado civil no puede quedar sin seleccionar \r\n";
+
+
+            if (cmbSexo.SelectedIndex < 0)
+                error += "El género no puede quedar sin seleccionar \r\n";
+
+
+            if (cmbTipoDoc.SelectedIndex < 0)
+                error += "El tipo de documento no puede quedar sin seleccionar \r\n";
+
             if (string.IsNullOrWhiteSpace(TxtMail.Text.Trim()))
             { error += "El campo e-mail es obligatorio \r\n"; }
             else
@@ -85,32 +94,57 @@ namespace ClinicaFrba.Abm_Afiliado
                 {  //alta
                     error = validar_campos();
                     if (error == "")
-                    {
-                        if (afiliado_principal != new Afiliado())
+                    {//Si es un alta y viene un  id en el afiliado principal, significa que estamos dando de alta un afiliado a cargo
+                        if (afiliado_principal.id != 0)
                         {
+                            afiliado.id_principal = afiliado_principal.id;
                             mapAfiliado_Vista(afiliado);
                             id_us = Negocio.ABMAFIL.alta_afiliado_adjunto(afiliado);
+                            if (id_us >= 0)
+                            {
+                                this.txtAfilId.Text = id_us.ToString();
+                                this.Text = "MODIFICA AFILIADO";
 
-                            cerrar = true;
+                                MessageBox.Show("Se ha realizado el alta correctamente");
+                                funcionalidad = tipos_funcionalidad.MODIFICACION;
+                                bloquearNoEditable();
+                            }
+
                         }
                         else
                         {
+                            //Si viene por acá significa que es  un titular
                             mapAfiliado_Vista(afiliado_principal);
                             id_us = Negocio.ABMAFIL.alta_afiliado(afiliado_principal);
-                            int i = 0;
-                            for (i = 0; i < afiliados_a_cargo.Count; i++)
+                            if (id_us > 0)
                             {
 
+                                int i = 0;
+                                //Si se agrega una nueva ventana a traves de un botón que 
+                                //llame a la misma pantalla podría adjuntar a una lista el grupo familiar
+                                var sin_problema = true;
+                                for (i = 0; i < afiliados_a_cargo.Count; i++)
+                                {
+                                    var id_us_sec = Negocio.ABMAFIL.alta_afiliado_adjunto(afiliados_a_cargo[i]);
+                                    if (id_us_sec <= 0)
+                                    {
+                                        sin_problema = false;
+                                        MessageBox.Show("No se ha realizado el alta correctamente");
+                                    }
+                                }
+
+                                if (sin_problema)
+                                {
+                                    this.txtAfilId.Text = id_us.ToString();
+                                    this.Text = "MODIFICA AFILIADO";
+
+                                    MessageBox.Show("Se ha realizado el alta correctamente");
+                                    funcionalidad = tipos_funcionalidad.MODIFICACION;
+                                    bloquearNoEditable();
+                                }
                             }
                         }
                     }
-
-                    this.txtAfilId.Text = id_us.ToString();
-                    this.Text = "MODIFICA AFILIADO";
-
-                    MessageBox.Show("Se ha realizado el alta correctamente");
-                    funcionalidad = tipos_funcionalidad.MODIFICACION;
-
                 }
 
                 else if (funcionalidad == tipos_funcionalidad.BAJA)
@@ -131,7 +165,7 @@ namespace ClinicaFrba.Abm_Afiliado
 
                 if (error != "")
                 {
-                    MessageBox.Show(error, this.ParentForm.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(error, "ERROR ABM AFILIADOS", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 };
 
                 if (cerrar)
@@ -161,6 +195,7 @@ namespace ClinicaFrba.Abm_Afiliado
                     this.Text = "MODIFICA AFILIADO";
                     this.afiliado = Negocio.ABMAFIL.Get_Afiliado(afiliado.id);
                     afiliado_en_pantalla();
+                    bloquearNoEditable();
                 }
                 else
                 {
@@ -193,6 +228,14 @@ namespace ClinicaFrba.Abm_Afiliado
             //selecciono el item que tiene de descripcion
             cmbTipoDoc.SelectedIndex = ComboData.obtener_indice(afiliado.tipo_doc, cmbTipoDoc);
 
+        }
+
+        private void bloquearNoEditable()
+        {
+            txtApellido.Enabled = false;
+            txtNombre.Enabled = false;
+            txtNroDoc.Enabled = false;
+            dtFNac.Enabled = false;
         }
 
         private void bloquearTodo()
@@ -311,15 +354,20 @@ namespace ClinicaFrba.Abm_Afiliado
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
+
             var new_afil = new Afiliado() { id = this.afiliado.id, id_principal = this.afiliado.id_principal, usuario = this.afiliado.usuario };
             this.afiliado = new_afil;
-            txtApellido.Text = afiliado.apellido;
+
+            if (!Equals(this.funcionalidad, tipos_funcionalidad.MODIFICACION))
+            {
+                txtAfilId.Text = (afiliado.id == 0) ? string.Empty : afiliado.id.ToString();
+                txtNombre.Text = afiliado.nombre;
+                txtApellido.Text = afiliado.apellido;
+                dtFNac.Value = dtFNac.MinDate;
+                txtNroDoc.Text = (afiliado.nro_doc == 0) ? string.Empty : afiliado.nro_doc.ToString();
+            }
             txtDireccion.Text = afiliado.direccion;
             TxtMail.Text = afiliado.e_mail;
-            dtFNac.Value = dtFNac.MinDate;
-            txtAfilId.Text = (afiliado.id == 0) ? string.Empty : afiliado.id.ToString();
-            txtNombre.Text = afiliado.nombre;
-            txtNroDoc.Text = (afiliado.nro_doc == 0) ? string.Empty : afiliado.nro_doc.ToString();
             txtNroTelefono.Text = afiliado.telefono;
             cmbTipoDoc.SelectedIndex = 0;
             cmbPlan.SelectedIndex = 0;

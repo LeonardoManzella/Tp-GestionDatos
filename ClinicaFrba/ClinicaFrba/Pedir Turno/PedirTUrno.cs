@@ -17,7 +17,6 @@ namespace ClinicaFrba.Pedir_Turno
         public Usuario usuario { get; set; }
         private DateTime fecha;
         private string nombre_boton_datagrid = "boton_pedir_turno";
-        private bool eligioFecha = false;
 
         public PedirTurno()
         {
@@ -69,7 +68,7 @@ namespace ClinicaFrba.Pedir_Turno
                 label_cargando.Visible = true;
                 this.Refresh();
                 DataTable datos = BD_Turnos.obtener_turnos_disponibles(profesional_nombre, profesional_apellido, descripcion_especialidad, fecha_texto);
-                if (datos.Rows.Count <= 0) throw new Exception("No hay Turnos Disponibles ese Dia para los Filtros Seleccionados");
+                if (datos.Rows.Count <= 0) throw new Exception("No hay Turnos Disponibles para los Filtros Seleccionados");
 
                 Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
 
@@ -85,10 +84,6 @@ namespace ClinicaFrba.Pedir_Turno
             }
         }
 
-        private void datePicker_fecha_ValueChanged(object sender, EventArgs e)
-        {
-            this.eligioFecha = true;
-        }
 
         //Handler para Cuando se Selecciona un Boton del DataGrid
         //IMPORTANTE: Se genera haciendo doble click en el DataGrid
@@ -121,10 +116,6 @@ namespace ClinicaFrba.Pedir_Turno
             }
         }
 
-        private void datePicker_fecha_ValueChanged_1(object sender, EventArgs e)
-        {
-            eligioFecha = true;
-        }
 
         private void button_limpiar_Click(object sender, EventArgs e)
         {

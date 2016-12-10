@@ -260,7 +260,7 @@ BEGIN
                               FROM
                                         kfc.bonos bo
                               WHERE
-                                        @plan_id IS NULL
+                                        @plan_id = 0
                                         OR bo.plan_id  = @plan_id ) b
                     INNER JOIN
                               kfc.atenciones at

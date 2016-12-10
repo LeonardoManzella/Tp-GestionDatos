@@ -41,7 +41,7 @@ namespace ClinicaFrba.Estadisticas
                     año = Int32.Parse(this.txtAnio.Text);
                 else
                 {
-                    throw new Exception("Debe indicar un año, para realizar la consulta");
+                    throw new Exception("Debe indicar un año, para realizar la consulta \r\n Usar 0 si se quiere de todos los años");
                 }
 
                 var estadistica = ComboData.obtener_identificador(this.comboTop5);
@@ -53,12 +53,14 @@ namespace ClinicaFrba.Estadisticas
                     case 2:
                         Profesionales_mas_consultados(año);
                         break;
-                    case 3://Profesionales_que_menos_trabajaron(año);
+                    case 3:
+                        Profesionales_que_menos_trabajaron(año);
                         break;
                     case 4:
                         Afiliado_que_mas_bonos_compro(año);
                         break;
-                    case 5://Especialidades_mas_concurridas(año);
+                    case 5:
+                        Especialidades_mas_concurridas(año);
                         break;
                 };
             }
@@ -68,6 +70,50 @@ namespace ClinicaFrba.Estadisticas
             }
         }
 
+        private void Especialidades_mas_concurridas(int año)
+        {
+            try
+            {
+
+                //DATAGRID
+                DataTable datos = BD_Estadisticas.get_top5_esp_con_mas_bonos(año, mes_desde, mes_hasta);
+
+                //Lleno el DataGrid
+                Comunes.llenar_dataGrid(dataGridEstadistico, datos);
+
+                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "ESTADISTICAS", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+
+        private void Profesionales_que_menos_trabajaron(int año)
+        {
+            try
+            {
+
+                //DATAGRID
+                DataTable datos = BD_Estadisticas.get_top5_prof_vagos(año, mes_desde, mes_hasta, plan ,especialidad);
+
+                //Lleno el DataGrid
+                Comunes.llenar_dataGrid(dataGridEstadistico, datos);
+
+                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
+                                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "ESTADISTICAS", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+
         private void Profesionales_mas_consultados(int año)
         {
             try
@@ -76,10 +122,11 @@ namespace ClinicaFrba.Estadisticas
                 //DATAGRID
                 DataTable datos = BD_Estadisticas.get_top5_prof_plan(año, mes_desde, mes_hasta, plan);
 
-                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
-
                 //Lleno el DataGrid
                 Comunes.llenar_dataGrid(dataGridEstadistico, datos);
+
+                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
+
             }
             catch (Exception ex)
             {
@@ -97,10 +144,11 @@ namespace ClinicaFrba.Estadisticas
                 //DATAGRID
                 DataTable datos = BD_Estadisticas.get_top5_afil_compra_bonos(año, mes_desde, mes_hasta);
 
-                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
-
                 //Lleno el DataGrid
                 Comunes.llenar_dataGrid(dataGridEstadistico, datos);
+
+                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
+
             }
             catch (Exception ex)
             {
@@ -117,10 +165,12 @@ namespace ClinicaFrba.Estadisticas
                 //DATAGRID
                 DataTable datos = BD_Estadisticas.get_top5_canc_esp(año, mes_desde, mes_hasta, cancelador);
 
-                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
 
                 //Lleno el DataGrid
                 Comunes.llenar_dataGrid(dataGridEstadistico, datos);
+
+                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
+
             }
             catch (Exception ex)
             {
@@ -171,6 +221,7 @@ namespace ClinicaFrba.Estadisticas
 
                 this.comboSemestre.DisplayMember = "descripcion";
                 this.comboSemestre.ValueMember = "identificador";
+                this.comboSemestre.Items.Add(cero);
                 this.comboSemestre.Items.Add(new ComboData(1, "Primer"));
                 this.comboSemestre.Items.Add(new ComboData(2, "Segundo"));
 
@@ -203,7 +254,7 @@ namespace ClinicaFrba.Estadisticas
         {
             var semestre = new List<ComboData>();
             //Esto devuelve un ciclo entre 0 y 6, o entre 6 y 12
-            for ( int i = (6*(nro - 1))+1; i < nro * 6+1; i++)
+            for (int i = (6 * (nro - 1)) + 1; i < nro * 6 + 1; i++)
             {
                 semestre.Add(new ComboData(i, i.ToString()));
             }
@@ -216,9 +267,10 @@ namespace ClinicaFrba.Estadisticas
             this.txtAnio.Text = string.Empty;
             this.cmbQuienCancela.SelectedIndex = ComboData.obtener_indice(0, this.cmbQuienCancela);
             comboBox3.SelectedIndex = ComboData.obtener_indice(0, this.comboBox3);
-            comboSemestre.SelectedIndex = ComboData.obtener_indice(1, this.comboSemestre);
+            comboSemestre.SelectedIndex = ComboData.obtener_indice(0, this.comboSemestre);
             comboTop5.SelectedIndex = ComboData.obtener_indice(1, this.comboTop5);
             comboEspec.SelectedIndex = ComboData.obtener_indice(0, this.comboEspec);
+            Comunes.llenar_dataGrid(dataGridEstadistico, new DataTable());
         }
 
         private void comboTop5_SelectedIndexChanged(object sender, EventArgs e)
@@ -295,21 +347,41 @@ namespace ClinicaFrba.Estadisticas
                 {
                     this.cmbDesde.Items.Add(item);
                     this.cmbHasta.Items.Add(item);
-                }
+                };
                 cmbDesde.SelectedIndex = 0;
                 cmbHasta.SelectedIndex = 5;
             }
             else
             {
-                this.cmbDesde.Items.Clear();
-                this.cmbHasta.Items.Clear();
-                foreach (ComboData item in semestre2)
+                if (semestre == 2)
                 {
-                    this.cmbDesde.Items.Add(item);
-                    this.cmbHasta.Items.Add(item);
+                    this.cmbDesde.Items.Clear();
+                    this.cmbHasta.Items.Clear();
+                    foreach (ComboData item in semestre2)
+                    {
+                        this.cmbDesde.Items.Add(item);
+                        this.cmbHasta.Items.Add(item);
+                    };
+                    cmbDesde.SelectedIndex = 0;
+                    cmbHasta.SelectedIndex = 5;
                 }
-                cmbDesde.SelectedIndex = 0;
-                cmbHasta.SelectedIndex = 5;
+                else
+                {
+                    this.cmbDesde.Items.Clear();
+                    this.cmbHasta.Items.Clear();
+                    foreach (ComboData item in semestre1)
+                    {
+                        this.cmbDesde.Items.Add(item);
+                        this.cmbHasta.Items.Add(item);
+                    };
+                    foreach (ComboData item in semestre2)
+                    {
+                        this.cmbDesde.Items.Add(item);
+                        this.cmbHasta.Items.Add(item);
+                    };
+                    cmbDesde.SelectedIndex = 0;
+                    cmbHasta.SelectedIndex = 11;
+                }
             }
         }
     }

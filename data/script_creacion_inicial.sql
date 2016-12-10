@@ -2512,25 +2512,34 @@ BEGIN TRY
 		SET habilitado = 0,
 			@plan = plan_id
 		WHERE afil_id = @afiliado;
-	
 		
-		DELETE FROM kfc.turnos 
-		WHERE afil_id = @afiliado and YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
-		and DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada) 
-		and turno_id not in (
-
-			SELECT tu.turno_id from kfc.turnos tu
-			  inner join kfc.atenciones ate on tu.turno_id = ate.turno_id
-			  WHERE afil_id = @afiliado
-			AND YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
-			AND DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada)
-);
+		
+		DELETE FROM kfc.turnos
+		WHERE
+        afil_id               = @afiliado
+        AND YEAR(fecha_hora) >=YEAR(@fecha_formateada)
+        AND MONTH(fecha_hora)>=MONTH(@fecha_formateada)
+        AND turno_id NOT IN
+        (
+        SELECT
+            tu.turno_id
+        FROM
+            kfc.turnos tu
+            INNER JOIN
+                kfc.atenciones ate
+            ON
+                tu.turno_id = ate.turno_id
+		 WHERE
+            afil_id               = @afiliado
+            AND YEAR(fecha_hora) >=YEAR(@fecha_formateada)
+            AND MONTH(fecha_hora)>=MONTH(@fecha_formateada) 
+		);
 	
 	IF (floor(@afiliado/100)*100+1) = @afiliado
 	EXECUTE	KFC.baja_grupo_afiliado @afiliado , @fecha_formateada;
 
 
-	Insert Into kfc.historial_afiliados values(@afiliado, @fecha_formateada ,@plan,'El afiliado ha sido dado de baja');
+	INSERT INTO kfc.historial_afiliados VALUES(@afiliado, @fecha_formateada ,@plan,'El afiliado ha sido dado de baja');
 	
 COMMIT;
 END TRY
@@ -2541,7 +2550,7 @@ BEGIN CATCH
        THROW
 END CATCH
 END
-go
+GO
 
 
 CREATE PROCEDURE KFC.baja_grupo_afiliado ( @afiliado INT, @fecha DATETIME)

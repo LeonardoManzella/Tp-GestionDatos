@@ -9,8 +9,11 @@ using System.Windows.Forms;
 
 namespace ClinicaFrba.Clases
 {
-    class Comunes
+    public class Comunes
     {
+        public static TextBox textBox;
+        public static Form form_nuevo;
+        public static MonthCalendar calendario;
 
         public static void agregar_boton_dataGrid(DataGridView dataGrid, string texto_mostrar_boton, string nombre_boton)
         {
@@ -73,6 +76,32 @@ namespace ClinicaFrba.Clases
         internal static void limpiarDataGrid(DataGridView dataGrid)
         {
             dataGrid.Columns.Clear();
+        }
+
+        public static void DialogoElegirFecha(TextBox textBox)
+        {
+            Comunes.textBox = textBox;
+
+            Comunes.calendario = new MonthCalendar();
+            Comunes.form_nuevo = new Form();
+            calendario.MaxSelectionCount = 1;
+            calendario.DateChanged += new DateRangeEventHandler(Elegir_Fecha);
+            form_nuevo.Controls.Add(calendario);
+
+            form_nuevo.FormBorderStyle = FormBorderStyle.None;
+            form_nuevo.Width = 230;
+            form_nuevo.Height = 160;
+
+            var result = form_nuevo.ShowDialog();
+        }
+
+        private static void Elegir_Fecha(object sender, EventArgs e)
+        {
+            string fecha = calendario.SelectionStart.Date.ToString("yyyy.MM.dd");
+
+            Comunes.textBox.Text = fecha;
+
+            Comunes.form_nuevo.Close();
         }
     }
 }

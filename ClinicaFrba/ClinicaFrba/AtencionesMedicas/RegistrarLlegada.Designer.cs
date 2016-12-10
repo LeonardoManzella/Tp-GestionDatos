@@ -34,8 +34,12 @@
             this.btnLimpiar = new System.Windows.Forms.Button();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBox_profesional_apellido = new System.Windows.Forms.TextBox();
             this.textBox_afiliado_apellido = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.label_afiliado_apellido = new System.Windows.Forms.Label();
+            this.textBox_profesional_nombre = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.textBox_afiliado_nombre = new System.Windows.Forms.TextBox();
             this.label_afiliado_nombre = new System.Windows.Forms.Label();
             this.button_Registrar = new System.Windows.Forms.Button();
@@ -45,10 +49,6 @@
             this.button_cancelar = new System.Windows.Forms.Button();
             this.label_Afiliado = new System.Windows.Forms.Label();
             this.label_profesional = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox_profesional_nombre = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox_profesional_apellido = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).BeginInit();
             this.SuspendLayout();
@@ -64,6 +64,7 @@
             // 
             // comboEspecialidades
             // 
+            this.comboEspecialidades.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEspecialidades.FormattingEnabled = true;
             this.comboEspecialidades.Location = new System.Drawing.Point(573, 55);
             this.comboEspecialidades.Name = "comboEspecialidades";
@@ -120,12 +121,32 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros de búsqueda";
             // 
+            // textBox_profesional_apellido
+            // 
+            this.textBox_profesional_apellido.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.textBox_profesional_apellido.Location = new System.Drawing.Point(638, 27);
+            this.textBox_profesional_apellido.Name = "textBox_profesional_apellido";
+            this.textBox_profesional_apellido.Size = new System.Drawing.Size(158, 20);
+            this.textBox_profesional_apellido.TabIndex = 31;
+            this.textBox_profesional_apellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_profesional_apellido_KeyPress);
+            // 
             // textBox_afiliado_apellido
             // 
+            this.textBox_afiliado_apellido.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_afiliado_apellido.Location = new System.Drawing.Point(103, 52);
             this.textBox_afiliado_apellido.Name = "textBox_afiliado_apellido";
             this.textBox_afiliado_apellido.Size = new System.Drawing.Size(140, 20);
             this.textBox_afiliado_apellido.TabIndex = 31;
+            this.textBox_afiliado_apellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_profesional_apellido_KeyPress);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(563, 31);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(69, 13);
+            this.label4.TabIndex = 30;
+            this.label4.Text = "Apellido Prof.";
             // 
             // label_afiliado_apellido
             // 
@@ -136,12 +157,32 @@
             this.label_afiliado_apellido.TabIndex = 30;
             this.label_afiliado_apellido.Text = "Apellido Afiliado";
             // 
+            // textBox_profesional_nombre
+            // 
+            this.textBox_profesional_nombre.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.textBox_profesional_nombre.Location = new System.Drawing.Point(340, 28);
+            this.textBox_profesional_nombre.Name = "textBox_profesional_nombre";
+            this.textBox_profesional_nombre.Size = new System.Drawing.Size(183, 20);
+            this.textBox_profesional_nombre.TabIndex = 31;
+            this.textBox_profesional_nombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_profesional_apellido_KeyPress);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(265, 31);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(69, 13);
+            this.label1.TabIndex = 30;
+            this.label1.Text = "Nombre Prof.";
+            // 
             // textBox_afiliado_nombre
             // 
+            this.textBox_afiliado_nombre.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_afiliado_nombre.Location = new System.Drawing.Point(103, 24);
             this.textBox_afiliado_nombre.Name = "textBox_afiliado_nombre";
             this.textBox_afiliado_nombre.Size = new System.Drawing.Size(140, 20);
             this.textBox_afiliado_nombre.TabIndex = 31;
+            this.textBox_afiliado_nombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_profesional_apellido_KeyPress);
             // 
             // label_afiliado_nombre
             // 
@@ -165,6 +206,7 @@
             // 
             // combo_Bono
             // 
+            this.combo_Bono.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.combo_Bono.Enabled = false;
             this.combo_Bono.FormattingEnabled = true;
             this.combo_Bono.Location = new System.Drawing.Point(700, 472);
@@ -194,7 +236,7 @@
             // 
             // button_cancelar
             // 
-            this.button_cancelar.Location = new System.Drawing.Point(300, 464);
+            this.button_cancelar.Location = new System.Drawing.Point(361, 464);
             this.button_cancelar.Name = "button_cancelar";
             this.button_cancelar.Size = new System.Drawing.Size(93, 32);
             this.button_cancelar.TabIndex = 31;
@@ -219,38 +261,6 @@
             this.label_profesional.Name = "label_profesional";
             this.label_profesional.Size = new System.Drawing.Size(0, 15);
             this.label_profesional.TabIndex = 32;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(265, 31);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 13);
-            this.label1.TabIndex = 30;
-            this.label1.Text = "Nombre Prof.";
-            // 
-            // textBox_profesional_nombre
-            // 
-            this.textBox_profesional_nombre.Location = new System.Drawing.Point(340, 28);
-            this.textBox_profesional_nombre.Name = "textBox_profesional_nombre";
-            this.textBox_profesional_nombre.Size = new System.Drawing.Size(183, 20);
-            this.textBox_profesional_nombre.TabIndex = 31;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(563, 31);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(69, 13);
-            this.label4.TabIndex = 30;
-            this.label4.Text = "Apellido Prof.";
-            // 
-            // textBox_profesional_apellido
-            // 
-            this.textBox_profesional_apellido.Location = new System.Drawing.Point(638, 27);
-            this.textBox_profesional_apellido.Name = "textBox_profesional_apellido";
-            this.textBox_profesional_apellido.Size = new System.Drawing.Size(158, 20);
-            this.textBox_profesional_apellido.TabIndex = 31;
             // 
             // RegistrarLlegada
             // 

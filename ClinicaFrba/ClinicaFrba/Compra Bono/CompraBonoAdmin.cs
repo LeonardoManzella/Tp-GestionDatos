@@ -198,5 +198,15 @@ namespace ClinicaFrba.Compra_Bono
                 MessageBox.Show("Error al obtener Datos Columna. " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void textBox_Nombre_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras(e);
+        }
+
+        private void textBox_Cantidad_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_numeros(e);
+        }
     }
 }

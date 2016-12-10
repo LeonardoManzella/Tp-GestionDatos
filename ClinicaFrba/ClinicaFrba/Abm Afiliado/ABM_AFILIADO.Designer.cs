@@ -62,6 +62,7 @@
             // 
             // txtNroDoc
             // 
+            this.txtNroDoc.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtNroDoc.Location = new System.Drawing.Point(336, 77);
             this.txtNroDoc.MaxLength = 13;
             this.txtNroDoc.Name = "txtNroDoc";
@@ -80,6 +81,7 @@
             // 
             // txtAfilId
             // 
+            this.txtAfilId.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtAfilId.Enabled = false;
             this.txtAfilId.Location = new System.Drawing.Point(405, 18);
             this.txtAfilId.Name = "txtAfilId";
@@ -141,6 +143,7 @@
             // 
             // txtNroTelefono
             // 
+            this.txtNroTelefono.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtNroTelefono.Location = new System.Drawing.Point(40, 89);
             this.txtNroTelefono.MaxLength = 12;
             this.txtNroTelefono.Name = "txtNroTelefono";

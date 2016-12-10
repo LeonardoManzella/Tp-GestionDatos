@@ -89,5 +89,10 @@ namespace ClinicaFrba.AbmRol
             textBox_nombre_rol.Text = "";
             llenar_funcionalidades();
         }
+
+        private void textBox_nombre_rol_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras(e);
+        }
     }
 }

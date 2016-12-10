@@ -52,18 +52,22 @@
             // 
             // textBox_Plan
             // 
+            this.textBox_Plan.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Plan.Enabled = false;
             this.textBox_Plan.Location = new System.Drawing.Point(88, 22);
             this.textBox_Plan.Name = "textBox_Plan";
+            this.textBox_Plan.ReadOnly = true;
             this.textBox_Plan.Size = new System.Drawing.Size(177, 20);
             this.textBox_Plan.TabIndex = 1;
             // 
             // textBox_Cantidad
             // 
+            this.textBox_Cantidad.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Cantidad.Location = new System.Drawing.Point(88, 87);
             this.textBox_Cantidad.Name = "textBox_Cantidad";
             this.textBox_Cantidad.Size = new System.Drawing.Size(177, 20);
             this.textBox_Cantidad.TabIndex = 11;
+            this.textBox_Cantidad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_Cantidad_KeyPress);
             // 
             // label_Cantidad
             // 
@@ -87,9 +91,11 @@
             // 
             // textBox_precio
             // 
+            this.textBox_precio.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_precio.Enabled = false;
             this.textBox_precio.Location = new System.Drawing.Point(88, 53);
             this.textBox_precio.Name = "textBox_precio";
+            this.textBox_precio.ReadOnly = true;
             this.textBox_precio.Size = new System.Drawing.Size(177, 20);
             this.textBox_precio.TabIndex = 11;
             // 

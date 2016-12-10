@@ -187,5 +187,10 @@ namespace ClinicaFrba.Abm_Afiliado
                 btnAccion.Text = "Filtrar";
             }
         }
+
+        private void textBox_Documento_KeyPress_1(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_numeros(e);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicaFrba.Clases;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,6 +26,11 @@ namespace ClinicaFrba.AtencionesMedicas
         private void button_Buscar_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void textBox_Nombre_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras(e);
         }
     }
 }

@@ -119,7 +119,7 @@
             this.bajaAfiliadoToolStripMenuItem});
             this.aBMAfiliadoToolStripMenuItem.Name = "aBMAfiliadoToolStripMenuItem";
             this.aBMAfiliadoToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.aBMAfiliadoToolStripMenuItem.Text = "ABM Afiliado";
+            this.aBMAfiliadoToolStripMenuItem.Text = "ABM &Afiliado";
             // 
             // nuevoAfiliadoToolStripMenuItem
             // 
@@ -146,21 +146,21 @@
             // 
             this.pedirTurnoToolStripMenuItem.Name = "pedirTurnoToolStripMenuItem";
             this.pedirTurnoToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.pedirTurnoToolStripMenuItem.Text = "Pedir Turno";
+            this.pedirTurnoToolStripMenuItem.Text = "&Pedir Turno";
             this.pedirTurnoToolStripMenuItem.Click += new System.EventHandler(this.pedirTurnoToolStripMenuItem_Click);
             // 
             // cancelarTurnosUsuario_ToolStripMenuItem
             // 
             this.cancelarTurnosUsuario_ToolStripMenuItem.Name = "cancelarTurnosUsuario_ToolStripMenuItem";
             this.cancelarTurnosUsuario_ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.cancelarTurnosUsuario_ToolStripMenuItem.Text = "Cancelar Turnos";
+            this.cancelarTurnosUsuario_ToolStripMenuItem.Text = "&Cancelar Turnos";
             this.cancelarTurnosUsuario_ToolStripMenuItem.Click += new System.EventHandler(this.cancelarTurnosToolStripMenuItem1_Click);
             // 
             // comprarBonoUsuario_ToolStripMenuItem
             // 
             this.comprarBonoUsuario_ToolStripMenuItem.Name = "comprarBonoUsuario_ToolStripMenuItem";
             this.comprarBonoUsuario_ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.comprarBonoUsuario_ToolStripMenuItem.Text = "Comprar Bono";
+            this.comprarBonoUsuario_ToolStripMenuItem.Text = "Comprar &Bono";
             this.comprarBonoUsuario_ToolStripMenuItem.Click += new System.EventHandler(this.comprarBonoToolStripMenuItem_Click);
             // 
             // profesionalesToolStripMenuItem
@@ -194,20 +194,20 @@
             this.registrarResultadoDiagnosticoToolStripMenuItem});
             this.atencionMedicaToolStripMenuItem.Name = "atencionMedicaToolStripMenuItem";
             this.atencionMedicaToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.atencionMedicaToolStripMenuItem.Text = "Atencion Medica";
+            this.atencionMedicaToolStripMenuItem.Text = "Atencion &Medica";
             // 
             // registrarLlegadaToolStripMenuItem
             // 
             this.registrarLlegadaToolStripMenuItem.Name = "registrarLlegadaToolStripMenuItem";
             this.registrarLlegadaToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.registrarLlegadaToolStripMenuItem.Text = "Registrar Llegada";
+            this.registrarLlegadaToolStripMenuItem.Text = "Registrar &Llegada";
             this.registrarLlegadaToolStripMenuItem.Click += new System.EventHandler(this.registrarLlegadaToolStripMenuItem_Click);
             // 
             // registrarResultadoDiagnosticoToolStripMenuItem
             // 
             this.registrarResultadoDiagnosticoToolStripMenuItem.Name = "registrarResultadoDiagnosticoToolStripMenuItem";
             this.registrarResultadoDiagnosticoToolStripMenuItem.Size = new System.Drawing.Size(241, 22);
-            this.registrarResultadoDiagnosticoToolStripMenuItem.Text = "Registrar Resultado Diagnostico";
+            this.registrarResultadoDiagnosticoToolStripMenuItem.Text = "Registrar &Resultado Diagnostico";
             this.registrarResultadoDiagnosticoToolStripMenuItem.Click += new System.EventHandler(this.registrarResultadoDiagnosticoToolStripMenuItem_Click);
             // 
             // adminToolStripMenuItem
@@ -227,7 +227,7 @@
             this.modificarRol_ToolStripMenuItem});
             this.rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
             this.rolesToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.rolesToolStripMenuItem.Text = "Roles";
+            this.rolesToolStripMenuItem.Text = "&Roles";
             // 
             // nuevRolToolStripMenuItem
             // 
@@ -247,14 +247,14 @@
             // 
             this.comprarBonoAdmin_ToolStripMenuItem.Name = "comprarBonoAdmin_ToolStripMenuItem";
             this.comprarBonoAdmin_ToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.comprarBonoAdmin_ToolStripMenuItem.Text = "Comprar Bono Usuario";
+            this.comprarBonoAdmin_ToolStripMenuItem.Text = "Comprar &Bono Usuario";
             this.comprarBonoAdmin_ToolStripMenuItem.Click += new System.EventHandler(this.comprarBonoUsuarioToolStripMenuItem_Click);
             // 
             // estadisticasToolStripMenuItem
             // 
             this.estadisticasToolStripMenuItem.Name = "estadisticasToolStripMenuItem";
             this.estadisticasToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.estadisticasToolStripMenuItem.Text = "Estadisticas";
+            this.estadisticasToolStripMenuItem.Text = "&Estadisticas";
             this.estadisticasToolStripMenuItem.Click += new System.EventHandler(this.estadisticasToolStripMenuItem_Click);
             // 
             // label1
@@ -277,25 +277,30 @@
             // 
             // textBox_usuario
             // 
+            this.textBox_usuario.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_usuario.Location = new System.Drawing.Point(149, 108);
             this.textBox_usuario.Name = "textBox_usuario";
             this.textBox_usuario.Size = new System.Drawing.Size(213, 20);
             this.textBox_usuario.TabIndex = 1;
             this.textBox_usuario.Text = "ADMIN";
+            this.textBox_usuario.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_usuario_KeyPress_1);
             // 
             // textBox_password
             // 
+            this.textBox_password.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_password.Location = new System.Drawing.Point(149, 154);
             this.textBox_password.Name = "textBox_password";
+            this.textBox_password.PasswordChar = '*';
             this.textBox_password.Size = new System.Drawing.Size(213, 20);
             this.textBox_password.TabIndex = 2;
             this.textBox_password.Text = "W23E";
+            this.textBox_password.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_usuario_KeyPress_1);
             // 
             // label_bienvenido
             // 
             this.label_bienvenido.AutoSize = true;
             this.label_bienvenido.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_bienvenido.Location = new System.Drawing.Point(92, 53);
+            this.label_bienvenido.Location = new System.Drawing.Point(127, 45);
             this.label_bienvenido.Name = "label_bienvenido";
             this.label_bienvenido.Size = new System.Drawing.Size(270, 25);
             this.label_bienvenido.TabIndex = 4;
@@ -305,9 +310,9 @@
             // boton_loguear
             // 
             this.boton_loguear.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boton_loguear.Location = new System.Drawing.Point(382, 100);
+            this.boton_loguear.Location = new System.Drawing.Point(382, 111);
             this.boton_loguear.Name = "boton_loguear";
-            this.boton_loguear.Size = new System.Drawing.Size(109, 74);
+            this.boton_loguear.Size = new System.Drawing.Size(109, 107);
             this.boton_loguear.TabIndex = 4;
             this.boton_loguear.Text = "Loguear";
             this.boton_loguear.UseVisualStyleBackColor = true;
@@ -324,12 +329,12 @@
             // 
             // comboBox_rol
             // 
+            this.comboBox_rol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_rol.FormattingEnabled = true;
             this.comboBox_rol.Location = new System.Drawing.Point(149, 194);
             this.comboBox_rol.Name = "comboBox_rol";
             this.comboBox_rol.Size = new System.Drawing.Size(212, 21);
             this.comboBox_rol.TabIndex = 3;
-            this.comboBox_rol.Text = "ADMINISTRADOR GENERAL";
             // 
             // label_fecha
             // 

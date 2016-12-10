@@ -88,7 +88,9 @@ namespace ClinicaFrba.CancelarTurno
             // 
             // motivoTextBox
             // 
+            this.motivoTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.motivoTextBox.Location = new System.Drawing.Point(42, 151);
+            this.motivoTextBox.MaxLength = 250;
             this.motivoTextBox.Multiline = true;
             this.motivoTextBox.Name = "motivoTextBox";
             this.motivoTextBox.Size = new System.Drawing.Size(369, 78);

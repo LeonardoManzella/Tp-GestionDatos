@@ -57,7 +57,7 @@
             // label_plan
             // 
             this.label_plan.AutoSize = true;
-            this.label_plan.Location = new System.Drawing.Point(6, 25);
+            this.label_plan.Location = new System.Drawing.Point(6, 32);
             this.label_plan.Name = "label_plan";
             this.label_plan.Size = new System.Drawing.Size(68, 13);
             this.label_plan.TabIndex = 0;
@@ -65,23 +65,28 @@
             // 
             // textBox_Plan
             // 
+            this.textBox_Plan.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Plan.Enabled = false;
-            this.textBox_Plan.Location = new System.Drawing.Point(88, 22);
+            this.textBox_Plan.Location = new System.Drawing.Point(88, 29);
             this.textBox_Plan.Name = "textBox_Plan";
-            this.textBox_Plan.Size = new System.Drawing.Size(177, 20);
+            this.textBox_Plan.ReadOnly = true;
+            this.textBox_Plan.Size = new System.Drawing.Size(187, 20);
             this.textBox_Plan.TabIndex = 1;
+            this.textBox_Plan.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_Nombre_KeyPress);
             // 
             // textBox_Cantidad
             // 
-            this.textBox_Cantidad.Location = new System.Drawing.Point(88, 87);
+            this.textBox_Cantidad.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.textBox_Cantidad.Location = new System.Drawing.Point(572, 29);
             this.textBox_Cantidad.Name = "textBox_Cantidad";
-            this.textBox_Cantidad.Size = new System.Drawing.Size(177, 20);
+            this.textBox_Cantidad.Size = new System.Drawing.Size(148, 20);
             this.textBox_Cantidad.TabIndex = 11;
+            this.textBox_Cantidad.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_Cantidad_KeyPress);
             // 
             // label_Cantidad
             // 
             this.label_Cantidad.AutoSize = true;
-            this.label_Cantidad.Location = new System.Drawing.Point(25, 87);
+            this.label_Cantidad.Location = new System.Drawing.Point(517, 32);
             this.label_Cantidad.Name = "label_Cantidad";
             this.label_Cantidad.Size = new System.Drawing.Size(49, 13);
             this.label_Cantidad.TabIndex = 2;
@@ -90,7 +95,7 @@
             // button_Comprar
             // 
             this.button_Comprar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_Comprar.Location = new System.Drawing.Point(663, 425);
+            this.button_Comprar.Location = new System.Drawing.Point(640, 391);
             this.button_Comprar.Name = "button_Comprar";
             this.button_Comprar.Size = new System.Drawing.Size(81, 45);
             this.button_Comprar.TabIndex = 12;
@@ -109,17 +114,21 @@
             // 
             // textBox_Nombre
             // 
+            this.textBox_Nombre.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Nombre.Location = new System.Drawing.Point(96, 23);
             this.textBox_Nombre.Name = "textBox_Nombre";
             this.textBox_Nombre.Size = new System.Drawing.Size(100, 20);
             this.textBox_Nombre.TabIndex = 6;
+            this.textBox_Nombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_Nombre_KeyPress);
             // 
             // textBox_Apellido
             // 
+            this.textBox_Apellido.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Apellido.Location = new System.Drawing.Point(299, 23);
             this.textBox_Apellido.Name = "textBox_Apellido";
             this.textBox_Apellido.Size = new System.Drawing.Size(100, 20);
             this.textBox_Apellido.TabIndex = 8;
+            this.textBox_Apellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_Nombre_KeyPress);
             // 
             // label_apellido
             // 
@@ -143,16 +152,18 @@
             // 
             // textBox_precio
             // 
+            this.textBox_precio.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_precio.Enabled = false;
-            this.textBox_precio.Location = new System.Drawing.Point(88, 53);
+            this.textBox_precio.Location = new System.Drawing.Point(356, 29);
             this.textBox_precio.Name = "textBox_precio";
-            this.textBox_precio.Size = new System.Drawing.Size(177, 20);
+            this.textBox_precio.ReadOnly = true;
+            this.textBox_precio.Size = new System.Drawing.Size(148, 20);
             this.textBox_precio.TabIndex = 11;
             // 
             // label_precio
             // 
             this.label_precio.AutoSize = true;
-            this.label_precio.Location = new System.Drawing.Point(13, 56);
+            this.label_precio.Location = new System.Drawing.Point(281, 32);
             this.label_precio.Name = "label_precio";
             this.label_precio.Size = new System.Drawing.Size(61, 13);
             this.label_precio.TabIndex = 10;
@@ -161,7 +172,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(316, 424);
+            this.button1.Location = new System.Drawing.Point(338, 391);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(95, 45);
             this.button1.TabIndex = 13;
@@ -180,6 +191,7 @@
             // 
             // textBox_Documento
             // 
+            this.textBox_Documento.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Documento.Location = new System.Drawing.Point(496, 23);
             this.textBox_Documento.Name = "textBox_Documento";
             this.textBox_Documento.Size = new System.Drawing.Size(100, 20);
@@ -212,7 +224,7 @@
             // button_limpiar
             // 
             this.button_limpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_limpiar.Location = new System.Drawing.Point(12, 425);
+            this.button_limpiar.Location = new System.Drawing.Point(41, 392);
             this.button_limpiar.Name = "button_limpiar";
             this.button_limpiar.Size = new System.Drawing.Size(90, 45);
             this.button_limpiar.TabIndex = 15;
@@ -230,7 +242,7 @@
             this.groupBox_plan.Controls.Add(this.label_precio);
             this.groupBox_plan.Location = new System.Drawing.Point(12, 295);
             this.groupBox_plan.Name = "groupBox_plan";
-            this.groupBox_plan.Size = new System.Drawing.Size(277, 117);
+            this.groupBox_plan.Size = new System.Drawing.Size(741, 74);
             this.groupBox_plan.TabIndex = 16;
             this.groupBox_plan.TabStop = false;
             this.groupBox_plan.Text = "Plan Seleccionado";
@@ -254,7 +266,7 @@
             this.label_afiliados.TabIndex = 18;
             this.label_afiliados.Text = "Afiliados";
             // 
-            // CompraBono
+            // CompraBonoAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -268,7 +280,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button_Buscar);
             this.Controls.Add(this.button_Comprar);
-            this.Name = "CompraBono";
+            this.Name = "CompraBonoAdmin";
             this.Text = "Comprar Bonos";
             this.Load += new System.EventHandler(this.CompraBono_Load);
             this.groupBox_filtros.ResumeLayout(false);

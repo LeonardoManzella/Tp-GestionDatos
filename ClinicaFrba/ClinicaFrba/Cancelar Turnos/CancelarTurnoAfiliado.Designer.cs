@@ -78,7 +78,9 @@
             // 
             // motivoCancelacion
             // 
+            this.motivoCancelacion.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.motivoCancelacion.Location = new System.Drawing.Point(21, 132);
+            this.motivoCancelacion.MaxLength = 250;
             this.motivoCancelacion.Multiline = true;
             this.motivoCancelacion.Name = "motivoCancelacion";
             this.motivoCancelacion.Size = new System.Drawing.Size(447, 106);

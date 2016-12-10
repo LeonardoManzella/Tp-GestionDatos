@@ -109,18 +109,21 @@
             // 
             // textBox_Nombre
             // 
+            this.textBox_Nombre.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Nombre.Location = new System.Drawing.Point(96, 23);
             this.textBox_Nombre.Name = "textBox_Nombre";
             this.textBox_Nombre.Size = new System.Drawing.Size(100, 20);
             this.textBox_Nombre.TabIndex = 6;
-            this.textBox_Nombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_Nombre_KeyPress);
+            this.textBox_Nombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_Apellido_KeyPress);
             // 
             // textBox_Documento
             // 
+            this.textBox_Documento.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Documento.Location = new System.Drawing.Point(496, 23);
             this.textBox_Documento.Name = "textBox_Documento";
             this.textBox_Documento.Size = new System.Drawing.Size(100, 20);
             this.textBox_Documento.TabIndex = 9;
+            this.textBox_Documento.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_Documento_KeyPress_1);
             // 
             // label_apellido
             // 
@@ -142,6 +145,7 @@
             // 
             // textBox_Apellido
             // 
+            this.textBox_Apellido.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_Apellido.Location = new System.Drawing.Point(299, 23);
             this.textBox_Apellido.Name = "textBox_Apellido";
             this.textBox_Apellido.Size = new System.Drawing.Size(100, 20);

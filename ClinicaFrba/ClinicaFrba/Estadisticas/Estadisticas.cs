@@ -41,7 +41,8 @@ namespace ClinicaFrba.Estadisticas
                     año = Int32.Parse(this.txtAnio.Text);
                 else
                 {
-                    throw new Exception("Debe indicar un año, para realizar la consulta \r\n Usar 0 si se quiere de todos los años");
+                    año = 0;
+                    //throw new Exception("Debe indicar un año, para realizar la consulta \r\n Usar 0 si se quiere de todos los años");
                 }
 
                 var estadistica = ComboData.obtener_identificador(this.comboTop5);
@@ -264,7 +265,7 @@ namespace ClinicaFrba.Estadisticas
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
-            this.txtAnio.Text = string.Empty;
+            this.txtAnio.Text ="";
             this.cmbQuienCancela.SelectedIndex = ComboData.obtener_indice(0, this.cmbQuienCancela);
             comboBox3.SelectedIndex = ComboData.obtener_indice(0, this.comboBox3);
             comboSemestre.SelectedIndex = ComboData.obtener_indice(0, this.comboSemestre);

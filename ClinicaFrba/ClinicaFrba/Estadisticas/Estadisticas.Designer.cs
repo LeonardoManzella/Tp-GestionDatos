@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.cmbHasta = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbDesde = new System.Windows.Forms.ComboBox();
@@ -55,7 +56,6 @@
             this.AfdoNom = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AfdoApe = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AfdoGpoFliar = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridEstadistico)).BeginInit();
             this.SuspendLayout();
@@ -86,6 +86,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros de Busqueda";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(348, 134);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(30, 13);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Mes:";
+            // 
             // cmbHasta
             // 
             this.cmbHasta.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -100,9 +109,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(372, 155);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(48, 13);
+            this.label3.Size = new System.Drawing.Size(38, 13);
             this.label3.TabIndex = 15;
-            this.label3.Text = "Hasta(*):";
+            this.label3.Text = "Hasta:";
             // 
             // cmbDesde
             // 
@@ -118,9 +127,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(255, 155);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(51, 13);
+            this.label2.Size = new System.Drawing.Size(41, 13);
             this.label2.TabIndex = 13;
-            this.label2.Text = "Desde(*):";
+            this.label2.Text = "Desde:";
             // 
             // cmbQuienCancela
             // 
@@ -135,7 +144,7 @@
             // lblCance
             // 
             this.lblCance.AutoSize = true;
-            this.lblCance.Location = new System.Drawing.Point(11, 71);
+            this.lblCance.Location = new System.Drawing.Point(8, 71);
             this.lblCance.Name = "lblCance";
             this.lblCance.Size = new System.Drawing.Size(80, 13);
             this.lblCance.TabIndex = 11;
@@ -197,18 +206,18 @@
             this.lblSemestre.AutoSize = true;
             this.lblSemestre.Location = new System.Drawing.Point(284, 110);
             this.lblSemestre.Name = "lblSemestre";
-            this.lblSemestre.Size = new System.Drawing.Size(64, 13);
+            this.lblSemestre.Size = new System.Drawing.Size(54, 13);
             this.lblSemestre.TabIndex = 4;
-            this.lblSemestre.Text = "Semestre(*):";
+            this.lblSemestre.Text = "Semestre:";
             // 
             // lblYear
             // 
             this.lblYear.AutoSize = true;
             this.lblYear.Location = new System.Drawing.Point(304, 74);
             this.lblYear.Name = "lblYear";
-            this.lblYear.Size = new System.Drawing.Size(39, 13);
+            this.lblYear.Size = new System.Drawing.Size(29, 13);
             this.lblYear.TabIndex = 3;
-            this.lblYear.Text = "Año(*):";
+            this.lblYear.Text = "Año:";
             // 
             // lblPlan
             // 
@@ -224,9 +233,9 @@
             this.lblEspecialidad.AutoSize = true;
             this.lblEspecialidad.Location = new System.Drawing.Point(11, 70);
             this.lblEspecialidad.Name = "lblEspecialidad";
-            this.lblEspecialidad.Size = new System.Drawing.Size(83, 13);
+            this.lblEspecialidad.Size = new System.Drawing.Size(73, 13);
             this.lblEspecialidad.TabIndex = 1;
-            this.lblEspecialidad.Text = "Especialidad: (*)";
+            this.lblEspecialidad.Text = "Especialidad: ";
             // 
             // label1
             // 
@@ -308,15 +317,6 @@
             this.AfdoGpoFliar.HeaderText = "Afild. Gpo. Fliar.";
             this.AfdoGpoFliar.Name = "AfdoGpoFliar";
             this.AfdoGpoFliar.Width = 104;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(348, 134);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(40, 13);
-            this.label4.TabIndex = 17;
-            this.label4.Text = "Mes(*):";
             // 
             // Estadisticas
             // 

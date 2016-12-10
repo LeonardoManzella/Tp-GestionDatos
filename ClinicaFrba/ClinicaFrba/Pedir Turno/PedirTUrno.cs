@@ -49,12 +49,6 @@ namespace ClinicaFrba.Pedir_Turno
             {
                 Comunes.limpiarDataGrid(dataGridView_resultados_filtros);
 
-                if (eligioFecha == false)
-                {
-                    MessageBox.Show("Por Favor Elija una Fecha, es Obligatorio", "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
                 actualizar_datagrid();
             }
             catch (Exception ex)
@@ -70,18 +64,23 @@ namespace ClinicaFrba.Pedir_Turno
                 var descripcion_especialidad = comboEspecialidades.Text.Trim();
                 var profesional_nombre = textBox_nombre.Text.Trim();
                 var profesional_apellido = textBox_apellido.Text.Trim();
-                fecha = datePicker_fecha.Value.Date;
+                string fecha_texto = textBox_fecha.Text;
 
-
-                DataTable datos = BD_Turnos.obtener_turnos_disponibles(profesional_nombre, profesional_apellido, descripcion_especialidad, fecha);
+                label_cargando.Visible = true;
+                this.Refresh();
+                DataTable datos = BD_Turnos.obtener_turnos_disponibles(profesional_nombre, profesional_apellido, descripcion_especialidad, fecha_texto);
                 if (datos.Rows.Count <= 0) throw new Exception("No hay Turnos Disponibles ese Dia para los Filtros Seleccionados");
 
                 Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
 
                 Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, "Pedir Turno", nombre_boton_datagrid);
+                label_cargando.Visible = false;
+                this.Refresh();
             }
             catch (Exception ex)
             {
+                label_cargando.Visible = false;
+                this.Refresh();
                 MessageBox.Show(ex.Message, "Pedir Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -101,10 +100,13 @@ namespace ClinicaFrba.Pedir_Turno
                 if (dataGridView_resultados_filtros.Columns[e.ColumnIndex].Name == nombre_boton_datagrid)
                 {
                     //Hago cosas con los valores de la fila seleccionada
-                    string horario = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 0);
-                    string prof_nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
-                    string prof_apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
-                    string especialidad = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 3);
+                    fecha = DateTime.Parse  (
+                                            Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 0)
+                                            );
+                    string horario = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
+                    string prof_nombre = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
+                    string prof_apellido = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 3);
+                    string especialidad = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 4);
                     int afil_id = BD_Afiliados.obtenerID_afiliado(usuario.nombre, usuario.apellido, usuario.id);
 
                     BD_Turnos.asignar_turno(prof_nombre, prof_apellido, fecha, horario, especialidad, afil_id);
@@ -131,8 +133,13 @@ namespace ClinicaFrba.Pedir_Turno
             comboEspecialidades.Text = "";
             textBox_nombre.Text = "";
             textBox_apellido.Text = "";
+            textBox_fecha.Text = "";
             Comunes.limpiarDataGrid(dataGridView_resultados_filtros);
         }
 
+        private void button_fecha_Click(object sender, EventArgs e)
+        {
+            Comunes.DialogoElegirFecha(textBox_fecha);
+        }
     }
 }

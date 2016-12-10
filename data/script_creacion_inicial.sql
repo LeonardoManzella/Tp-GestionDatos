@@ -891,6 +891,8 @@ RETURN
 								select afil_id from afiliados 
 								where floor(afil_id/100) = floor(@afiliado_id/100) and habilitado = 1 )
                     AND b.consumido = 0
+);
+GO
 
 --Funcionalidad REGISTRO DE RESULTADO DE ATENCION MEDICA. Devuelve el 'Id Afilidado' (con el Id despues consulto turnos en otra función).
 CREATE FUNCTION KFC.fun_retornar_id_afildo_por_id(@nombre VARCHAR(255), @apellido VARCHAR(255), @us_id INT)
@@ -1443,9 +1445,10 @@ GO
 ------------------OBTENER_TURNOS_PROFESIONAL------------------
 --CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @fecha_text VARCHAR(60) )
 
-CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @desc_esp VARCHAR(50), @fecha DATE )
+CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @desc_esp VARCHAR(50), @fecha_text VARCHAR(60) )
 returns @retorno TABLE (
-						horario_disponible VARCHAR(60)
+						  fecha  VARCHAR(60)
+						, horario_disponible VARCHAR(60)
 						, nombre VARCHAR(60)
 						, apellido VARCHAR(60)
 						, especialidad VARCHAR(50)
@@ -1454,71 +1457,120 @@ returns @retorno TABLE (
 BEGIN
 	DECLARE @hora_desde TIME
 	DECLARE	@hora_hasta	TIME
-	--DECLARE	@fecha DATE
+	DECLARE	@fecha_desde DATETIME, @fecha_hasta DATETIME
+	DECLARE @dia INT
+	DECLARE @nombre VARCHAR(60), @apellido VARCHAR(60), @especialidad VARCHAR(50)
 	--SET @fecha = CONVERT(DATE,@fecha_text,102)
 	
-	--Me traigo el Rango de Horarios Posibles
-	SELECT @hora_desde = hora_desde, @hora_hasta = hora_hasta
-	FROM	KFC.agenda a
-			INNER JOIN KFC.profesionales p
-			ON a.prof_id = p.prof_id
-			INNER JOIN KFC.especialidades e
-			ON e.espe_id = a.espe_id
-	WHERE	p.nombre         LIKE '%' + UPPER(@prof_nombre)		+ '%'
-	AND		p.apellido       LIKE '%' + UPPER(@prof_apellido)	+ '%'
-	AND		DATEPART(WEEKDAY, @fecha) = dia
-	--Convierto para que solo compare por Año-Mes-Dia
-	AND		CONVERT(DATE,fecha_desde) <= @fecha
-	AND		CONVERT(DATE,fecha_hasta) >= @fecha
-	AND		UPPER(e.descripcion)	LIKE '%' + UPPER(@desc_esp)		+ '%'
 
-	--Inserto Horarios Disponibles, cada 30 minutos (Uso el While para Crear un FOR)
-	WHILE ( DATEDIFF(MINUTE, @hora_desde, @hora_hasta) != 0 )
+
+	--Me traigo el Rango de Fechas y Horarios Posibles dentro de un Cursor
+	DECLARE rango_fechas_horarios CURSOR FOR (
+		SELECT  a.fecha_desde, a.fecha_hasta ,a.dia, a.hora_desde, a.hora_hasta, p.nombre, p.apellido, e.descripcion
+		FROM	KFC.agenda a
+				INNER JOIN KFC.profesionales p
+				ON a.prof_id = p.prof_id
+				INNER JOIN KFC.especialidades e
+				ON e.espe_id = a.espe_id
+		WHERE	p.nombre         LIKE '%' + UPPER(@prof_nombre)		+ '%'
+		AND		p.apellido       LIKE '%' + UPPER(@prof_apellido)	+ '%'
+		AND (
+			@fecha_text = '' 
+			OR		(
+					--Convierto para que solo compare por Año-Mes-Dia
+							CONVERT(DATE,a.fecha_desde) <= CONVERT(DATE,@fecha_text, 102)
+					AND		CONVERT(DATE,a.fecha_hasta) >= CONVERT(DATE,@fecha_text, 102)
+					)
+			)
+		AND		UPPER(e.descripcion)	LIKE '%' + UPPER(@desc_esp)		+ '%'
+		--Considero que si hay un turno el ultimo Dia, es que estan usados todos, sino lo considero OK
+		AND NOT EXISTS	(
+						SELECT	1
+						FROM	KFC.turnos t
+						WHERE	t.prof_id = p.prof_id
+						AND		t.espe_id = e.espe_id
+						AND		CONVERT(DATE, t.fecha_hora) = CONVERT(DATE, a.fecha_hasta)
+						)
+	)
+
+	OPEN rango_fechas_horarios
+
+	--Por cada resultado del Cursor (cada rango de fechas) calculo los turnos de 30 minutos para cada dia
+	FETCH NEXT FROM rango_fechas_horarios INTO @fecha_desde, @fecha_hasta, @dia, @hora_desde, @hora_hasta, @nombre, @apellido, @especialidad
+	WHILE (@@FETCH_STATUS = 0)		--Mientras haya datos
 	BEGIN
-		--PRINT DATEDIFF(MINUTE, @hora_desde, @hora_hasta)
-		INSERT INTO @retorno (horario_disponible, nombre, apellido, especialidad) 
-		SELECT	CONVERT(varchar,@hora_desde, 108), p.nombre, p.apellido, e.descripcion
-					FROM	KFC.agenda a
-							INNER JOIN KFC.profesionales p
-							ON a.prof_id = p.prof_id
-							INNER JOIN KFC.especialidades e
-							ON e.espe_id = a.espe_id
-					WHERE	a.hora_desde		<= @hora_desde
-							AND a.hora_hasta	>= @hora_desde
-							AND DATEPART(WEEKDAY, @fecha) = dia
-							--Convierto para que solo compare por Año-Mes-Dia
-							AND		CONVERT(DATE,fecha_desde) <= @fecha
-							AND		CONVERT(DATE,fecha_hasta) >= @fecha
-							AND		UPPER(e.descripcion)	LIKE '%' + UPPER(@desc_esp)		+ '%'
+			
+			--Recorro los Dias de la Semana de este Rango de Fechas (Uso el While para Crear un FOR)
+			WHILE ( @fecha_desde < @fecha_hasta )
+			BEGIN
+					--En caso que el Rango empieze antes del Dia establecido, aumento hasta el dia mismo
+					WHILE ( DATEPART(WEEKDAY, @fecha_desde) != @dia )
+					BEGIN
+							--Aumento 1 dia
+							SET @fecha_desde = DATEADD(DAY, 1, @fecha_desde)
+					END
+					----------------------------------------------------------
+					-- Ahora estamos parados justo en el Dia de la semana del Turno
+					----------------------------------------------------------
+					
+
+					--Inserto Horarios Disponibles, cada 30 minutos (Uso el While para Crear un FOR)
+					WHILE ( DATEDIFF(MINUTE, @hora_desde, @hora_hasta) != 0 )
+					BEGIN
+						--PRINT DATEDIFF(MINUTE, @hora_desde, @hora_hasta)
+						INSERT INTO @retorno (fecha , horario_disponible, nombre, apellido, especialidad) 
+						VALUES	( 
+								CONVERT(VARCHAR, @fecha_desde, 102), 
+								CONVERT(varchar,@hora_desde, 108), 
+								@nombre, 
+								@apellido, 
+								@especialidad 
+								)
+
+						--Aumento 30 Minutos
+						SET @hora_desde = DATEADD(MINUTE, 30, @hora_desde)
+					END
+
+					
+					--Quito Horarios ya Tomados por Turnos
+					DELETE
+					FROM	@retorno
+					-- Debo convertir sino no me deja comparar con el IN
+					WHERE	horario_disponible  IN	(
+													SELECT	CONVERT(varchar,hora, 108) AS hora_ocupada
+													FROM	KFC.turnos t
+															INNER JOIN KFC.profesionales p
+															ON t.prof_id = p.prof_id
+															INNER JOIN KFC.especialidades e
+															ON t.espe_id = e.espe_id
+													-- Debo convertir para solo comparar la fecha, no la hora incluida
+													WHERE	CONVERT(DATE,fecha_hora) = CONVERT(DATE,@fecha_desde)
+													AND		p.nombre         LIKE '%' + UPPER(@nombre)		+ '%'
+													AND		p.apellido       LIKE '%' + UPPER(@apellido)	+ '%'		
+													AND		UPPER(e.descripcion)	LIKE '%' + UPPER(@especialidad)		+ '%'
+													)
 
 
-		SET @hora_desde = DATEADD(MINUTE, 30, @hora_desde)
+					
+					--Aumento 1 semana
+					SET @fecha_desde = DATEADD(DAY, 7, @fecha_desde)
+
+			END
+
+			--Traigo Siguiente Rango de Fechas
+			FETCH NEXT FROM rango_fechas_horarios INTO @fecha_desde, @fecha_hasta, @dia, @hora_desde, @hora_hasta, @nombre, @apellido, @especialidad
 	END
-
 	
-	--Quito Horarios ya Tomados por Turnos y Retorno
-	DELETE
-	FROM	@retorno
-	-- Debo convertirlos sino no me deja comparar con el IN
-	WHERE	horario_disponible  IN	(
-															SELECT	CONVERT(varchar,hora, 108) AS hora_ocupada
-															FROM	KFC.turnos t
-																	INNER JOIN KFC.profesionales p
-																	ON t.prof_id = p.prof_id
-																	INNER JOIN KFC.especialidades e
-																	ON t.espe_id = e.espe_id
-															-- Debo convertirlos para solo comparar la fecha, no la hora incluida
-															WHERE	CONVERT(DATE,fecha_hora) = CONVERT(DATE,@fecha)
-															AND		p.nombre         LIKE '%' + UPPER(@prof_nombre)		+ '%'
-															AND		p.apellido       LIKE '%' + UPPER(@prof_apellido)	+ '%'		
-															AND		UPPER(e.descripcion)	LIKE '%' + UPPER(@desc_esp)		+ '%'
-															)
+		
+	CLOSE rango_fechas_horarios
+	DEALLOCATE rango_fechas_horarios
+	
 	RETURN	
 END;
 GO
 
---Select * from KFC.fun_obtener_turnos_profesional('','',  '', CONVERT(DATE, '2016.01.01', 102) );
-
+--Select * from KFC.fun_obtener_turnos_profesional( '','', '', '2016.01.01' );
+--Select * from KFC.fun_obtener_turnos_profesional( '','', '', '' );
 
 
 ------------------ASIGNAR_TURNO------------------
@@ -1805,7 +1857,7 @@ AS
           END;
 GO
 
-EXECUTE PROC kfc.pro_crear_agenda_profesional 'ALERGOLOGÍA', 6, 1, 
+--EXECUTE PROC kfc.pro_crear_agenda_profesional 'ALERGOLOGÍA', 6, 1, 
 
 
 PRINT 'CREADAS FUNCIONES Y PROCEDURES DE NEGOCIO'

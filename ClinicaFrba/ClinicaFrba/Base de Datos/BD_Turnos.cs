@@ -177,7 +177,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
         }
 
-        public static DataTable obtener_turnos_disponibles(string nombre, string apellido, string descripcion_especialidad, DateTime fecha)
+        public static DataTable obtener_turnos_disponibles(string nombre, string apellido, string descripcion_especialidad, string fecha_texto)
         {
             try
             {
@@ -188,8 +188,8 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro2.Value = apellido;
                 SqlParameter parametro3 = new SqlParameter("@desc_esp", SqlDbType.Text);
                 parametro3.Value = descripcion_especialidad;
-                SqlParameter parametro4 = new SqlParameter("@fecha", SqlDbType.DateTime);
-                parametro4.Value = fecha;
+                SqlParameter parametro4 = new SqlParameter("@fecha", SqlDbType.Text);
+                parametro4.Value = fecha_texto;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);

@@ -31,18 +31,19 @@
             this.comboEspecialidades = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.datePicker_fecha = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
             this.boton_salir = new System.Windows.Forms.Button();
             this.button_horarios = new System.Windows.Forms.Button();
             this.button_limpiar = new System.Windows.Forms.Button();
             this.groupBox_filtros = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.button_fecha = new System.Windows.Forms.Button();
+            this.textBox_fecha = new System.Windows.Forms.TextBox();
             this.textBox_apellido = new System.Windows.Forms.TextBox();
             this.textBox_nombre = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.dataGridView_resultados_filtros = new System.Windows.Forms.DataGridView();
+            this.label_cargando = new System.Windows.Forms.Label();
             this.groupBox_filtros.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).BeginInit();
             this.SuspendLayout();
@@ -67,20 +68,11 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(262, 58);
+            this.label3.Location = new System.Drawing.Point(236, 64);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(66, 13);
             this.label3.TabIndex = 6;
             this.label3.Text = "Elegir Fecha";
-            // 
-            // datePicker_fecha
-            // 
-            this.datePicker_fecha.Location = new System.Drawing.Point(334, 57);
-            this.datePicker_fecha.Name = "datePicker_fecha";
-            this.datePicker_fecha.Size = new System.Drawing.Size(200, 20);
-            this.datePicker_fecha.TabIndex = 3;
-            this.datePicker_fecha.Value = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
-            this.datePicker_fecha.ValueChanged += new System.EventHandler(this.datePicker_fecha_ValueChanged_1);
             // 
             // label4
             // 
@@ -106,7 +98,7 @@
             // button_horarios
             // 
             this.button_horarios.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_horarios.Location = new System.Drawing.Point(562, 50);
+            this.button_horarios.Location = new System.Drawing.Point(582, 53);
             this.button_horarios.Name = "button_horarios";
             this.button_horarios.Size = new System.Drawing.Size(82, 36);
             this.button_horarios.TabIndex = 4;
@@ -127,7 +119,8 @@
             // 
             // groupBox_filtros
             // 
-            this.groupBox_filtros.Controls.Add(this.label7);
+            this.groupBox_filtros.Controls.Add(this.button_fecha);
+            this.groupBox_filtros.Controls.Add(this.textBox_fecha);
             this.groupBox_filtros.Controls.Add(this.textBox_apellido);
             this.groupBox_filtros.Controls.Add(this.textBox_nombre);
             this.groupBox_filtros.Controls.Add(this.label6);
@@ -135,7 +128,6 @@
             this.groupBox_filtros.Controls.Add(this.label1);
             this.groupBox_filtros.Controls.Add(this.label3);
             this.groupBox_filtros.Controls.Add(this.comboEspecialidades);
-            this.groupBox_filtros.Controls.Add(this.datePicker_fecha);
             this.groupBox_filtros.Location = new System.Drawing.Point(12, 12);
             this.groupBox_filtros.Name = "groupBox_filtros";
             this.groupBox_filtros.Size = new System.Drawing.Size(544, 100);
@@ -143,14 +135,23 @@
             this.groupBox_filtros.TabStop = false;
             this.groupBox_filtros.Text = "Filtros de Busqueda";
             // 
-            // label7
+            // button_fecha
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(263, 75);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(63, 13);
-            this.label7.TabIndex = 17;
-            this.label7.Text = "(Obligatorio)";
+            this.button_fecha.Location = new System.Drawing.Point(416, 64);
+            this.button_fecha.Name = "button_fecha";
+            this.button_fecha.Size = new System.Drawing.Size(112, 23);
+            this.button_fecha.TabIndex = 12;
+            this.button_fecha.Text = "Seleccionar";
+            this.button_fecha.UseVisualStyleBackColor = true;
+            this.button_fecha.Click += new System.EventHandler(this.button_fecha_Click);
+            // 
+            // textBox_fecha
+            // 
+            this.textBox_fecha.Enabled = false;
+            this.textBox_fecha.Location = new System.Drawing.Point(309, 64);
+            this.textBox_fecha.Name = "textBox_fecha";
+            this.textBox_fecha.Size = new System.Drawing.Size(100, 20);
+            this.textBox_fecha.TabIndex = 11;
             // 
             // textBox_apellido
             // 
@@ -193,11 +194,23 @@
             this.dataGridView_resultados_filtros.TabIndex = 16;
             this.dataGridView_resultados_filtros.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_resultados_filtros_CellContentClick);
             // 
+            // label_cargando
+            // 
+            this.label_cargando.AutoSize = true;
+            this.label_cargando.ForeColor = System.Drawing.Color.DarkRed;
+            this.label_cargando.Location = new System.Drawing.Point(437, 133);
+            this.label_cargando.Name = "label_cargando";
+            this.label_cargando.Size = new System.Drawing.Size(102, 13);
+            this.label_cargando.TabIndex = 17;
+            this.label_cargando.Text = "...Leyendo Turnos...";
+            this.label_cargando.Visible = false;
+            // 
             // PedirTurno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 439);
+            this.Controls.Add(this.label_cargando);
             this.Controls.Add(this.dataGridView_resultados_filtros);
             this.Controls.Add(this.groupBox_filtros);
             this.Controls.Add(this.button_limpiar);
@@ -219,7 +232,6 @@
         private System.Windows.Forms.ComboBox comboEspecialidades;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.DateTimePicker datePicker_fecha;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button boton_salir;
         private System.Windows.Forms.Button button_horarios;
@@ -230,6 +242,8 @@
         private System.Windows.Forms.TextBox textBox_nombre;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label_cargando;
+        private System.Windows.Forms.Button button_fecha;
+        private System.Windows.Forms.TextBox textBox_fecha;
     }
 }

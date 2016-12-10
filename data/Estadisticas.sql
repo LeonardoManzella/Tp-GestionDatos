@@ -20,13 +20,13 @@ DROP PROCEDURE KFC.pro_top_5_prof_menos_trabajo;
 GO
 
 ---------------------
-COMBOS
+----COMBOS
 ---------------------
 IF OBJECT_ID('KFC.get_cmb_especialidades') IS NOT NULL
 DROP PROCEDURE KFC.get_cmb_especialidades;
 GO
 ------------------------
-Funciones
+---Funciones
 ------------------------
 IF OBJECT_ID('KFC.obtener_titular') IS NOT NULL
 DROP FUNCTION KFC.obtener_titular;

@@ -87,6 +87,7 @@
             // 
             // textBox_nombre_rol
             // 
+            this.textBox_nombre_rol.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_nombre_rol.Location = new System.Drawing.Point(138, 6);
             this.textBox_nombre_rol.Name = "textBox_nombre_rol";
             this.textBox_nombre_rol.Size = new System.Drawing.Size(201, 20);

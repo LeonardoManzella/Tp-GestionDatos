@@ -64,7 +64,7 @@
             // 
             this.txtNroDoc.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtNroDoc.Location = new System.Drawing.Point(336, 77);
-            this.txtNroDoc.MaxLength = 13;
+            this.txtNroDoc.MaxLength = 10;
             this.txtNroDoc.Name = "txtNroDoc";
             this.txtNroDoc.Size = new System.Drawing.Size(94, 20);
             this.txtNroDoc.TabIndex = 5;
@@ -145,7 +145,7 @@
             // 
             this.txtNroTelefono.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtNroTelefono.Location = new System.Drawing.Point(40, 89);
-            this.txtNroTelefono.MaxLength = 12;
+            this.txtNroTelefono.MaxLength = 10;
             this.txtNroTelefono.Name = "txtNroTelefono";
             this.txtNroTelefono.Size = new System.Drawing.Size(143, 20);
             this.txtNroTelefono.TabIndex = 7;

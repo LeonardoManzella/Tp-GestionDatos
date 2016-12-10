@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace ClinicaFrba.Compra_Bono
 {
-    public partial class CompraBono : Form
+    public partial class CompraBonoAdmin : Form
     {
         public enum tipos_funcionalidad
         {
@@ -26,7 +26,7 @@ namespace ClinicaFrba.Compra_Bono
         private int id_afiliado_que_compra;
         private string nombre_boton_datagrid = "boton_seleccionar";
 
-        public CompraBono()
+        public CompraBonoAdmin()
         {
             InitializeComponent();
         }

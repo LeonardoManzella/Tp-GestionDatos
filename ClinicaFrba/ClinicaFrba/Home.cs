@@ -200,16 +200,16 @@ namespace ClinicaFrba
 
         private void comprarBonoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = new Compra_Bono.CompraBono();
-            form.funcionalidad = Compra_Bono.CompraBono.tipos_funcionalidad.USUARIO;
-            form.usuario_o_administrador = this.usuario;
+            var form = new Compra_Bono.CompraBonoAfiliado();
+            form.usuario = this.usuario;
             form.ShowDialog();
         }
 
         private void comprarBonoUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = new Compra_Bono.CompraBono();
-            form.funcionalidad = Compra_Bono.CompraBono.tipos_funcionalidad.ADMIN;
+            var form = new Compra_Bono.CompraBonoAdmin();
+            form.funcionalidad = Compra_Bono.CompraBonoAdmin.tipos_funcionalidad.ADMIN;
+            form.usuario_o_administrador = this.usuario;
             form.ShowDialog();
         }
 

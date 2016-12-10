@@ -14,25 +14,28 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="inicio"></param>
         /// <param name="fin"></param>
         /// <returns></returns>
-        public static DataTable get_top5_canc_esp(DateTime año, DateTime inicio, DateTime fin)
+        public static DataTable get_top5_canc_esp(int año, int inicio, int fin, int cancelador)
         {
             try
             {
 
-                string sql = "KFC.pro_top_5_cancelaciones_especialidad  @año, @plazo_init, @plazo_fin";
+                string sql = "KFC.pro_top_5_cancelaciones_especialidad  @año, @plazo_init, @plazo_fin @cancelador";
 
-                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.DateTime);
+                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.Int);
                 parametro1.Value = año;
-                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.DateTime);
+                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.Int);
                 parametro2.Value = inicio;
-                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.DateTime);
+                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.Int);
                 parametro3.Value = fin;
+                SqlParameter parametro4 = new SqlParameter("@cancelador", SqlDbType.Int);
+                parametro3.Value = cancelador;
 
                 SqlCommand cmd = new SqlCommand(sql, Conexion.Instance.get());
 
                 cmd.Parameters.Add(parametro1);
                 cmd.Parameters.Add(parametro2);
                 cmd.Parameters.Add(parametro3);
+                cmd.Parameters.Add(parametro4);
 
                 DataTable dt = new DataTable();
 
@@ -60,27 +63,27 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="inicio"></param>
         /// <param name="fin"></param>
         /// <returns></returns>
-        public static DataTable get_top5_prof_plan(int plan_id, DateTime año, DateTime inicio, DateTime fin)
+        public static DataTable get_top5_prof_plan(int año, int inicio, int fin, int plan_id)
         {
             try
             {
                 string sql = "KFC.pro_top_5_profesional_popular  @año, @plazo_init, @plazo_fin, @plan_id";
 
-                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.DateTime);
+                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.Int);
                 parametro1.Value = año;
-                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.DateTime);
+                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.Int);
                 parametro2.Value = inicio;
-                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.DateTime);
+                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.Int);
                 parametro3.Value = fin;
                 SqlParameter parametro4 = new SqlParameter("@plan_id", SqlDbType.Int);
                 parametro4.Value = plan_id;
-
+                
                 SqlCommand cmd = new SqlCommand(sql, Conexion.Instance.get());
                 cmd.Parameters.Add(parametro1);
                 cmd.Parameters.Add(parametro2);
                 cmd.Parameters.Add(parametro3);
                 cmd.Parameters.Add(parametro4);
-
+                
                 DataTable dt = new DataTable();
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -107,17 +110,17 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="id_plan"></param>
         /// <param name="id_esp"></param>
         /// <returns></returns>
-        public static DataTable get_top5_prof_vagos(DateTime año, DateTime inicio, DateTime fin, int id_plan, int id_esp)
+        public static DataTable get_top5_prof_vagos(int año, int inicio, int fin, int id_plan, int id_esp)
         {
             try
             {
                 string sql = "KFC.pro_top_5_prof_menos_trabajo @año, @plazo_init, @plazo_fin, @plan_id, @esp_id";
 
-                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.DateTime);
+                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.Int);
                 parametro1.Value = año;
-                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.DateTime);
+                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.Int);
                 parametro2.Value = inicio;
-                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.DateTime);
+                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.Int);
                 parametro3.Value = fin;
                 SqlParameter parametro4 = new SqlParameter("@plan_id", SqlDbType.Int);
                 parametro4.Value = id_plan;
@@ -156,17 +159,17 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="inicio"></param>
         /// <param name="fin"></param>
         /// <returns></returns>
-        public static DataTable get_top5_afil_compra_bonos(DateTime año, DateTime inicio, DateTime fin)
+        public static DataTable get_top5_afil_compra_bonos(int año, int inicio, int fin)
         {
             try
             {
                 string sql = "KFC.pro_top_5_compradores_bonos @año, @plazo_init, @plazo_fin";
 
-                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.DateTime);
+                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.Int);
                 parametro1.Value = año;
-                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.DateTime);
+                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.Int);
                 parametro2.Value = inicio;
-                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.DateTime);
+                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.Int);
                 parametro3.Value = fin;
 
                 SqlCommand cmd = new SqlCommand(sql, Conexion.Instance.get());
@@ -199,17 +202,17 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="inicio"></param>
         /// <param name="fin"></param>
         /// <returns></returns>
-        public static DataTable get_top5_esp_con_mas_bonos(DateTime año, DateTime inicio, DateTime fin)
+        public static DataTable get_top5_esp_con_mas_bonos(int año, int inicio, int fin)
         {
             try
             {
                 string sql = "KFC.pro_top_5_espec_Atenciones @año, @plazo_init, @plazo_fin";
 
-                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.DateTime);
+                SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.Int);
                 parametro1.Value = año;
-                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.DateTime);
+                SqlParameter parametro2 = new SqlParameter("@plazo_init", SqlDbType.Int);
                 parametro2.Value = inicio;
-                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.DateTime);
+                SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.Int);
                 parametro3.Value = fin;
 
 

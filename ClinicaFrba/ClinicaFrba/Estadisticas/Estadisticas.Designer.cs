@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cmbHasta = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cmbDesde = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.cmbQuienCancela = new System.Windows.Forms.ComboBox();
             this.lblCance = new System.Windows.Forms.Label();
             this.comboSemestre = new System.Windows.Forms.ComboBox();
@@ -51,12 +55,18 @@
             this.AfdoNom = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AfdoApe = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AfdoGpoFliar = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridEstadistico)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.cmbHasta);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.cmbDesde);
+            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.cmbQuienCancela);
             this.groupBox1.Controls.Add(this.lblCance);
             this.groupBox1.Controls.Add(this.comboSemestre);
@@ -71,24 +81,61 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 22);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(489, 152);
+            this.groupBox1.Size = new System.Drawing.Size(489, 179);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros de Busqueda";
+            // 
+            // cmbHasta
+            // 
+            this.cmbHasta.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbHasta.FormattingEnabled = true;
+            this.cmbHasta.Location = new System.Drawing.Point(429, 152);
+            this.cmbHasta.Name = "cmbHasta";
+            this.cmbHasta.Size = new System.Drawing.Size(54, 21);
+            this.cmbHasta.TabIndex = 16;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(372, 155);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(48, 13);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Hasta(*):";
+            // 
+            // cmbDesde
+            // 
+            this.cmbDesde.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDesde.FormattingEnabled = true;
+            this.cmbDesde.Location = new System.Drawing.Point(312, 152);
+            this.cmbDesde.Name = "cmbDesde";
+            this.cmbDesde.Size = new System.Drawing.Size(54, 21);
+            this.cmbDesde.TabIndex = 14;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(255, 155);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(51, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Desde(*):";
             // 
             // cmbQuienCancela
             // 
             this.cmbQuienCancela.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbQuienCancela.FormattingEnabled = true;
-            this.cmbQuienCancela.Location = new System.Drawing.Point(94, 69);
+            this.cmbQuienCancela.Location = new System.Drawing.Point(94, 67);
             this.cmbQuienCancela.Name = "cmbQuienCancela";
             this.cmbQuienCancela.Size = new System.Drawing.Size(172, 21);
             this.cmbQuienCancela.TabIndex = 12;
+            this.cmbQuienCancela.SelectedIndexChanged += new System.EventHandler(this.cmbQuienCancela_SelectedIndexChanged);
             // 
             // lblCance
             // 
             this.lblCance.AutoSize = true;
-            this.lblCance.Location = new System.Drawing.Point(11, 73);
+            this.lblCance.Location = new System.Drawing.Point(11, 71);
             this.lblCance.Name = "lblCance";
             this.lblCance.Size = new System.Drawing.Size(80, 13);
             this.lblCance.TabIndex = 11;
@@ -98,15 +145,16 @@
             // 
             this.comboSemestre.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboSemestre.FormattingEnabled = true;
-            this.comboSemestre.Location = new System.Drawing.Point(349, 109);
+            this.comboSemestre.Location = new System.Drawing.Point(349, 107);
             this.comboSemestre.Name = "comboSemestre";
             this.comboSemestre.Size = new System.Drawing.Size(121, 21);
             this.comboSemestre.TabIndex = 10;
+            this.comboSemestre.SelectedIndexChanged += new System.EventHandler(this.comboSemestre_SelectedIndexChanged);
             // 
             // txtAnio
             // 
             this.txtAnio.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.txtAnio.Location = new System.Drawing.Point(349, 70);
+            this.txtAnio.Location = new System.Drawing.Point(349, 68);
             this.txtAnio.MaxLength = 4;
             this.txtAnio.Name = "txtAnio";
             this.txtAnio.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -118,19 +166,21 @@
             // 
             this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(94, 108);
+            this.comboBox3.Location = new System.Drawing.Point(94, 106);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(172, 21);
             this.comboBox3.TabIndex = 8;
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // comboEspec
             // 
             this.comboEspec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEspec.FormattingEnabled = true;
-            this.comboEspec.Location = new System.Drawing.Point(94, 68);
+            this.comboEspec.Location = new System.Drawing.Point(94, 66);
             this.comboEspec.Name = "comboEspec";
             this.comboEspec.Size = new System.Drawing.Size(172, 21);
             this.comboEspec.TabIndex = 7;
+            this.comboEspec.SelectedIndexChanged += new System.EventHandler(this.comboEspec_SelectedIndexChanged);
             // 
             // comboTop5
             // 
@@ -145,7 +195,7 @@
             // lblSemestre
             // 
             this.lblSemestre.AutoSize = true;
-            this.lblSemestre.Location = new System.Drawing.Point(284, 112);
+            this.lblSemestre.Location = new System.Drawing.Point(284, 110);
             this.lblSemestre.Name = "lblSemestre";
             this.lblSemestre.Size = new System.Drawing.Size(64, 13);
             this.lblSemestre.TabIndex = 4;
@@ -154,7 +204,7 @@
             // lblYear
             // 
             this.lblYear.AutoSize = true;
-            this.lblYear.Location = new System.Drawing.Point(284, 73);
+            this.lblYear.Location = new System.Drawing.Point(304, 74);
             this.lblYear.Name = "lblYear";
             this.lblYear.Size = new System.Drawing.Size(39, 13);
             this.lblYear.TabIndex = 3;
@@ -163,7 +213,7 @@
             // lblPlan
             // 
             this.lblPlan.AutoSize = true;
-            this.lblPlan.Location = new System.Drawing.Point(11, 112);
+            this.lblPlan.Location = new System.Drawing.Point(11, 110);
             this.lblPlan.Name = "lblPlan";
             this.lblPlan.Size = new System.Drawing.Size(31, 13);
             this.lblPlan.TabIndex = 2;
@@ -172,7 +222,7 @@
             // lblEspecialidad
             // 
             this.lblEspecialidad.AutoSize = true;
-            this.lblEspecialidad.Location = new System.Drawing.Point(11, 72);
+            this.lblEspecialidad.Location = new System.Drawing.Point(11, 70);
             this.lblEspecialidad.Name = "lblEspecialidad";
             this.lblEspecialidad.Size = new System.Drawing.Size(83, 13);
             this.lblEspecialidad.TabIndex = 1;
@@ -189,7 +239,7 @@
             // 
             // btnLimpiar
             // 
-            this.btnLimpiar.Location = new System.Drawing.Point(152, 192);
+            this.btnLimpiar.Location = new System.Drawing.Point(152, 207);
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Size = new System.Drawing.Size(75, 23);
             this.btnLimpiar.TabIndex = 1;
@@ -199,7 +249,7 @@
             // 
             // btnEjecutar
             // 
-            this.btnEjecutar.Location = new System.Drawing.Point(299, 192);
+            this.btnEjecutar.Location = new System.Drawing.Point(299, 207);
             this.btnEjecutar.Name = "btnEjecutar";
             this.btnEjecutar.Size = new System.Drawing.Size(75, 23);
             this.btnEjecutar.TabIndex = 2;
@@ -259,6 +309,15 @@
             this.AfdoGpoFliar.Name = "AfdoGpoFliar";
             this.AfdoGpoFliar.Width = 104;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(348, 134);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(40, 13);
+            this.label4.TabIndex = 17;
+            this.label4.Text = "Mes(*):";
+            // 
             // Estadisticas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,5 +362,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn AfdoGpoFliar;
         private System.Windows.Forms.ComboBox cmbQuienCancela;
         private System.Windows.Forms.Label lblCance;
+        private System.Windows.Forms.ComboBox cmbHasta;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ComboBox cmbDesde;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -978,6 +978,45 @@ RETURN
 );
 GO
 
+CREATE FUNCTION KFC.fun_obtener_turnos_con_llegada(@afil_nombre VARCHAR(255), @afil_apellido VARCHAR(255), @documento VARCHAR(18), @prof_id INT)
+returns TABLE
+RETURN
+(
+          SELECT
+                    A.nombre
+                  , A.apellido
+                  , A.numero_doc
+                  , T.fecha_hora
+                  , T.turno_id
+                  , E.descripcion
+          FROM
+                    KFC.afiliados A
+                    INNER JOIN
+                              KFC.turnos T
+                    ON
+                              T.afil_id = A.afil_id
+                    INNER JOIN
+                              KFC.profesionales P
+                    ON
+                              P.prof_id = T.prof_id
+                    INNER JOIN
+                              KFC.especialidades E
+                    ON
+                              E.espe_id = T.espe_id
+                    INNER JOIN
+                              KFC.atenciones AT
+                    ON
+                              AT.turno_id = T.turno_id
+          WHERE
+                    A.nombre              LIKE '%' + UPPER(@afil_nombre) + '%'
+                    AND A.apellido        LIKE '%' + UPPER(@afil_apellido) + '%'
+                    AND A.numero_doc         = CAST(@documento AS NUMERIC(18,0))
+                    AND P.prof_id            = @prof_id
+                    AND AT.sintomas    IS NULL
+                    AND AT.diagnostico IS NULL
+);
+GO
+
 --SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','lara','GIMÉNEZ','')
 --SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','','','')
 
@@ -2378,6 +2417,26 @@ BEGIN
 	END CATCH
 END;
 GO
+
+CREATE PROCEDURE KFC.pro_registrar_atencion (@turno_id INT, @diagnostico VARCHAR(255), @sintomas VARCHAR(255), @fecha Datetime)
+AS
+BEGIN
+  BEGIN TRY
+    BEGIN TRANSACTION
+      UPDATE KFC.atenciones SET sintomas = @sintomas, diagnostico = @diagnostico, hora_atencion = @fecha
+      WHERE turno_id = @turno_id;
+    COMMIT;
+  END TRY
+  BEGIN CATCH
+    IF @@trancount > 0
+        ROLLBACK TRANSACTION;
+    PRINT 'La atencion no se registro correctamente'
+    ;THROW
+  END CATCH
+END;
+GO
+
+
 CREATE PROCEDURE KFC.alta_afiliado( @nombre VARCHAR(255),
 @apellido                                   VARCHAR(255),
 @tipo_doc                                   VARCHAR(25),

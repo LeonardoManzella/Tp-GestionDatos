@@ -53,15 +53,6 @@ namespace ClinicaFrba.CancelarTurno
                     return;
                 }
 
-                /*
-                if ( (fechaActual.CompareTo(fechaDesde)<0) && (fechaActual.CompareTo(fechaHasta) < 0))
-                {
-                    MessageBox.Show("Las Fechas deben ser Menor a la Actual", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-                */
-
-
                 Base_de_Datos.BD_Turnos.cancelar_turnos_pro(fechaDesde, fechaHasta, motivo, usuario.id);
 
                 MessageBox.Show("Los turnos se cancelaron exitosamente", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);

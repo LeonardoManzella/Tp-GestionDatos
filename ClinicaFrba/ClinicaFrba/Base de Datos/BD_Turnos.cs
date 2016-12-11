@@ -93,6 +93,37 @@ namespace ClinicaFrba.Base_de_Datos
 
         }
 
+        public static DataTable obtener_turnos_con_llegada(string afiliado_nombre, string afiliado_apellido, string documento, int profID)
+        {
+            try
+            { 
+                string funcion = "SELECT * FROM KFC.fun_obtener_turnos_con_llegada(@afil_nombre, @afil_apellido, @documento, @prof_id)";
+                SqlParameter parametro1 = new SqlParameter("@afil_nombre", SqlDbType.Text);
+                parametro1.Value = afiliado_nombre.ToUpper();
+                SqlParameter parametro2 = new SqlParameter("@afil_apellido", SqlDbType.Text);
+                parametro2.Value = afiliado_apellido.ToUpper();
+                SqlParameter parametro3 = new SqlParameter("@documento", SqlDbType.Text);
+                parametro3.Value = documento;
+                SqlParameter parametro4 = new SqlParameter("@prof_id", SqlDbType.Int);
+                parametro4.Value = profID;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                parametros.Add(parametro3);
+                parametros.Add(parametro4);
+
+                var tabla_datos = InteraccionDB.ejecutar_funcion_table(funcion, parametros);
+
+                return tabla_datos;
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+                throw e;
+            }
+}
+
         public static void cancelar_turnos_pro(DateTime fechaDesde, DateTime fechaHasta, string motivo, int id)
         {
             try

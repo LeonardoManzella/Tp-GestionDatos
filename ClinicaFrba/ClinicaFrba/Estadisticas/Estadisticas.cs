@@ -169,7 +169,7 @@ namespace ClinicaFrba.Estadisticas
                 //Lleno el DataGrid
                 Comunes.llenar_dataGrid(dataGridEstadistico, datos);
 
-                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
+                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros. Revise que haya almenos una cancelacion");
 
             }
             catch (Exception ex)

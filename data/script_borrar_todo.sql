@@ -186,6 +186,10 @@ IF OBJECT_ID('KFC.pro_validar_usuario') IS NOT NULL
 DROP PROCEDURE KFC.pro_validar_usuario;
 GO
 
+IF OBJECT_ID('KFC.pro_registrar_atencion') IS NOT NULL
+DROP PROCEDURE KFC.pro_registrar_atencion;
+GO
+
 IF OBJECT_ID('KFC.pro_top_5_cancelaciones_especialidad') IS NOT NULL
 DROP PROCEDURE KFC.pro_top_5_cancelaciones_especialidad ;
 GO
@@ -350,6 +354,9 @@ IF OBJECT_ID('KFC.obtener_titular') IS NOT NULL
 DROP FUNCTION KFC.obtener_titular;
 GO
 
+IF OBJECT_ID('KFC.fun_obtener_turnos_con_llegada') IS NOT NULL
+DROP FUNCTION KFC.fun_obtener_turnos_con_llegada;
+GO
 
 PRINT 'Funciones Borradas'
 

@@ -161,5 +161,35 @@ namespace ClinicaFrba.Base_de_Datos
                 throw e;
             }
         }
+
+        public static void registrar_atencion(int turnoID, string diagnostico, string sintomas, DateTime horaConfigurada)
+        {
+            try
+            {
+                string sql = "KFC.pro_registrar_atencion";
+
+                SqlParameter parametro1 = new SqlParameter("@turno_id", SqlDbType.Int);
+                parametro1.Value = turnoID;
+                SqlParameter parametro2 = new SqlParameter("@diagnostico", SqlDbType.VarChar);
+                parametro2.Value = diagnostico;
+                SqlParameter parametro3 = new SqlParameter("@sintomas", SqlDbType.VarChar);
+                parametro3.Value = sintomas;
+                SqlParameter parametro4 = new SqlParameter("@fecha", SqlDbType.DateTime);
+                parametro4.Value = horaConfigurada;
+
+                var parametros = new List<SqlParameter>();
+                parametros.Add(parametro1);
+                parametros.Add(parametro2);
+                parametros.Add(parametro3);
+                parametros.Add(parametro4);
+
+                InteraccionDB.ejecutar_storedProcedure(sql, parametros);
+            }
+            catch (Exception e)
+            {
+                InteraccionDB.ImprimirExcepcion(e);
+                throw e;
+            }
+        }
     }
 }

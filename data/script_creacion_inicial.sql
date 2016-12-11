@@ -978,6 +978,45 @@ RETURN
 );
 GO
 
+CREATE FUNCTION KFC.fun_obtener_turnos_con_llegada(@afil_nombre VARCHAR(255), @afil_apellido VARCHAR(255), @documento VARCHAR(18), @prof_id INT)
+returns TABLE
+RETURN
+(
+          SELECT
+                    A.nombre
+                  , A.apellido
+                  , A.numero_doc
+                  , T.fecha_hora
+                  , T.turno_id
+                  , E.descripcion
+          FROM
+                    KFC.afiliados A
+                    INNER JOIN
+                              KFC.turnos T
+                    ON
+                              T.afil_id = A.afil_id
+                    INNER JOIN
+                              KFC.profesionales P
+                    ON
+                              P.prof_id = T.prof_id
+                    INNER JOIN
+                              KFC.especialidades E
+                    ON
+                              E.espe_id = T.espe_id
+                    INNER JOIN
+                              KFC.atenciones AT
+                    ON
+                              AT.turno_id = T.turno_id
+          WHERE
+                    A.nombre              LIKE '%' + UPPER(@afil_nombre) + '%'
+                    AND A.apellido        LIKE '%' + UPPER(@afil_apellido) + '%'
+                    AND A.numero_doc         = CAST(@documento AS NUMERIC(18,0))
+                    AND P.prof_id            = @prof_id
+                    AND AT.sintomas    IS NULL
+                    AND AT.diagnostico IS NULL
+);
+GO
+
 --SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','lara','GIMÉNEZ','')
 --SELECT * FROM KFC.fun_obtener_turnos_sin_diagnostico_profesional('','','','','')
 
@@ -2406,6 +2445,26 @@ BEGIN
 	END CATCH
 END;
 GO
+
+CREATE PROCEDURE KFC.pro_registrar_atencion (@turno_id INT, @diagnostico VARCHAR(255), @sintomas VARCHAR(255), @fecha Datetime)
+AS
+BEGIN
+  BEGIN TRY
+    BEGIN TRANSACTION
+      UPDATE KFC.atenciones SET sintomas = @sintomas, diagnostico = @diagnostico, hora_atencion = @fecha
+      WHERE turno_id = @turno_id;
+    COMMIT;
+  END TRY
+  BEGIN CATCH
+    IF @@trancount > 0
+        ROLLBACK TRANSACTION;
+    PRINT 'La atencion no se registro correctamente'
+    ;THROW
+  END CATCH
+END;
+GO
+
+
 CREATE PROCEDURE KFC.alta_afiliado( @nombre VARCHAR(255),
 @apellido                                   VARCHAR(255),
 @tipo_doc                                   VARCHAR(25),
@@ -2527,6 +2586,7 @@ CREATE PROCEDURE KFC.alta_afiliado_adjunto ( @nombre VARCHAR(255),
 @estado                                              INT,
 @plan                                                INT,
 @afil_id_titular                                     INT,
+@conyuge											 INT,
 @afil_id                                             NUMERIC(18,0) OUTPUT)
 AS
 BEGIN
@@ -2537,14 +2597,26 @@ BEGIN
 					
           BEGIN TRANSACTION
 			    BEGIN TRY
-                    --Calculo ID de Usuario No Titular
+				IF @conyuge > 0
+				BEGIN
+					select @id = @afil_id_titular+1;
+				END
+				ELSE
+				BEGIN
+                    --Calculo ID de Afiliado No Titular
 					SELECT
                               @id= MAX(af.afil_id) +1
                     FROM
                               kfc.afiliados af
                     WHERE
                               Floor(af.afil_id/100) = Floor(@afil_id_titular/100);
-                    --SELECT @usuario = us_id FROM kfc.afiliados WHERE afil_id = @afil_id_titular;
+
+					IF @id = @afil_id_titular+1
+					BEGIN
+						select @id = @afil_id_titular+2;
+					END
+				END
+
 					--Insercion del usuario
                                         INSERT INTO kfc.usuarios
                                                   (
@@ -2605,7 +2677,7 @@ BEGIN
                               
                               SET IDENTITY_INSERT KFC.afiliados OFF;
 							  
-							  --Actualizo usuario Titular personas a cargo
+							  --Actualizo afiliadoTitular personas a cargo
                               UPDATE
                                         kfc.afiliados
                               SET       personas_a_car = ISNULL(personas_a_car,0)+1
@@ -2703,51 +2775,53 @@ CREATE PROCEDURE KFC.baja_afiliado( @afiliado INT, @fecha VARCHAR(30) )
 AS
 DECLARE @plan INT
 DECLARE @fecha_formateada DATETIME
+DECLARE @usuario INT
 BEGIN
 BEGIN TRY
 	SET @fecha_formateada = CONVERT(DATETIME, @fecha, 102);
 	BEGIN TRANSACTION
+		--Deshabilito el afiliado
 		UPDATE kfc.afiliados
 		SET habilitado = 0,
 			@plan = plan_id
 		WHERE afil_id = @afiliado;
 		
+		--Selecciona el usuario del afiliado
+		select @usuario = us_id from kfc.afiliados us where afil_id = @afiliado;
+
+		--Quita la funcionalidad afiliado del usuario
+		DELETE kfc.roles_usuarios
+		WHERE us_id = @usuario
+		AND rol_id = 1;
 		
-		DELETE FROM kfc.turnos
-		WHERE
-        afil_id               = @afiliado
-        AND YEAR(fecha_hora) >=YEAR(@fecha_formateada)
-        AND MONTH(fecha_hora)>=MONTH(@fecha_formateada)
-        AND turno_id NOT IN
-        (
-        SELECT
-            tu.turno_id
-        FROM
-            kfc.turnos tu
-            INNER JOIN
-                kfc.atenciones ate
-            ON
-                tu.turno_id = ate.turno_id
-		 WHERE
-            afil_id               = @afiliado
-            AND YEAR(fecha_hora) >=YEAR(@fecha_formateada)
-            AND MONTH(fecha_hora)>=MONTH(@fecha_formateada) 
-		);
+		--Elimino los turnos que tiene pedidos y que no usó
+		DELETE FROM kfc.turnos 
+		WHERE afil_id = @afiliado and YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
+		and DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada) 
+		and turno_id not in (
+			--Que no elimine turnos cancelados
+			SELECT ca.turno_id from kfc.cancelaciones ca
+			inner join turnos tr on ca.turno_id = tr.turno_id
+			where tr.afil_id = @afiliado
+			AND YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
+			AND DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada)
+			UNION
+		--Obtiene todas las atenciones de turnos a partir de este momento
+		--(esto es por culpa de que la fecha no es la real)
+			SELECT tu.turno_id from kfc.turnos tu
+			  inner join kfc.atenciones ate on tu.turno_id = ate.turno_id
+			  WHERE afil_id = @afiliado
+			AND YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
+			AND DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada
+			)
+);
 	
-	--Si es Usuario Titular, doy de baja a todo el Grupo Familiar
 	IF (floor(@afiliado/100)*100+1) = @afiliado
 	EXECUTE	KFC.baja_grupo_afiliado @afiliado , @fecha_formateada;
 
 
-	INSERT INTO kfc.historial_afiliados VALUES(@afiliado, @fecha_formateada ,@plan,'El afiliado ha sido dado de baja');
+	Insert Into kfc.historial_afiliados values(@afiliado, @fecha_formateada ,@plan,'El afiliado ha sido dado de baja');
 	
-	--Deshabilito Usuario
-	UPDATE KFC.usuarios SET habilitado = 0
-	FROM	KFC.usuarios u
-	INNER JOIN KFC.afiliados a
-	ON a.us_id = u.us_id
-	WHERE a.afil_id = @afiliado
-
 COMMIT;
 END TRY
 BEGIN CATCH 
@@ -2758,7 +2832,6 @@ BEGIN CATCH
 END CATCH
 END
 GO
-
 
 CREATE PROCEDURE KFC.baja_grupo_afiliado ( @afiliado INT, @fecha DATETIME)
 AS

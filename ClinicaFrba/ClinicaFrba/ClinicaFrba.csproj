@@ -108,6 +108,12 @@
     <Compile Include="Clases\Comunes.cs" />
     <Compile Include="Clases\Configuracion_Global.cs" />
     <Compile Include="Clases\Helper.cs" />
+    <Compile Include="Clases\SelecionarFecha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Clases\SelecionarFecha.Designer.cs">
+      <DependentUpon>SelecionarFecha.cs</DependentUpon>
+    </Compile>
     <Compile Include="Compra Bono\CompraBonoAfiliado.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -183,6 +189,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Cancelar Turnos\CancelarTurnoProfesional.resx">
       <DependentUpon>CancelarTurnoProfesional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Clases\SelecionarFecha.resx">
+      <DependentUpon>SelecionarFecha.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Compra Bono\CompraBonoAfiliado.resx">
       <DependentUpon>CompraBonoAfiliado.cs</DependentUpon>

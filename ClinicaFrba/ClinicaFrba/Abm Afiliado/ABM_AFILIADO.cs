@@ -50,12 +50,13 @@ namespace ClinicaFrba.Abm_Afiliado
             {
                 if (!Helper.Email_valido(TxtMail.Text.Trim()))
                 {
-                    error += "El campo e-mail no tiene un formato correcto";
+                    error += "El campo e-mail no tiene un formato correcto \r\n" ;
                 };
             }
-            if (dtFNac.Value < DateTime.Parse(Configuracion_Global.fecha_actual).AddYears(-115))
+            //if (dtFNac.Value < DateTime.Parse(Configuracion_Global.fecha_actual).AddYears(-115))
+            if (afiliado.fecha_nac < DateTime.Parse(Configuracion_Global.fecha_actual).AddYears(-115))
             {
-                var rta = MessageBox.Show("EL año de nacimiento parece mal cargado, ¿está seguro desea continuar?", "Fecha Nacimiento", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                var rta = MessageBox.Show("EL año de nacimiento parece mal cargado, ¿está seguro desea continuar? \r\n", "Fecha Nacimiento", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (rta == DialogResult.No)
                     error += "La fecha indicada se ha declarado como incorrecta, debe reasignarse \r\n";
             }
@@ -99,12 +100,17 @@ namespace ClinicaFrba.Abm_Afiliado
                         {
                             afiliado.id_principal = afiliado_principal.id;
                             mapAfiliado_Vista(afiliado);
+                            if (this.chkConc.Checked == true)
+                            {
+                                afiliado.id = 2;
+                            }
                             id_us = Negocio.ABMAFIL.alta_afiliado_adjunto(afiliado);
                             if (id_us >= 0)
                             {
                                 this.txtAfilId.Text = id_us.ToString();
                                 this.Text = "MODIFICA AFILIADO";
-
+                                this.chkConc.Visible = false;
+                                this.chkConc.Checked = false;
                                 MessageBox.Show("Se ha realizado el alta correctamente");
                                 funcionalidad = tipos_funcionalidad.MODIFICACION;
                                 bloquearNoEditable();
@@ -174,7 +180,8 @@ namespace ClinicaFrba.Abm_Afiliado
             catch (Exception ex)
             {
                 string mensaje = "Ha ocurrido un Error. Por Favor Verifique los datos";
-                if(  ex.Message.Contains("Ya existe el Afiliado")  ) mensaje = ex.Message;
+                if (ex.Message.Contains("Ya existe el Afiliado")) mensaje = ex.Message;
+                if (ex.Message.Contains("cónyuge declarado")) mensaje = ex.Message;
 
                 MessageBox.Show(mensaje, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -190,8 +197,19 @@ namespace ClinicaFrba.Abm_Afiliado
                 txtAfilId.Enabled = false;
                 if (funcionalidad == tipos_funcionalidad.ALTA)
                 {
+                    this.afiliado.fecha_nac = DateTime.Parse(Configuracion_Global.fecha_actual);
+                    this.txtFec_Nac.Text = this.afiliado.fecha_nac.ToShortDateString();
+                    
                     btnLimpiar_Click(sender, e);
                     this.Text = "ALTA AFILIADO";
+                    if (afiliado_principal.id != 0)
+                    {
+                        this.chkConc.Visible = true;
+                    }
+                    else
+                    {
+                        this.chkConc.Visible = false;
+                    };
                 }
                 else if (funcionalidad == tipos_funcionalidad.MODIFICACION)
                 {
@@ -220,7 +238,8 @@ namespace ClinicaFrba.Abm_Afiliado
             txtDireccion.Text = afiliado.direccion;
             cmbEstadoCiv.SelectedIndex = ComboData.obtener_indice(afiliado.estado_civil, cmbEstadoCiv);
             TxtMail.Text = afiliado.e_mail;
-            dtFNac.Value = afiliado.fecha_nac;
+            //dtFNac.Value = afiliado.fecha_nac;
+            txtFec_Nac.Text = afiliado.fecha_nac.ToShortDateString();
             txtAfilId.Text = afiliado.id.ToString();
             txtNombre.Text = afiliado.nombre;
             txtNroDoc.Text = afiliado.nro_doc.ToString();
@@ -238,7 +257,8 @@ namespace ClinicaFrba.Abm_Afiliado
             txtApellido.Enabled = false;
             txtNombre.Enabled = false;
             txtNroDoc.Enabled = false;
-            dtFNac.Enabled = false;
+            //dtFNac.Enabled = false;
+            btn_fecha.Enabled = false;
         }
 
         private void bloquearTodo()
@@ -247,7 +267,8 @@ namespace ClinicaFrba.Abm_Afiliado
             txtDireccion.Enabled = false;
             cmbEstadoCiv.Enabled = false;
             TxtMail.Enabled = false;
-            dtFNac.Enabled = false;
+            btn_fecha.Enabled = false;
+            //dtFNac.Enabled = false;
             txtAfilId.Enabled = false;
             txtNombre.Enabled = false;
             txtNroDoc.Enabled = false;
@@ -305,7 +326,7 @@ namespace ClinicaFrba.Abm_Afiliado
             afiliado.direccion = txtDireccion.Text;
             afiliado.estado_civil = ComboData.obtener_identificador(cmbEstadoCiv);
             afiliado.e_mail = TxtMail.Text;
-            afiliado.fecha_nac = dtFNac.Value;
+            //afiliado.fecha_nac = dtFNac.Value;
             if (!String.IsNullOrEmpty(txtAfilId.Text.Trim()))
                 afiliado.id = Int32.Parse(txtAfilId.Text);
 
@@ -364,10 +385,12 @@ namespace ClinicaFrba.Abm_Afiliado
 
             if (!Equals(this.funcionalidad, tipos_funcionalidad.MODIFICACION))
             {
+                this.afiliado.fecha_nac = DateTime.Parse( Configuracion_Global.fecha_actual);
+                txtFec_Nac.Text = afiliado.fecha_nac.ToShortDateString();
                 txtAfilId.Text = (afiliado.id == 0) ? string.Empty : afiliado.id.ToString();
                 txtNombre.Text = afiliado.nombre;
                 txtApellido.Text = afiliado.apellido;
-                dtFNac.Value = dtFNac.MinDate;
+                //dtFNac.Value = dtFNac.MinDate;
                 txtNroDoc.Text = (afiliado.nro_doc == 0) ? string.Empty : afiliado.nro_doc.ToString();
             }
             txtDireccion.Text = afiliado.direccion;
@@ -378,6 +401,14 @@ namespace ClinicaFrba.Abm_Afiliado
             cmbSexo.SelectedIndex = 0;
             cmbEstadoCiv.SelectedIndex = 0;
 
+        }
+
+        private void btn_fecha_Click(object sender, EventArgs e)
+        {
+            var seleccionarFecha = new SelecionarFecha();
+            seleccionarFecha.ShowDialog();
+            this.afiliado.fecha_nac = seleccionarFecha.fecha;
+            this.txtFec_Nac.Text = afiliado.fecha_nac.ToShortDateString();
         }
     }
 }

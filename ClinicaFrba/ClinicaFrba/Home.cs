@@ -266,7 +266,9 @@ namespace ClinicaFrba
 
         private void registrarResultadoDiagnosticoToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            new AtencionesMedicas.RegistrarResultado().ShowDialog();
+            var registrarResultado = new AtencionesMedicas.RegistrarResultado();
+            registrarResultado.usuario = this.usuario;
+            registrarResultado.ShowDialog();
         }
 
         private void registrarLlegadaAfiliadoToolStripMenuItem_Click(object sender, EventArgs e)

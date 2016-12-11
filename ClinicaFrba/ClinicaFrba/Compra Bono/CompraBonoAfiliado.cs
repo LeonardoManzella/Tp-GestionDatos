@@ -96,6 +96,9 @@ namespace ClinicaFrba.Compra_Bono
             this.Close();
         }
 
-
+        private void textBox_Cantidad_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_numeros(e);
+        }
     }
 }

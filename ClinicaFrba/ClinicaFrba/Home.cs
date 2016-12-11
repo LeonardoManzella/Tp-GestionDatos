@@ -244,5 +244,10 @@ namespace ClinicaFrba
         {
             loguear();
         }
+        
+        private void textBox_usuario_KeyPress_1(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras_y_arroba(e);
+        }
     }
 }

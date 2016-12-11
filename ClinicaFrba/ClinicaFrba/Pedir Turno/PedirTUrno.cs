@@ -132,5 +132,10 @@ namespace ClinicaFrba.Pedir_Turno
         {
             Comunes.DialogoElegirFecha(textBox_fecha);
         }
+
+        private void textBox_apellido_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras(e);
+        }
     }
 }

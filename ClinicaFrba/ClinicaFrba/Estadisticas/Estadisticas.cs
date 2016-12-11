@@ -41,7 +41,8 @@ namespace ClinicaFrba.Estadisticas
                     año = Int32.Parse(this.txtAnio.Text);
                 else
                 {
-                    throw new Exception("Debe indicar un año, para realizar la consulta \r\n Usar 0 si se quiere de todos los años");
+                    año = 0;
+                    //throw new Exception("Debe indicar un año, para realizar la consulta \r\n Usar 0 si se quiere de todos los años");
                 }
 
                 var estadistica = ComboData.obtener_identificador(this.comboTop5);
@@ -98,13 +99,13 @@ namespace ClinicaFrba.Estadisticas
             {
 
                 //DATAGRID
-                DataTable datos = BD_Estadisticas.get_top5_prof_vagos(año, mes_desde, mes_hasta, plan ,especialidad);
+                DataTable datos = BD_Estadisticas.get_top5_prof_vagos(año, mes_desde, mes_hasta, plan, especialidad);
 
                 //Lleno el DataGrid
                 Comunes.llenar_dataGrid(dataGridEstadistico, datos);
 
                 if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
-                                
+
             }
             catch (Exception ex)
             {
@@ -165,11 +166,10 @@ namespace ClinicaFrba.Estadisticas
                 //DATAGRID
                 DataTable datos = BD_Estadisticas.get_top5_canc_esp(año, mes_desde, mes_hasta, cancelador);
 
-
                 //Lleno el DataGrid
                 Comunes.llenar_dataGrid(dataGridEstadistico, datos);
 
-                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros");
+                if (datos.Rows.Count <= 0) throw new Exception("No hay resultados para Estos Filtros. Revise que haya almenos una cancelacion");
 
             }
             catch (Exception ex)
@@ -264,7 +264,7 @@ namespace ClinicaFrba.Estadisticas
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
-            this.txtAnio.Text = string.Empty;
+            this.txtAnio.Text = "";
             this.cmbQuienCancela.SelectedIndex = ComboData.obtener_indice(0, this.cmbQuienCancela);
             comboBox3.SelectedIndex = ComboData.obtener_indice(0, this.comboBox3);
             comboSemestre.SelectedIndex = ComboData.obtener_indice(0, this.comboSemestre);
@@ -383,6 +383,16 @@ namespace ClinicaFrba.Estadisticas
                     cmbHasta.SelectedIndex = 11;
                 }
             }
+        }
+
+        private void cmbDesde_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.mes_desde = int.Parse(ComboData.obtener_descripcion(cmbDesde));
+        }
+
+        private void cmbHasta_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.mes_hasta = int.Parse(ComboData.obtener_descripcion(cmbHasta));
         }
     }
 }

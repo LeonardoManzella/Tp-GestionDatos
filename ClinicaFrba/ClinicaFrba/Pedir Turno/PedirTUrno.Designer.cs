@@ -50,16 +50,17 @@
             // 
             // comboEspecialidades
             // 
+            this.comboEspecialidades.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEspecialidades.FormattingEnabled = true;
-            this.comboEspecialidades.Location = new System.Drawing.Point(376, 25);
+            this.comboEspecialidades.Location = new System.Drawing.Point(409, 25);
             this.comboEspecialidades.Name = "comboEspecialidades";
-            this.comboEspecialidades.Size = new System.Drawing.Size(158, 21);
+            this.comboEspecialidades.Size = new System.Drawing.Size(182, 21);
             this.comboEspecialidades.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(236, 29);
+            this.label1.Location = new System.Drawing.Point(269, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(126, 13);
             this.label1.TabIndex = 4;
@@ -68,7 +69,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(236, 64);
+            this.label3.Location = new System.Drawing.Point(269, 64);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(66, 13);
             this.label3.TabIndex = 6;
@@ -87,7 +88,7 @@
             // boton_salir
             // 
             this.boton_salir.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.boton_salir.Location = new System.Drawing.Point(277, 387);
+            this.boton_salir.Location = new System.Drawing.Point(406, 387);
             this.boton_salir.Name = "boton_salir";
             this.boton_salir.Size = new System.Drawing.Size(103, 40);
             this.boton_salir.TabIndex = 7;
@@ -98,9 +99,9 @@
             // button_horarios
             // 
             this.button_horarios.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_horarios.Location = new System.Drawing.Point(582, 53);
+            this.button_horarios.Location = new System.Drawing.Point(597, 25);
             this.button_horarios.Name = "button_horarios";
-            this.button_horarios.Size = new System.Drawing.Size(82, 36);
+            this.button_horarios.Size = new System.Drawing.Size(82, 62);
             this.button_horarios.TabIndex = 4;
             this.button_horarios.Text = "Buscar Turnos";
             this.button_horarios.UseVisualStyleBackColor = true;
@@ -109,9 +110,9 @@
             // button_limpiar
             // 
             this.button_limpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_limpiar.Location = new System.Drawing.Point(12, 387);
+            this.button_limpiar.Location = new System.Drawing.Point(171, 387);
             this.button_limpiar.Name = "button_limpiar";
-            this.button_limpiar.Size = new System.Drawing.Size(76, 40);
+            this.button_limpiar.Size = new System.Drawing.Size(103, 40);
             this.button_limpiar.TabIndex = 14;
             this.button_limpiar.Text = "Limpiar";
             this.button_limpiar.UseVisualStyleBackColor = true;
@@ -124,20 +125,21 @@
             this.groupBox_filtros.Controls.Add(this.textBox_apellido);
             this.groupBox_filtros.Controls.Add(this.textBox_nombre);
             this.groupBox_filtros.Controls.Add(this.label6);
+            this.groupBox_filtros.Controls.Add(this.button_horarios);
             this.groupBox_filtros.Controls.Add(this.label5);
             this.groupBox_filtros.Controls.Add(this.label1);
             this.groupBox_filtros.Controls.Add(this.label3);
             this.groupBox_filtros.Controls.Add(this.comboEspecialidades);
             this.groupBox_filtros.Location = new System.Drawing.Point(12, 12);
             this.groupBox_filtros.Name = "groupBox_filtros";
-            this.groupBox_filtros.Size = new System.Drawing.Size(544, 100);
+            this.groupBox_filtros.Size = new System.Drawing.Size(685, 100);
             this.groupBox_filtros.TabIndex = 15;
             this.groupBox_filtros.TabStop = false;
             this.groupBox_filtros.Text = "Filtros de Busqueda";
             // 
             // button_fecha
             // 
-            this.button_fecha.Location = new System.Drawing.Point(416, 64);
+            this.button_fecha.Location = new System.Drawing.Point(479, 62);
             this.button_fecha.Name = "button_fecha";
             this.button_fecha.Size = new System.Drawing.Size(112, 23);
             this.button_fecha.TabIndex = 12;
@@ -147,25 +149,31 @@
             // 
             // textBox_fecha
             // 
+            this.textBox_fecha.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_fecha.Enabled = false;
-            this.textBox_fecha.Location = new System.Drawing.Point(309, 64);
+            this.textBox_fecha.Location = new System.Drawing.Point(342, 63);
             this.textBox_fecha.Name = "textBox_fecha";
-            this.textBox_fecha.Size = new System.Drawing.Size(100, 20);
+            this.textBox_fecha.ReadOnly = true;
+            this.textBox_fecha.Size = new System.Drawing.Size(131, 20);
             this.textBox_fecha.TabIndex = 11;
             // 
             // textBox_apellido
             // 
+            this.textBox_apellido.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_apellido.Location = new System.Drawing.Point(120, 61);
             this.textBox_apellido.Name = "textBox_apellido";
-            this.textBox_apellido.Size = new System.Drawing.Size(100, 20);
+            this.textBox_apellido.Size = new System.Drawing.Size(142, 20);
             this.textBox_apellido.TabIndex = 10;
+            this.textBox_apellido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_apellido_KeyPress);
             // 
             // textBox_nombre
             // 
+            this.textBox_nombre.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox_nombre.Location = new System.Drawing.Point(120, 26);
             this.textBox_nombre.Name = "textBox_nombre";
-            this.textBox_nombre.Size = new System.Drawing.Size(100, 20);
+            this.textBox_nombre.Size = new System.Drawing.Size(142, 20);
             this.textBox_nombre.TabIndex = 9;
+            this.textBox_nombre.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_apellido_KeyPress);
             // 
             // label6
             // 
@@ -215,7 +223,6 @@
             this.Controls.Add(this.groupBox_filtros);
             this.Controls.Add(this.button_limpiar);
             this.Controls.Add(this.boton_salir);
-            this.Controls.Add(this.button_horarios);
             this.Controls.Add(this.label4);
             this.Name = "PedirTurno";
             this.Text = "Pedir Turnos";

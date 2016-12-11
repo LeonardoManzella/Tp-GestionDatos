@@ -424,9 +424,10 @@ namespace ClinicaFrba.Base_de_Datos
                 var lista_tipos_documentos = new List<ComboData>();
 
                 lista_tipos_documentos.Add(new ComboData(1, "DNI"));
-                lista_tipos_documentos.Add(new ComboData(2, "Pasaporte"));
+                lista_tipos_documentos.Add(new ComboData(2, "PAS"));
                 lista_tipos_documentos.Add(new ComboData(3, "LE"));
                 lista_tipos_documentos.Add(new ComboData(4, "LC"));
+                lista_tipos_documentos.Add(new ComboData(5, "CI"));
                 return lista_tipos_documentos;
             }
             catch (Exception e)

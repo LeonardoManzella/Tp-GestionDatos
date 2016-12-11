@@ -269,6 +269,7 @@ namespace ClinicaFrba.Abm_Afiliado
             this.cmbSexo.Items.Clear();
             this.cmbSexo.Items.Add(new ComboData(77, "M"));
             this.cmbSexo.Items.Add(new ComboData(70, "F"));
+            this.cmbSexo.Items.Add(new ComboData(84, "T"));
 
             this.cmbEstadoCiv.DisplayMember = "descripcion";
             this.cmbEstadoCiv.ValueMember = "identificador";

@@ -19,7 +19,7 @@ namespace ClinicaFrba.Base_de_Datos
             try
             {
 
-                string sql = "KFC.pro_top_5_cancelaciones_especialidad  @año, @plazo_init, @plazo_fin @cancelador";
+                string sql = "KFC.pro_top_5_cancelaciones_especialidad  @año, @plazo_init, @plazo_fin, @cancelador";
 
                 SqlParameter parametro1 = new SqlParameter("@año", SqlDbType.Int);
                 parametro1.Value = año;
@@ -28,7 +28,7 @@ namespace ClinicaFrba.Base_de_Datos
                 SqlParameter parametro3 = new SqlParameter("@plazo_fin", SqlDbType.Int);
                 parametro3.Value = fin;
                 SqlParameter parametro4 = new SqlParameter("@cancelador", SqlDbType.Int);
-                parametro3.Value = cancelador;
+                parametro4.Value = cancelador;
 
                 SqlCommand cmd = new SqlCommand(sql, Conexion.Instance.get());
 

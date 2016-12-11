@@ -886,10 +886,10 @@ RETURN
           FROM
                     kfc.bonos b
           WHERE
-                    b.afil_id  in (
+                    b.afil_id  IN (
 								--Esto devuelve el grupo familiar completo.
-								select afil_id from afiliados 
-								where floor(afil_id/100) = floor(@afiliado_id/100) and habilitado = 1 )
+								SELECT afil_id FROM afiliados 
+								WHERE floor(afil_id/100) = floor(@afiliado_id/100) AND habilitado = 1 )
                     AND b.consumido = 0
 );
 GO
@@ -1805,7 +1805,7 @@ CREATE FUNCTION kfc.fun_obtener_turnos_cancelables( @afil_id INT, @fecha_formato
 RETURNS TABLE AS
 RETURN
 SELECT
-                    CONCAT(P.apellido,', ', P.nombre)                                  profesional
+        CONCAT(P.apellido,', ', P.nombre)                                  profesional
         , CONCAT(DAY(T.fecha_hora), '/', MONTH(T.fecha_hora), '/', YEAR(T.fecha_hora)) fecha
         , T.hora                                                                       hora
         , E.descripcion
@@ -2550,26 +2550,43 @@ BEGIN TRY
 		SET habilitado = 0,
 			@plan = plan_id
 		WHERE afil_id = @afiliado;
-	
 		
-		DELETE FROM kfc.turnos 
-		WHERE afil_id = @afiliado and YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
-		and DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada) 
-		and turno_id not in (
-
-			SELECT tu.turno_id from kfc.turnos tu
-			  inner join kfc.atenciones ate on tu.turno_id = ate.turno_id
-			  WHERE afil_id = @afiliado
-			AND YEAR(fecha_hora)>=YEAR(@fecha_formateada) 
-			AND DATEPART(DAYOFYEAR, fecha_hora)>DATEPART(DAYOFYEAR,@fecha_formateada)
-);
+		
+		DELETE FROM kfc.turnos
+		WHERE
+        afil_id               = @afiliado
+        AND YEAR(fecha_hora) >=YEAR(@fecha_formateada)
+        AND MONTH(fecha_hora)>=MONTH(@fecha_formateada)
+        AND turno_id NOT IN
+        (
+        SELECT
+            tu.turno_id
+        FROM
+            kfc.turnos tu
+            INNER JOIN
+                kfc.atenciones ate
+            ON
+                tu.turno_id = ate.turno_id
+		 WHERE
+            afil_id               = @afiliado
+            AND YEAR(fecha_hora) >=YEAR(@fecha_formateada)
+            AND MONTH(fecha_hora)>=MONTH(@fecha_formateada) 
+		);
 	
+	--Si es Usuario Titular, doy de baja a todo el Grupo Familiar
 	IF (floor(@afiliado/100)*100+1) = @afiliado
 	EXECUTE	KFC.baja_grupo_afiliado @afiliado , @fecha_formateada;
 
 
-	Insert Into kfc.historial_afiliados values(@afiliado, @fecha_formateada ,@plan,'El afiliado ha sido dado de baja');
+	INSERT INTO kfc.historial_afiliados VALUES(@afiliado, @fecha_formateada ,@plan,'El afiliado ha sido dado de baja');
 	
+	--Deshabilito Usuario
+	UPDATE KFC.usuarios SET habilitado = 0
+	FROM	KFC.usuarios u
+	INNER JOIN KFC.afiliados a
+	ON a.us_id = u.us_id
+	WHERE a.afil_id = @afiliado
+
 COMMIT;
 END TRY
 BEGIN CATCH 
@@ -2579,7 +2596,7 @@ BEGIN CATCH
        THROW
 END CATCH
 END
-go
+GO
 
 
 CREATE PROCEDURE KFC.baja_grupo_afiliado ( @afiliado INT, @fecha DATETIME)
@@ -2587,6 +2604,7 @@ AS
 declare @interno int
 BEGIN
 	DECLARE adjuntos CURSOR FOR   
+	--Selecciono todo el Grupo Familiar
 	SELECT afil_id FROM afiliados WHERE floor(afil_id/100) = floor(@afiliado/100) and habilitado = 1  
 	
 	OPEN adjuntos  

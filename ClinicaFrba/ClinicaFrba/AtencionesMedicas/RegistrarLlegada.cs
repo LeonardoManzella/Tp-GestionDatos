@@ -194,5 +194,10 @@ namespace ClinicaFrba.AtencionesMedicas
         {
             this.button_Registrar.Enabled = true;
         }
+
+        private void textBox_profesional_apellido_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_letras(e);
+        }
     }
 }

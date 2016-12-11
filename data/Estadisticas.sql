@@ -201,9 +201,9 @@ CREATE PROCEDURE KFC.pro_top_5_espec_Atenciones
           @año INT, @plazo_init INT, @plazo_fin INT
 AS
 BEGIN
-          SELECT DISTINCT TOP 5 ESP.ESPE_ID especialidad
+          SELECT DISTINCT TOP 5 esp.espe_id especialidad_id
                   , esp.descripcion
-                  , ISNULL(COUNT(*),0) atenciones
+                  , ISNULL(COUNT(*),0) cantidad_bonos
           FROM
                     (
                               SELECT

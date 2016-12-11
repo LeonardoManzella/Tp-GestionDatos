@@ -34,13 +34,16 @@ namespace ClinicaFrba
             this.comprarBonoUsuario_ToolStripMenuItem.Enabled               = false;
             this.agendaCrearTurnos_ToolStripMenuItem.Enabled                = false;
             this.cancelarTurnosUsuario_ToolStripMenuItem.Enabled            = false;
-            this.registrarLlegadaToolStripMenuItem.Enabled                  = false;
+            this.registrarLlegadaAfiliadoToolStripMenuItem.Enabled          = false;
             this.registrarResultadoDiagnosticoToolStripMenuItem.Enabled     = false;
             this.nuevRolToolStripMenuItem.Enabled                           = false;
             this.modificarRol_ToolStripMenuItem.Enabled                     = false;
             this.comprarBonoAdmin_ToolStripMenuItem.Enabled                 = false;
             this.estadisticasToolStripMenuItem.Enabled                      = false;
 
+            this.afiliadoToolStripMenuItem.Enabled = false;
+            this.profesionalesToolStripMenuItem.Enabled = false;
+            this.adminToolStripMenuItem.Enabled = false;
         }
         private void habilitar_componentes()
         {
@@ -54,13 +57,35 @@ namespace ClinicaFrba
             if (this.usuario.permisos.Contains("COMPRAR_BONO"))                 this.comprarBonoUsuario_ToolStripMenuItem.Enabled               = true;
             if (this.usuario.permisos.Contains("CREAR_AGENDA"))                 this.agendaCrearTurnos_ToolStripMenuItem.Enabled                = true;
             if (this.usuario.permisos.Contains("CANCELAR_TURNOS_AGENDA"))       this.cancelarTurnosProfesional_ToolStripMenuItem.Enabled        = true;
-            if (this.usuario.permisos.Contains("REGISTRAR_LLEGADA"))            this.registrarLlegadaToolStripMenuItem.Enabled                  = true;
+            if (this.usuario.permisos.Contains("REGISTRAR_LLEGADA"))            this.registrarLlegadaAfiliadoToolStripMenuItem.Enabled           = true;
             if (this.usuario.permisos.Contains("REGISTRAR_DIAGNOSTICO"))        this.registrarResultadoDiagnosticoToolStripMenuItem.Enabled     = true;
             if (this.usuario.permisos.Contains("CREAR_ROL"))                    this.nuevRolToolStripMenuItem.Enabled                           = true;
             if (this.usuario.permisos.Contains("MODIFICAR_ROL"))                this.modificarRol_ToolStripMenuItem.Enabled                     = true;
             if (this.usuario.permisos.Contains("COMPRA_BONO_ADMINISTRADOR"))    this.comprarBonoAdmin_ToolStripMenuItem.Enabled                 = true;
             if (this.usuario.permisos.Contains("ESTADISTICAS"))                 this.estadisticasToolStripMenuItem.Enabled                      = true;
 
+
+            if (usuario.permisos.Contains("ALTA_AFILIADO")  || 
+                usuario.permisos.Contains("MODIFICAR_AFILIADO")  || 
+                usuario.permisos.Contains("BAJA_AFILIADO")  || 
+                usuario.permisos.Contains("PEDIR_TURNO")  || 
+                usuario.permisos.Contains("CANCELAR_TURNO")  || 
+                usuario.permisos.Contains("COMPRAR_BONO")
+                ) this.afiliadoToolStripMenuItem.Enabled = true;
+
+            if (usuario.permisos.Contains("CREAR_AGENDA") ||
+                usuario.permisos.Contains("CANCELAR_TURNOS_AGENDA") ||
+                usuario.permisos.Contains("REGISTRAR_DIAGNOSTICO")
+                )
+                this.profesionalesToolStripMenuItem.Enabled = true;
+
+            if (usuario.permisos.Contains("REGISTRAR_LLEGADA") ||
+                usuario.permisos.Contains("CREAR_ROL") ||
+                usuario.permisos.Contains("MODIFICAR_ROL") ||
+                usuario.permisos.Contains("COMPRA_BONO_ADMINISTRADOR") ||
+                usuario.permisos.Contains("ESTADISTICAS")
+                )
+                this.adminToolStripMenuItem.Enabled = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -228,17 +253,6 @@ namespace ClinicaFrba
             new Estadisticas.Estadisticas().ShowDialog();
         }
 
-        private void registrarLlegadaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var form = new AtencionesMedicas.RegistrarLlegada();
-            form.usuario_profesional = this.usuario;
-            form.ShowDialog();
-        }
-
-        private void registrarResultadoDiagnosticoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new AtencionesMedicas.RegistrarResultado().ShowDialog();
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -248,6 +262,18 @@ namespace ClinicaFrba
         private void textBox_usuario_KeyPress_1(object sender, KeyPressEventArgs e)
         {
             Helper.permitir_letras_y_arroba(e);
+        }
+
+        private void registrarResultadoDiagnosticoToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            new AtencionesMedicas.RegistrarResultado().ShowDialog();
+        }
+
+        private void registrarLlegadaAfiliadoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new AtencionesMedicas.RegistrarLlegada();
+            form.usuario_profesional = this.usuario;
+            form.ShowDialog();
         }
     }
 }

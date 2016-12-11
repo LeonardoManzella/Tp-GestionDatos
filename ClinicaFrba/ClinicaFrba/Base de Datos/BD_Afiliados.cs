@@ -62,7 +62,7 @@ namespace ClinicaFrba.Base_de_Datos
                 if (String.IsNullOrEmpty(documento)) documento = "0";
 
 
-                    string funcion = "SELECT * FROM KFC.obtener_afiliados_filtros(@nombre, @apellido, @documento)";
+                string funcion = "SELECT * FROM KFC.obtener_afiliados_filtros(@nombre, @apellido, @documento)";
                 SqlParameter parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 parametro1.Value = nombre.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
@@ -70,7 +70,7 @@ namespace ClinicaFrba.Base_de_Datos
                 SqlParameter parametro3 = new SqlParameter("@documento", SqlDbType.Decimal);
                 parametro3.Value = Convert.ToDecimal(documento);
 
-               var parametros = new List<SqlParameter>();
+                var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
                 parametros.Add(parametro3);
@@ -97,13 +97,13 @@ namespace ClinicaFrba.Base_de_Datos
         {
             try
             {
- 
+
                 //TODO pasar todo esto a metodo con Variable Args para parameters y fijo primer parametro string sql
                 SqlConnection conexion = Conexion.Instance.get();
 
 
                 SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @afil_id_titular, @afil_id OUTPUT", conexion);
-                
+
                 var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
                 var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
@@ -155,7 +155,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
-               InteraccionDB.ImprimirExcepcion(e);
+                InteraccionDB.ImprimirExcepcion(e);
 
                 throw e;
             }
@@ -175,7 +175,7 @@ namespace ClinicaFrba.Base_de_Datos
                 SqlConnection conexion = Conexion.Instance.get();
 
 
-                SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado_adjunto  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @afil_id_titular, @afil_id OUTPUT", conexion);
+                SqlCommand comando_sql = new SqlCommand("kfc.alta_afiliado_adjunto  @nombre, @apellido, @tipo_doc, @nro_doc, @direccion, @telefono, @mail, @sexo, @fecha_nac, @estado, @plan, @afil_id_titular, @conyuge, @afil_id OUTPUT", conexion);
 
                 var parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 var parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
@@ -189,6 +189,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro9 = new SqlParameter("@estado", SqlDbType.Int);
                 var parametro10 = new SqlParameter("@plan", SqlDbType.Int);
                 var parametro11 = new SqlParameter("@afil_id_titular", SqlDbType.Int);
+                var parametro12 = new SqlParameter("@conyuge", SqlDbType.Int);
                 var parametro0 = new SqlParameter("@afil_id", SqlDbType.Int);
 
                 parametro1.Value = afiliado.nombre.ToUpper();
@@ -203,7 +204,8 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro9.Value = afiliado.estado_civil;
                 parametro10.Value = afiliado.plan_id;
                 parametro11.Value = afiliado.id_principal;
-                parametro0.Direction = ParameterDirection.Output;//ReturnValue;
+                parametro0.Direction = ParameterDirection.Output;
+                parametro12.Value = afiliado.id;
 
                 comando_sql.Parameters.Add(parametro1);
                 comando_sql.Parameters.Add(parametro2);
@@ -217,6 +219,7 @@ namespace ClinicaFrba.Base_de_Datos
                 comando_sql.Parameters.Add(parametro9);
                 comando_sql.Parameters.Add(parametro10);
                 comando_sql.Parameters.Add(parametro11);
+                comando_sql.Parameters.Add(parametro12);
                 comando_sql.Parameters.Add(parametro0);
 
                 comando_sql.ExecuteReader();
@@ -228,6 +231,13 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
+                if (e.Message.Contains("duplic"))
+                {
+                   var texto  = string.Format("El afiliado {0}, ya tiene un cónyuge declarado.", afiliado.id_principal);
+
+                    e = new Exception(texto);
+                }
+
                 InteraccionDB.ImprimirExcepcion(e);
 
                 throw e;
@@ -258,7 +268,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro12 = new SqlParameter("@fecha", SqlDbType.VarChar);
 
                 parametro0.Value = afiliado.id;
-                parametro3.Value = afiliado.tipo_doc.ToUpper();               
+                parametro3.Value = afiliado.tipo_doc.ToUpper();
                 parametro4.Value = afiliado.direccion.ToUpper();
                 parametro5.Value = afiliado.telefono.ToUpper();
                 parametro6.Value = afiliado.e_mail.ToUpper();
@@ -282,7 +292,7 @@ namespace ClinicaFrba.Base_de_Datos
             }
             catch (Exception e)
             {
-               InteraccionDB.ImprimirExcepcion(e);
+                InteraccionDB.ImprimirExcepcion(e);
 
                 throw e;
             }
@@ -357,7 +367,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro1 = new SqlParameter("@fecha", SqlDbType.VarChar);
 
                 parametro0.Value = afil_id;
-                parametro1.Value =Configuracion_Global.fecha_actual;
+                parametro1.Value = Configuracion_Global.fecha_actual;
 
                 comando_sql.Parameters.Add(parametro0);
                 comando_sql.Parameters.Add(parametro1);
@@ -371,7 +381,7 @@ namespace ClinicaFrba.Base_de_Datos
                 return false;
             }
         }
-        
-       
+
+
     }
 }

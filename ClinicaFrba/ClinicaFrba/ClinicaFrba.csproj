@@ -120,6 +120,12 @@
     <Compile Include="Compra Bono\CompraBonoAdmin.Designer.cs">
       <DependentUpon>CompraBonoAdmin.cs</DependentUpon>
     </Compile>
+    <Compile Include="SeleccionarFecha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SeleccionarFecha.Designer.cs">
+      <DependentUpon>SeleccionarFecha.cs</DependentUpon>
+    </Compile>
     <Compile Include="Crear Agenda Medico\HorariosDia.cs" />
     <Compile Include="Home.cs">
       <SubType>Form</SubType>
@@ -189,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Compra Bono\CompraBonoAdmin.resx">
       <DependentUpon>CompraBonoAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SeleccionarFecha.resx">
+      <DependentUpon>SeleccionarFecha.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Crear Agenda Medico\AgendaMedico.resx">
       <DependentUpon>AgendaMedico.cs</DependentUpon>

@@ -112,7 +112,7 @@ namespace ClinicaFrba.AgendaMedico
             }
 
             DateTime maxFechaAgendaExistente = Base_de_Datos.BD_Profesional.getUltimaFechaAgenda(this.idProfesional);
-            if(maxFechaAgendaExistente != null)
+            if (maxFechaAgendaExistente != null)
             {
                 DateTime minDate = maxFechaAgendaExistente.AddDays(1);
                 fechaDesdePicker.MinDate = minDate;
@@ -203,8 +203,14 @@ namespace ClinicaFrba.AgendaMedico
                     return;
                 }
                 diasSemanaCombo.Items.Remove(diasSemanaCombo.SelectedItem);
-                diasSemanaCombo.SelectedItem = diasSemanaCombo.Items[0];
-
+                if (diasSemanaCombo.Items.Count == 0)
+                {
+                    agregarHorarioButton.Enabled = false;
+                }
+                else
+                {
+                    diasSemanaCombo.SelectedItem = diasSemanaCombo.Items[0];
+                }
                 diasAgenda.Add(diaNuevo);
                 horariosPorDiaList.Items.Add(diaNuevo);
             }
@@ -230,13 +236,21 @@ namespace ClinicaFrba.AgendaMedico
                 MessageBox.Show("Seleccione los horarios a borrar", "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            else {
 
-            List<HorariosDia> selectedItemsList = horariosPorDiaList.SelectedItems.Cast<HorariosDia>().ToList();
-            foreach (HorariosDia selectedItem in selectedItemsList)
-            {
-                diasSemanaCombo.Items.Add(selectedItem.nombreDiaSemana);
-                diasAgenda.Remove(selectedItem);
-                horariosPorDiaList.Items.Remove(selectedItem);
+                if (diasSemanaCombo.Items.Count == 0)
+                {
+                    agregarHorarioButton.Enabled = true;
+                }
+                List<HorariosDia> selectedItemsList = horariosPorDiaList.SelectedItems.Cast<HorariosDia>().ToList();
+                foreach (HorariosDia selectedItem in selectedItemsList)
+                {
+                    diasSemanaCombo.Items.Add(selectedItem.nombreDiaSemana);
+                    diasAgenda.Remove(selectedItem);
+                    horariosPorDiaList.Items.Remove(selectedItem);
+                }
+
+                horariosPorDiaList.SelectedItems.Clear();
             }
         }
 
@@ -264,7 +278,7 @@ namespace ClinicaFrba.AgendaMedico
 
                 AgendaMedico_Load(sender, e);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Error en la creacion de la agenda: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

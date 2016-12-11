@@ -185,7 +185,11 @@
             // 
             this.btnAccion.BackColor = System.Drawing.SystemColors.Control;
             this.btnAccion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+<<<<<<< HEAD
+            this.btnAccion.Location = new System.Drawing.Point(368, 357);
+=======
             this.btnAccion.Location = new System.Drawing.Point(371, 379);
+>>>>>>> 5de8e0b43d5fff4450efa600b834b664e3501e4a
             this.btnAccion.Name = "btnAccion";
             this.btnAccion.Size = new System.Drawing.Size(120, 37);
             this.btnAccion.TabIndex = 14;
@@ -195,7 +199,11 @@
             // 
             // btnCancelar
             // 
+<<<<<<< HEAD
+            this.btnCancelar.Location = new System.Drawing.Point(199, 357);
+=======
             this.btnCancelar.Location = new System.Drawing.Point(202, 379);
+>>>>>>> 5de8e0b43d5fff4450efa600b834b664e3501e4a
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(120, 37);
             this.btnCancelar.TabIndex = 15;
@@ -324,7 +332,11 @@
             // 
             // btnLimpiar
             // 
+<<<<<<< HEAD
+            this.btnLimpiar.Location = new System.Drawing.Point(23, 357);
+=======
             this.btnLimpiar.Location = new System.Drawing.Point(26, 379);
+>>>>>>> 5de8e0b43d5fff4450efa600b834b664e3501e4a
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Size = new System.Drawing.Size(120, 37);
             this.btnLimpiar.TabIndex = 21;

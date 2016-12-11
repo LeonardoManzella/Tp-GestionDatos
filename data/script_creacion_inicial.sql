@@ -1693,66 +1693,104 @@ CREATE PROCEDURE KFC.pro_cancelar_turno_profesional
         , @fecha_formato_string VARCHAR(30)
 AS
     BEGIN
-		BEGIN TRY
-			BEGIN TRANSACTION
+    BEGIN TRY
+      BEGIN TRANSACTION
 
-				DECLARE @fecha_actual DATETIME;
-				SET @fecha_actual = CONVERT(DATETIME, @fecha_formato_string, 102);
+        DECLARE @fecha_actual DATETIME,
+            @fecha_temp DATETIME,
+            @cursor_espe_id INT,
+            @cursor_dia INT,
+            @cursor_fecha_desde DATETIME,
+            @cursor_fecha_hasta DATETIME,
+            @cursor_hora_desde TIME(0),
+            @cursor_hora_hasta TIME(0);
 
-				INSERT INTO KFC.cancelaciones
-				SELECT T.turno_id, @motivo, @fecha_actual, 2
-				FROM KFC.turnos T
-				FULL OUTER JOIN 
-					KFC.cancelaciones C
-					ON C.turno_id = T.turno_id
-				INNER JOIN
-					KFC.profesionales P
-					ON P.prof_id = T.prof_id
-				WHERE P.prof_id = @prof_id
-				AND T.fecha_hora BETWEEN @fechaDesde AND @fechaHasta
-				AND (T.turno_id IS NULL OR C.turno_id IS NULL)
+        SET @fecha_actual = CONVERT(DATETIME, @fecha_formato_string, 102);
 
-				IF @@ROWCOUNT = 0			
+        INSERT INTO KFC.cancelaciones
+        SELECT T.turno_id, @motivo, @fecha_actual, 2
+        FROM KFC.turnos T
+        FULL OUTER JOIN 
+          KFC.cancelaciones C
+          ON C.turno_id = T.turno_id
+        INNER JOIN
+          KFC.profesionales P
+          ON P.prof_id = T.prof_id
+        WHERE P.prof_id = @prof_id
+        AND T.fecha_hora BETWEEN @fechaDesde AND @fechaHasta
+        AND (T.turno_id IS NULL OR C.turno_id IS NULL)
+
+        IF @@ROWCOUNT = 0     
                     RAISERROR ('No hay turnos a cancelar',16,1);
 
-				--Vuelvo restablecer Bonos Consumidos
-				UPDATE KFC.bonos	SET consumido = 0
-				WHERE bono_id IN	(
-									SELECT	a.bono_id
-									FROM	KFC.atenciones a
-											INNER JOIN KFC.turnos t
-											ON t.turno_id = a.turno_id
-									WHERE	t.prof_id = @prof_id
-									AND		@fechaDesde >= t.fecha_hora
-									AND		@fechaHasta <= t.fecha_hora
-									)
+        --Vuelvo restablecer Bonos Consumidos
+        UPDATE KFC.bonos  SET consumido = 0
+        WHERE bono_id IN  (
+                  SELECT  a.bono_id
+                  FROM  KFC.atenciones a
+                      INNER JOIN KFC.turnos t
+                      ON t.turno_id = a.turno_id
+                  WHERE t.prof_id = @prof_id
+                  AND   @fechaDesde >= t.fecha_hora
+                  AND   @fechaHasta <= t.fecha_hora
+                  )
 
+        DECLARE agenda CURSOR FOR   
+        SELECT espe_id, dia, fecha_desde, fecha_hasta, hora_desde, hora_hasta FROM KFC.agenda WHERE prof_id = @prof_id AND DATEDIFF(day, @fechaDesde, fecha_hasta) >= 1
 
-				--Elimina Agenda Profesional para Que no hayan nuevos turnos
-				DELETE KFC.agenda
-					FROM	KFC.agenda a
-					WHERE	a.fecha_desde >= @fechaDesde
-					AND		a.fecha_hasta <= @fechaHasta
-					AND		a.prof_id = @prof_id
+        OPEN agenda  
+          FETCH NEXT FROM agenda
+        INTO @cursor_espe_id, @cursor_dia, @cursor_fecha_desde, @cursor_fecha_hasta, @cursor_hora_desde, @cursor_hora_hasta
 
+        WHILE @@FETCH_STATUS = 0  
+        BEGIN 
+          --- Caso :    CancelDesde----AgendaDesde-----CancelHasta-----AgendaHasta
+          IF CONVERT(date, @cursor_fecha_desde) >= CONVERT(date, @fechaDesde) AND CONVERT(date, @cursor_fecha_hasta) > CONVERT(date, @fechaHasta)
+            BEGIN 
+              UPDATE KFC.agenda SET fecha_desde = @fechaHasta + CAST(hora_desde as DATETIME)
+              WHERE prof_id = @prof_id AND espe_id = @cursor_espe_id AND fecha_desde = @cursor_fecha_desde AND fecha_hasta = @cursor_fecha_hasta
+              AND dia = @cursor_dia
+            END
+          --- Caso :    AgendaDesde----CancelDesde-----AgendaHasta-----CancelHasta
+          ELSE IF CONVERT(date, @cursor_fecha_desde) < CONVERT(date, @fechaDesde) AND CONVERT(date, @cursor_fecha_hasta) <= CONVERT(date, @fechaHasta)
+            BEGIN
+              UPDATE KFC.agenda SET fecha_hasta = @fechaDesde + CAST(hora_hasta as DATETIME)
+              WHERE prof_id = @prof_id AND espe_id = @cursor_espe_id AND fecha_desde = @cursor_fecha_desde AND fecha_hasta = @cursor_fecha_hasta
+              AND dia = @cursor_dia
+            END
+          --- Caso :    AgendaDesde----CancelDesde-----CancelHasta-----AgendaHasta
+          ELSE IF CONVERT(date, @cursor_fecha_desde) < CONVERT(date, @fechaDesde) AND CONVERT(date, @cursor_fecha_hasta) > CONVERT(date, @fechaHasta)
+            BEGIN
+              UPDATE KFC.agenda SET fecha_hasta = @fechaDesde + CAST(hora_hasta as DATETIME)
+              WHERE prof_id = @prof_id AND espe_id = @cursor_espe_id AND fecha_desde = @cursor_fecha_desde AND fecha_hasta = @cursor_fecha_hasta
+              AND dia = @cursor_dia
 
-				--Si selecciona algo, no borro nada
-				IF EXISTS	(
-								SELECT 1
-								FROM	KFC.agenda a
-								WHERE	a.fecha_desde <= @fechaDesde
-								AND		a.fecha_hasta >= @fechaHasta
-								AND		a.prof_id = @prof_id
-								)		
-                    RAISERROR ('No se pudo Eliminar Turnos Agenda',16,1);
+              INSERT INTO KFC.agenda(espe_id, prof_id, dia, fecha_desde, fecha_hasta, hora_desde, hora_hasta)
+              VALUES(@cursor_espe_id, @prof_id, @cursor_dia, @fechaHasta + CAST(@cursor_hora_desde as DATETIME), @cursor_fecha_hasta, @cursor_hora_desde, @cursor_hora_hasta)
+            END
+          --- Caso :    CancelDesde----AgendaDesde-----AgendaHasta-----CancelHasta
+          ELSE IF (CONVERT(date, @cursor_fecha_desde) > CONVERT(date, @fechaDesde) AND CONVERT(date, @cursor_fecha_hasta) < CONVERT(date, @fechaHasta))
+            OR (CONVERT(date, @cursor_fecha_desde) = CONVERT(date, @fechaDesde) AND CONVERT(date, @cursor_fecha_hasta) = CONVERT(date, @fechaHasta))
+            BEGIN
+              DELETE FROM KFC.agenda
+              WHERE prof_id = @prof_id AND espe_id = @cursor_espe_id AND fecha_desde = @cursor_fecha_desde AND fecha_hasta = @cursor_fecha_hasta
+              AND dia = @cursor_dia
+            END
 
-			COMMIT;
-		END TRY
-		BEGIN CATCH
+          FETCH NEXT FROM agenda
+          INTO @cursor_espe_id, @cursor_dia, @cursor_fecha_desde, @cursor_fecha_hasta, @cursor_hora_desde, @cursor_hora_hasta
+        END
+
+        CLOSE agenda
+        DEALLOCATE agenda
+
+      COMMIT;
+    END TRY
+    BEGIN CATCH
                     IF @@trancount > 0
                     ROLLBACK TRANSACTION;
 
-					PRINT 'Turnos no cancelados. Fechas ' + CONVERT(varchar,@fechaDesde,102) + ' - ' + CONVERT(varchar,@fechaHasta,102)
+          PRINT 'Turnos no cancelados. Fechas ' + CONVERT(varchar,@fechaDesde,102) + ' - ' + CONVERT(varchar,@fechaHasta,102)
                     ;THROW
         END CATCH
     END;

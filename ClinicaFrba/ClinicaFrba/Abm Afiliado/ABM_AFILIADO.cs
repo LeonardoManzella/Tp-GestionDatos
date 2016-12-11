@@ -173,7 +173,7 @@ namespace ClinicaFrba.Abm_Afiliado
             }
             catch (Exception ex)
             {
-                string mensaje = "Ha ocurrido un Error. Pruebe modificar los datos";
+                string mensaje = "Ha ocurrido un Error. Por Favor Verifique los datos";
                 if(  ex.Message.Contains("Ya existe el Afiliado")  ) mensaje = ex.Message;
 
                 MessageBox.Show(mensaje, "ABM_AFILIADO", MessageBoxButtons.OK, MessageBoxIcon.Error);

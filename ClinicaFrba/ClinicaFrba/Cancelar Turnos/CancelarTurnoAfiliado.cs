@@ -28,7 +28,7 @@ namespace ClinicaFrba.CancelarTurno
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Ventana: " + ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -66,7 +66,7 @@ namespace ClinicaFrba.CancelarTurno
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cancelar Turno: " + ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -80,7 +80,7 @@ namespace ClinicaFrba.CancelarTurno
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Error al Actualizar Datos: " + ex.Message, "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.comboCancelarTurno.Enabled = false;
                 this.cancelarTurnoButton.Enabled = false;
             }

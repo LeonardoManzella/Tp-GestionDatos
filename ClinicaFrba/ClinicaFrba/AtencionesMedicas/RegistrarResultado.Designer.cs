@@ -88,6 +88,7 @@
             this.textBox_Documento.Name = "textBox_Documento";
             this.textBox_Documento.Size = new System.Drawing.Size(100, 20);
             this.textBox_Documento.TabIndex = 9;
+            this.textBox_Documento.TextChanged += new System.EventHandler(this.textBox_Documento_TextChanged);
             // 
             // textBox_Nombre
             // 

@@ -44,7 +44,7 @@ namespace ClinicaFrba.AtencionesMedicas
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al Cargar Form: " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Ventana: " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -142,7 +142,7 @@ namespace ClinicaFrba.AtencionesMedicas
             catch (Exception ex)
             {
                 btnLimpiar_Click(null, null);
-                MessageBox.Show("Error al obtener Registrar Llegada. " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Registrar Llegada: " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -186,7 +186,7 @@ namespace ClinicaFrba.AtencionesMedicas
             catch (Exception ex)
             {
                 btnLimpiar_Click(null, null);
-                MessageBox.Show(ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Seleccionar: " + ex.Message, "RegistrarLlegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

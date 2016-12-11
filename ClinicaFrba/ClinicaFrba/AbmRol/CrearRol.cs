@@ -27,7 +27,7 @@ namespace ClinicaFrba.AbmRol
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Ventana: " + ex.Message, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -80,7 +80,7 @@ namespace ClinicaFrba.AbmRol
                     mensaje = "Rol Duplicado. Ya existe un Rol con ese nombre";
                 }
 
-                MessageBox.Show("Error al Crear Rol. "+ mensaje, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Crear Rol: "+ mensaje, "Crear Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

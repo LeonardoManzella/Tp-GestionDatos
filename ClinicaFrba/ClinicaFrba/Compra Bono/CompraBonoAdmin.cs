@@ -87,7 +87,7 @@ namespace ClinicaFrba.Compra_Bono
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Cargar Ventana: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -146,7 +146,7 @@ namespace ClinicaFrba.Compra_Bono
             catch (Exception ex)
             {
                 button_limpiar_Click(null,null);
-                MessageBox.Show("Error al Comprar. " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Comprar: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -169,7 +169,7 @@ namespace ClinicaFrba.Compra_Bono
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Limpiar: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -195,7 +195,7 @@ namespace ClinicaFrba.Compra_Bono
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al obtener Datos Columna. " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al Seleccionar: " + ex.Message, "ComprarBono", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -205,6 +205,11 @@ namespace ClinicaFrba.Compra_Bono
         }
 
         private void textBox_Cantidad_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Helper.permitir_numeros(e);
+        }
+
+        private void textBox_Documento_KeyPress(object sender, KeyPressEventArgs e)
         {
             Helper.permitir_numeros(e);
         }

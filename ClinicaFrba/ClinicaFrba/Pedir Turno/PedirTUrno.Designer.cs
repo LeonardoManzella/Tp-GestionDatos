@@ -98,7 +98,7 @@
             // 
             // button_horarios
             // 
-            this.button_horarios.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_horarios.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_horarios.Location = new System.Drawing.Point(597, 25);
             this.button_horarios.Name = "button_horarios";
             this.button_horarios.Size = new System.Drawing.Size(82, 62);

@@ -57,8 +57,8 @@
             // 
             // cancelarTurnoButton
             // 
-            this.cancelarTurnoButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.cancelarTurnoButton.Location = new System.Drawing.Point(167, 260);
+            this.cancelarTurnoButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cancelarTurnoButton.Location = new System.Drawing.Point(338, 257);
             this.cancelarTurnoButton.Name = "cancelarTurnoButton";
             this.cancelarTurnoButton.Size = new System.Drawing.Size(130, 36);
             this.cancelarTurnoButton.TabIndex = 2;
@@ -68,9 +68,9 @@
             // 
             // cancelarButton
             // 
-            this.cancelarButton.Location = new System.Drawing.Point(167, 302);
+            this.cancelarButton.Location = new System.Drawing.Point(22, 257);
             this.cancelarButton.Name = "cancelarButton";
-            this.cancelarButton.Size = new System.Drawing.Size(130, 26);
+            this.cancelarButton.Size = new System.Drawing.Size(87, 26);
             this.cancelarButton.TabIndex = 3;
             this.cancelarButton.Text = "Cancelar";
             this.cancelarButton.UseVisualStyleBackColor = true;

@@ -33,7 +33,7 @@ namespace ClinicaFrba.AtencionesMedicas
             Helper.permitir_letras(e);
         }
 
-        private void textBox_Documento_TextChanged(object sender, EventArgs e)
+        private void textBox_Documento_KeyPress(object sender, KeyPressEventArgs e)
         {
             Helper.permitir_numeros(e);
         }

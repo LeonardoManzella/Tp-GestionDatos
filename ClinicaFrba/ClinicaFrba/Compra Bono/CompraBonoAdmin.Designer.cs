@@ -94,10 +94,10 @@
             // 
             // button_Comprar
             // 
-            this.button_Comprar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_Comprar.Location = new System.Drawing.Point(640, 391);
+            this.button_Comprar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_Comprar.Location = new System.Drawing.Point(635, 391);
             this.button_Comprar.Name = "button_Comprar";
-            this.button_Comprar.Size = new System.Drawing.Size(81, 45);
+            this.button_Comprar.Size = new System.Drawing.Size(86, 45);
             this.button_Comprar.TabIndex = 12;
             this.button_Comprar.Text = "Comprar Bonos";
             this.button_Comprar.UseVisualStyleBackColor = true;
@@ -141,7 +141,7 @@
             // 
             // button_Buscar
             // 
-            this.button_Buscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_Buscar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button_Buscar.Location = new System.Drawing.Point(625, 17);
             this.button_Buscar.Name = "button_Buscar";
             this.button_Buscar.Size = new System.Drawing.Size(96, 55);
@@ -271,7 +271,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(765, 476);
+            this.ClientSize = new System.Drawing.Size(765, 446);
             this.Controls.Add(this.label_afiliados);
             this.Controls.Add(this.label_Id_Usuario);
             this.Controls.Add(this.dataGridView_resultados_filtros);

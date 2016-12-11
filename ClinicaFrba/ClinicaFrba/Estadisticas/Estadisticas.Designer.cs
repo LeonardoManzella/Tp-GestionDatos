@@ -250,9 +250,9 @@
             // 
             // btnLimpiar
             // 
-            this.btnLimpiar.Location = new System.Drawing.Point(152, 207);
+            this.btnLimpiar.Location = new System.Drawing.Point(12, 207);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(75, 23);
+            this.btnLimpiar.Size = new System.Drawing.Size(82, 32);
             this.btnLimpiar.TabIndex = 1;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = true;
@@ -260,11 +260,12 @@
             // 
             // btnEjecutar
             // 
-            this.btnEjecutar.Location = new System.Drawing.Point(299, 207);
+            this.btnEjecutar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEjecutar.Location = new System.Drawing.Point(393, 207);
             this.btnEjecutar.Name = "btnEjecutar";
-            this.btnEjecutar.Size = new System.Drawing.Size(75, 23);
+            this.btnEjecutar.Size = new System.Drawing.Size(102, 45);
             this.btnEjecutar.TabIndex = 2;
-            this.btnEjecutar.Text = "Ejecutar";
+            this.btnEjecutar.Text = "Ver Estadistica";
             this.btnEjecutar.UseVisualStyleBackColor = true;
             this.btnEjecutar.Click += new System.EventHandler(this.btnEjecutar_Click);
             // 
@@ -279,9 +280,9 @@
             this.AfdoNom,
             this.AfdoApe,
             this.AfdoGpoFliar});
-            this.dataGridEstadistico.Location = new System.Drawing.Point(12, 236);
+            this.dataGridEstadistico.Location = new System.Drawing.Point(12, 258);
             this.dataGridEstadistico.Name = "dataGridEstadistico";
-            this.dataGridEstadistico.Size = new System.Drawing.Size(489, 174);
+            this.dataGridEstadistico.Size = new System.Drawing.Size(489, 205);
             this.dataGridEstadistico.TabIndex = 4;
             // 
             // Cantidad
@@ -324,7 +325,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(515, 422);
+            this.ClientSize = new System.Drawing.Size(515, 475);
             this.Controls.Add(this.dataGridEstadistico);
             this.Controls.Add(this.btnEjecutar);
             this.Controls.Add(this.btnLimpiar);

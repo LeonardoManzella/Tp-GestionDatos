@@ -117,6 +117,7 @@ namespace ClinicaFrba.CancelarTurno
             this.Controls.Add(this.cancelarTurnoProButton);
             this.Controls.Add(this.fechaDesdePicker);
             this.Name = "CancelarTurnoProfesional";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = " ";
             this.Load += new System.EventHandler(this.CancelarTurnoProfesional_Load);
             this.ResumeLayout(false);

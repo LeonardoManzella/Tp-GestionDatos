@@ -2499,6 +2499,7 @@ CREATE PROCEDURE KFC.alta_afiliado_adjunto ( @nombre VARCHAR(255),
 @estado                                              INT,
 @plan                                                INT,
 @afil_id_titular                                     INT,
+@conyuge											 INT,
 @afil_id                                             NUMERIC(18,0) OUTPUT)
 AS
 BEGIN
@@ -2509,14 +2510,26 @@ BEGIN
 					
           BEGIN TRANSACTION
 			    BEGIN TRY
-                    --Calculo ID de Usuario No Titular
+				IF @conyuge > 0
+				BEGIN
+					select @id = @afil_id_titular+1;
+				END
+				ELSE
+				BEGIN
+                    --Calculo ID de Afiliado No Titular
 					SELECT
                               @id= MAX(af.afil_id) +1
                     FROM
                               kfc.afiliados af
                     WHERE
                               Floor(af.afil_id/100) = Floor(@afil_id_titular/100);
-                    --SELECT @usuario = us_id FROM kfc.afiliados WHERE afil_id = @afil_id_titular;
+
+					IF @id = @afil_id_titular+1
+					BEGIN
+						select @id = @afil_id_titular+2;
+					END
+				END
+
 					--Insercion del usuario
                                         INSERT INTO kfc.usuarios
                                                   (
@@ -2577,7 +2590,7 @@ BEGIN
                               
                               SET IDENTITY_INSERT KFC.afiliados OFF;
 							  
-							  --Actualizo usuario Titular personas a cargo
+							  --Actualizo afiliadoTitular personas a cargo
                               UPDATE
                                         kfc.afiliados
                               SET       personas_a_car = ISNULL(personas_a_car,0)+1
@@ -2610,7 +2623,7 @@ BEGIN
                               THROW;
                     END CATCH
           END;
-GO
+
 
 
 CREATE PROCEDURE KFC.get_afiliado( @id_afiliado INT)

@@ -43,7 +43,6 @@
             this.btnAccion = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dtFNac = new System.Windows.Forms.DateTimePicker();
             this.label6 = new System.Windows.Forms.Label();
             this.cmbSexo = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -56,6 +55,9 @@
             this.label11 = new System.Windows.Forms.Label();
             this.cmbPlan = new System.Windows.Forms.ComboBox();
             this.btnLimpiar = new System.Windows.Forms.Button();
+            this.chkConc = new System.Windows.Forms.CheckBox();
+            this.txtFec_Nac = new System.Windows.Forms.TextBox();
+            this.btn_fecha = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -181,7 +183,9 @@
             // 
             // btnAccion
             // 
-            this.btnAccion.Location = new System.Drawing.Point(39, 364);
+            this.btnAccion.BackColor = System.Drawing.SystemColors.Control;
+            this.btnAccion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAccion.Location = new System.Drawing.Point(371, 379);
             this.btnAccion.Name = "btnAccion";
             this.btnAccion.Size = new System.Drawing.Size(120, 37);
             this.btnAccion.TabIndex = 14;
@@ -191,7 +195,7 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(357, 364);
+            this.btnCancelar.Location = new System.Drawing.Point(202, 379);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(120, 37);
             this.btnCancelar.TabIndex = 15;
@@ -201,7 +205,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.dtFNac);
+            this.groupBox2.Controls.Add(this.btn_fecha);
+            this.groupBox2.Controls.Add(this.txtFec_Nac);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.cmbSexo);
             this.groupBox2.Controls.Add(this.label5);
@@ -215,17 +220,6 @@
             this.groupBox2.TabIndex = 16;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Datos Clinicos";
-            // 
-            // dtFNac
-            // 
-            this.dtFNac.CustomFormat = "MM\'/\'dd\'/\'yyyy";
-            this.dtFNac.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.dtFNac.Location = new System.Drawing.Point(11, 95);
-            this.dtFNac.MaxDate = new System.DateTime(2200, 12, 31, 0, 0, 0, 0);
-            this.dtFNac.MinDate = new System.DateTime(1910, 1, 1, 0, 0, 0, 0);
-            this.dtFNac.Name = "dtFNac";
-            this.dtFNac.Size = new System.Drawing.Size(255, 20);
-            this.dtFNac.TabIndex = 21;
             // 
             // label6
             // 
@@ -330,7 +324,7 @@
             // 
             // btnLimpiar
             // 
-            this.btnLimpiar.Location = new System.Drawing.Point(192, 364);
+            this.btnLimpiar.Location = new System.Drawing.Point(26, 379);
             this.btnLimpiar.Name = "btnLimpiar";
             this.btnLimpiar.Size = new System.Drawing.Size(120, 37);
             this.btnLimpiar.TabIndex = 21;
@@ -338,11 +332,41 @@
             this.btnLimpiar.UseVisualStyleBackColor = true;
             this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
+            // chkConc
+            // 
+            this.chkConc.AutoSize = true;
+            this.chkConc.Location = new System.Drawing.Point(373, 349);
+            this.chkConc.Name = "chkConc";
+            this.chkConc.Size = new System.Drawing.Size(117, 17);
+            this.chkConc.TabIndex = 22;
+            this.chkConc.Text = "¿Pareja del Titular?";
+            this.chkConc.UseVisualStyleBackColor = true;
+            this.chkConc.Visible = false;
+            // 
+            // txtFec_Nac
+            // 
+            this.txtFec_Nac.Location = new System.Drawing.Point(15, 108);
+            this.txtFec_Nac.Name = "txtFec_Nac";
+            this.txtFec_Nac.ReadOnly = true;
+            this.txtFec_Nac.Size = new System.Drawing.Size(167, 20);
+            this.txtFec_Nac.TabIndex = 21;
+            // 
+            // btn_fecha
+            // 
+            this.btn_fecha.Location = new System.Drawing.Point(191, 105);
+            this.btn_fecha.Name = "btn_fecha";
+            this.btn_fecha.Size = new System.Drawing.Size(75, 23);
+            this.btn_fecha.TabIndex = 22;
+            this.btn_fecha.Text = "Elegir Fecha";
+            this.btn_fecha.UseVisualStyleBackColor = true;
+            this.btn_fecha.Click += new System.EventHandler(this.btn_fecha_Click);
+            // 
             // ABM_AFILIADO
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(515, 427);
+            this.Controls.Add(this.chkConc);
             this.Controls.Add(this.btnLimpiar);
             this.Controls.Add(this.cmbPlan);
             this.Controls.Add(this.label11);
@@ -385,7 +409,6 @@
         private System.Windows.Forms.Button btnAccion;
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.DateTimePicker dtFNac;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox cmbSexo;
         private System.Windows.Forms.Label label5;
@@ -398,5 +421,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox cmbPlan;
         private System.Windows.Forms.Button btnLimpiar;
+        private System.Windows.Forms.CheckBox chkConc;
+        private System.Windows.Forms.Button btn_fecha;
+        private System.Windows.Forms.TextBox txtFec_Nac;
     }
 }

@@ -103,6 +103,7 @@
             this.cmbHasta.Name = "cmbHasta";
             this.cmbHasta.Size = new System.Drawing.Size(54, 21);
             this.cmbHasta.TabIndex = 16;
+            this.cmbHasta.SelectedIndexChanged += new System.EventHandler(this.cmbHasta_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -121,6 +122,7 @@
             this.cmbDesde.Name = "cmbDesde";
             this.cmbDesde.Size = new System.Drawing.Size(54, 21);
             this.cmbDesde.TabIndex = 14;
+            this.cmbDesde.SelectedIndexChanged += new System.EventHandler(this.cmbDesde_SelectedIndexChanged);
             // 
             // label2
             // 

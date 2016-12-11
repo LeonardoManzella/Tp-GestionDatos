@@ -20,6 +20,7 @@ namespace ClinicaFrba.Common
             this.monthCalendar.TodayDate = DateTime.Parse(Configuracion_Global.fecha_actual);
             this.monthCalendar.MaxSelectionCount = 1;
             this.fecha = monthCalendar.SelectionRange.Start.Date;
+            this.monthCalendar.SelectionStart = this.monthCalendar.TodayDate;
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -1744,8 +1744,10 @@ AS
         AND T.fecha_hora BETWEEN @fechaDesde AND @fechaHasta
         AND (T.turno_id IS NULL OR C.turno_id IS NULL)
 
+		/*
         IF @@ROWCOUNT = 0     
                     RAISERROR ('No hay turnos a cancelar',16,1);
+					*/
 
         --Vuelvo restablecer Bonos Consumidos
         UPDATE KFC.bonos  SET consumido = 0

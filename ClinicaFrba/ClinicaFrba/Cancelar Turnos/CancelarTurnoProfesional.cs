@@ -49,7 +49,7 @@ namespace ClinicaFrba.CancelarTurno
 
                 if (motivo.Trim().Equals(""))
                 {
-                    MessageBox.Show("Debe completar todos los campos del formulario", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Debe completar todos los campos del formulario", "Cancelar Turno", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 

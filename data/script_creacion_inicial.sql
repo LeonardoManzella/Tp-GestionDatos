@@ -1443,8 +1443,6 @@ GO
 --Ingreso: id del profesional a consultar horarios y la fecha (formato Año-Mes-Dia) del dia donde quiere ver que horarios hay disponibles 
 --Egreso:	Una Tabla de unica columna Horarios disponibles (formato Varchar) (multiples filas cada una con un horario disponible). Necesito que sera Varchar para evitar problemas de conversion contra la aplicacion
 ------------------OBTENER_TURNOS_PROFESIONAL------------------
---CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @fecha_text VARCHAR(60) )
-
 CREATE FUNCTION KFC.fun_obtener_turnos_profesional( @prof_nombre VARCHAR(60), @prof_apellido VARCHAR(60), @desc_esp VARCHAR(50), @fecha_text VARCHAR(60) )
 returns @retorno TABLE (
 						  fecha  VARCHAR(60)

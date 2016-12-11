@@ -186,6 +186,30 @@ IF OBJECT_ID('KFC.pro_validar_usuario') IS NOT NULL
 DROP PROCEDURE KFC.pro_validar_usuario;
 GO
 
+IF OBJECT_ID('KFC.pro_top_5_cancelaciones_especialidad') IS NOT NULL
+DROP PROCEDURE KFC.pro_top_5_cancelaciones_especialidad ;
+GO
+-----------------
+IF OBJECT_ID('KFC.pro_top_5_profesional_popular') IS NOT NULL
+DROP PROCEDURE KFC.pro_top_5_profesional_popular ;
+GO
+----------------
+IF OBJECT_ID('KFC.pro_top_5_compradores_bonos') IS NOT NULL
+DROP PROCEDURE KFC.pro_top_5_compradores_bonos ;
+GO
+----------------
+IF OBJECT_ID('KFC.pro_top_5_espec_Atenciones') IS NOT NULL
+DROP PROCEDURE KFC.pro_top_5_espec_Atenciones;
+GO
+---------------
+IF OBJECT_ID('KFC.pro_top_5_prof_menos_trabajo') IS NOT NULL
+DROP PROCEDURE KFC.pro_top_5_prof_menos_trabajo;
+GO
+
+IF OBJECT_ID('KFC.get_cmb_especialidades') IS NOT NULL
+DROP PROCEDURE KFC.get_cmb_especialidades;
+GO
+
 PRINT 'Procedures Borrados'
 
 
@@ -321,6 +345,11 @@ GO
 IF OBJECT_ID('KFC.fun_obtener_turnos_sin_diagnostico_profesional') IS NOT NULL
 DROP FUNCTION KFC.fun_obtener_turnos_sin_diagnostico_profesional;
 GO
+
+IF OBJECT_ID('KFC.obtener_titular') IS NOT NULL
+DROP FUNCTION KFC.obtener_titular;
+GO
+
 
 PRINT 'Funciones Borradas'
 

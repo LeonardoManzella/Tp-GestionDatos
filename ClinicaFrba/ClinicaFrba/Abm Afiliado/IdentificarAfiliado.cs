@@ -142,7 +142,14 @@ namespace ClinicaFrba.Abm_Afiliado
                     this.textBox_Nombre.Text = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 1);
                     this.textBox_Apellido.Text = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 2);
                     this.textBox_Documento.Text = Comunes.obtenerStringDataGrid(dataGridView_resultados_filtros, e.RowIndex, 3);
-                    var choise = MessageBox.Show("Seguro desea seleccionar el Afiliado: " + this.textBox_Nombre.Text + " " + this.textBox_Apellido.Text, "Identificar Afiliado", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+
+                    string mensaje = "Seguro desea Seleccionar el Afiliado: ";
+                    if (siguiente.funcionalidad == ABM_AFILIADO.tipos_funcionalidad.BAJA)
+                    {
+                        mensaje = "Seguro desea Dar de Baja el Afiliado: ";
+                    }
+
+                        var choise = MessageBox.Show(mensaje + this.textBox_Nombre.Text + " " + this.textBox_Apellido.Text, "Identificar Afiliado", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                     if (choise == DialogResult.OK)
                     {
 

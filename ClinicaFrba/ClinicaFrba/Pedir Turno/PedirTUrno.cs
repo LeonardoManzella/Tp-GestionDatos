@@ -130,7 +130,10 @@ namespace ClinicaFrba.Pedir_Turno
 
         private void button_fecha_Click(object sender, EventArgs e)
         {
-            Comunes.DialogoElegirFecha(textBox_fecha);
+            var seleccionarFecha = new SelecionarFecha();
+            seleccionarFecha.ShowDialog();
+            var fecha = seleccionarFecha.fecha;
+            this.textBox_fecha.Text = fecha.ToString("yyyy.MM.dd");
         }
 
         private void textBox_apellido_KeyPress(object sender, KeyPressEventArgs e)

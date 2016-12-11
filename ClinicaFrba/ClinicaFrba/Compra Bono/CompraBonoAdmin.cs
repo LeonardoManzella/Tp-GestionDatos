@@ -71,6 +71,7 @@ namespace ClinicaFrba.Compra_Bono
 
         private void CompraBono_Load(object sender, EventArgs e)
         {
+            label_Id_Usuario.Text = "";
             try
             {
                 if (this.funcionalidad == tipos_funcionalidad.USUARIO)

@@ -359,7 +359,15 @@ namespace ClinicaFrba.Base_de_Datos
                     afiliado.tipo_doc = pRow["tipo_doc"].ToString();
                     afiliado.nro_doc = Int32.Parse(pRow["numero_doc"].ToString());
                     afiliado.direccion = pRow["direccion"].ToString();
-                    afiliado.telefono = Int32.Parse(pRow["telefono"].ToString());
+                    var telefono = pRow["telefono"].ToString();
+                    if (!String.IsNullOrEmpty(telefono))
+                    {
+                        afiliado.telefono = Int32.Parse(telefono);
+                    }
+                    else
+                    {
+                        afiliado.telefono = 0;
+                    }
                     afiliado.e_mail = pRow["mail"].ToString();
                     afiliado.sexo = pRow["sexo"].ToString()[0];
                     afiliado.fecha_nac = DateTime.Parse(pRow["fecha_nacimiento"].ToString());

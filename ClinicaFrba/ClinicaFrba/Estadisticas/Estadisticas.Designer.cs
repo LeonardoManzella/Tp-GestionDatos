@@ -252,7 +252,7 @@
             // 
             this.btnLimpiar.Location = new System.Drawing.Point(12, 207);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(82, 32);
+            this.btnLimpiar.Size = new System.Drawing.Size(88, 45);
             this.btnLimpiar.TabIndex = 1;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = true;
@@ -280,9 +280,9 @@
             this.AfdoNom,
             this.AfdoApe,
             this.AfdoGpoFliar});
-            this.dataGridEstadistico.Location = new System.Drawing.Point(12, 258);
+            this.dataGridEstadistico.Location = new System.Drawing.Point(7, 258);
             this.dataGridEstadistico.Name = "dataGridEstadistico";
-            this.dataGridEstadistico.Size = new System.Drawing.Size(489, 205);
+            this.dataGridEstadistico.Size = new System.Drawing.Size(499, 223);
             this.dataGridEstadistico.TabIndex = 4;
             // 
             // Cantidad
@@ -325,7 +325,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(515, 475);
+            this.ClientSize = new System.Drawing.Size(515, 486);
             this.Controls.Add(this.dataGridEstadistico);
             this.Controls.Add(this.btnEjecutar);
             this.Controls.Add(this.btnLimpiar);

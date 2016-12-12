@@ -283,5 +283,11 @@ namespace ClinicaFrba.AgendaMedico
                 MessageBox.Show("Error en la creacion de la agenda: " + ex.Message, "Agenda Medico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void fechaDesdePicker_ValueChanged(object sender, EventArgs e)
+        {
+            DateTime fechaDesde = fechaDesdePicker.Value;
+            fechaHastaPicker.MinDate = fechaDesde;
+        }
     }
 }

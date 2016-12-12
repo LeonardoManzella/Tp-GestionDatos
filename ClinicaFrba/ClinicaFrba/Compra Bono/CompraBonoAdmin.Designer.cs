@@ -95,9 +95,9 @@
             // button_Comprar
             // 
             this.button_Comprar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_Comprar.Location = new System.Drawing.Point(635, 391);
+            this.button_Comprar.Location = new System.Drawing.Point(625, 376);
             this.button_Comprar.Name = "button_Comprar";
-            this.button_Comprar.Size = new System.Drawing.Size(86, 45);
+            this.button_Comprar.Size = new System.Drawing.Size(107, 61);
             this.button_Comprar.TabIndex = 7;
             this.button_Comprar.Text = "Comprar Bonos";
             this.button_Comprar.UseVisualStyleBackColor = true;
@@ -172,9 +172,9 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(338, 391);
+            this.button1.Location = new System.Drawing.Point(338, 376);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(95, 45);
+            this.button1.Size = new System.Drawing.Size(100, 60);
             this.button1.TabIndex = 8;
             this.button1.Text = "Cerrar";
             this.button1.UseVisualStyleBackColor = true;
@@ -226,9 +226,9 @@
             // button_limpiar
             // 
             this.button_limpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_limpiar.Location = new System.Drawing.Point(41, 392);
+            this.button_limpiar.Location = new System.Drawing.Point(24, 376);
             this.button_limpiar.Name = "button_limpiar";
-            this.button_limpiar.Size = new System.Drawing.Size(90, 45);
+            this.button_limpiar.Size = new System.Drawing.Size(99, 58);
             this.button_limpiar.TabIndex = 9;
             this.button_limpiar.Text = "Limpiar Filtros";
             this.button_limpiar.UseVisualStyleBackColor = true;

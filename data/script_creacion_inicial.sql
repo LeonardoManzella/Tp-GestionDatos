@@ -916,8 +916,19 @@ BEGIN
 END;
 GO
 
+--Devuelve ID Titular de un Afiliado
+CREATE FUNCTION kfc.obtener_titular (@afil_id INT)
+RETURNS INT
+AS
+BEGIN
+	DECLARE @id INT;
+	SELECT @id = floor(@afil_id/100)*100 + 1;
+	RETURN @id;
+END;
+GO
+
 --Con Valor 0 de Documento Trae a Todos
-CREATE FUNCTION KFC.obtener_afiliados_filtros(@nombre VARCHAR(255), @apellido VARCHAR(255), @documento NUMERIC(18,0))
+CREATE FUNCTION KFC.obtener_afiliados_filtros(@nombre VARCHAR(255), @apellido VARCHAR(255), @documento NUMERIC(18,0), @flag_buscar_titulares BIT)
 returns TABLE
 RETURN
 (
@@ -937,6 +948,13 @@ RETURN
 						CONVERT(VARCHAR, Afi.numero_doc) LIKE '%' + CONVERT(VARCHAR, @documento) + '%'
 						)
                     AND Afi.habilitado = 1
+					--Si busco o no Solamente Titulares, quedo medio feo
+					AND (
+						@flag_buscar_titulares = 0		--No busco titulares
+						OR
+						--Veo si el Titular de este afiliado es el mismo, en ese caso es un titular
+						KFC.obtener_titular(Afi.afil_id) = Afi.afil_id
+						)
 );
 GO
 
@@ -2259,16 +2277,6 @@ AS
 BEGIN
 	SELECT e.espe_id id,  e.descripcion
 	FROM KFC.especialidades e;
-END;
-GO
-
-CREATE FUNCTION kfc.obtener_titular (@afil_id INT)
-RETURNS INT
-AS
-BEGIN
-	DECLARE @id INT;
-	SELECT @id = floor(@afil_id/100)*100 + 1;
-	RETURN @id;
 END;
 GO
 

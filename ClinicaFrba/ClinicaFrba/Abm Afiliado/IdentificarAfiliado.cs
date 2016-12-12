@@ -45,22 +45,28 @@ namespace ClinicaFrba.Abm_Afiliado
 
                 }
                 else
-                { 
-                string nombre = this.textBox_Nombre.Text.Trim();
-                string apellido = this.textBox_Apellido.Text.Trim();
-                string documento = this.textBox_Documento.Text.Trim();
+                {
+                    string nombre = this.textBox_Nombre.Text.Trim();
+                    string apellido = this.textBox_Apellido.Text.Trim();
+                    string documento = this.textBox_Documento.Text.Trim();
 
 
-                //DATAGRID
-                DataTable datos = BD_Afiliados.obtener_afiliados_filtros(nombre, apellido, documento);
+                    bool flag_buscar_titulares = false;
+                    if (siguiente.funcionalidad == ABM_AFILIADO.tipos_funcionalidad.ALTA)
+                    {
+                        flag_buscar_titulares = true;
+                    }
 
-                if (datos.Rows.Count <= 0) throw new Exception("No hay Afiliados para Estos Filtros");
+                    //DATAGRID
+                    DataTable datos = BD_Afiliados.obtener_afiliados_filtros(nombre, apellido, documento, flag_buscar_titulares);
 
-                //Lleno el DataGrid
-                Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
+                    if (datos.Rows.Count <= 0) throw new Exception("No hay Afiliados para Estos Filtros");
 
-                //Agrego Boton
-                Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, this.mensaje_funcionalidad, "seleccionar");
+                    //Lleno el DataGrid
+                    Comunes.llenar_dataGrid(dataGridView_resultados_filtros, datos);
+
+                    //Agrego Boton
+                    Comunes.agregar_boton_dataGrid(dataGridView_resultados_filtros, this.mensaje_funcionalidad, "seleccionar");
                 }
 
             }
@@ -74,6 +80,7 @@ namespace ClinicaFrba.Abm_Afiliado
         private void ABMAFILIADO_Load(object sender, EventArgs e)
         {
             this.label_mensaje.Text = "";
+            this.label_mensaje.Visible = false;
 
             if (siguiente != null)
             {
@@ -85,12 +92,14 @@ namespace ClinicaFrba.Abm_Afiliado
                     chkTitular.Checked = false;
                     this.label_mensaje.Text = "Elija el Afiliado Titular del Nuevo afiliado";
                     this.mensaje_funcionalidad = "Elegir Titular";
+                    this.chkTitular.Checked = true;
+                    chkTitular_CheckedChanged(null, null);
                 }
                 else
                 {
                     chkTitular.Visible = false;
                     chkTitular.Checked = false;
-                    if(siguiente.funcionalidad == ABM_AFILIADO.tipos_funcionalidad.MODIFICACION)
+                    if (siguiente.funcionalidad == ABM_AFILIADO.tipos_funcionalidad.MODIFICACION)
                     {
                         this.mensaje_funcionalidad = "Modificar";
                     }
@@ -98,13 +107,10 @@ namespace ClinicaFrba.Abm_Afiliado
                     {
                         this.mensaje_funcionalidad = "Dar Baja";
                     }
+                    this.btnAccion_Click(sender, e);
                 }
 
             }
-
-            this.chkTitular.Checked = true;
-            chkTitular_CheckedChanged(null, null);
-            //this.btnAccion_Click(sender, e);
         }
 
 
@@ -166,7 +172,7 @@ namespace ClinicaFrba.Abm_Afiliado
                         mensaje = "¿Seguro desea Dar de Baja el Afiliado: ";
                     }
 
-                        var choise = MessageBox.Show(mensaje + this.textBox_Nombre.Text + " " + this.textBox_Apellido.Text + "?", "Identificar Afiliado", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    var choise = MessageBox.Show(mensaje + this.textBox_Nombre.Text + " " + this.textBox_Apellido.Text + "?", "Identificar Afiliado", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     if (choise == DialogResult.Yes)
                     {
 
@@ -174,7 +180,7 @@ namespace ClinicaFrba.Abm_Afiliado
                         {
                             if (siguiente.funcionalidad != ABM_AFILIADO.tipos_funcionalidad.ALTA)
                             {
-                                this.siguiente.afiliado.id = this.afiliado_id;                                
+                                this.siguiente.afiliado.id = this.afiliado_id;
                             }
                             else
                             {
@@ -196,8 +202,10 @@ namespace ClinicaFrba.Abm_Afiliado
 
         private void chkTitular_CheckedChanged(object sender, EventArgs e)
         {
+
             if (this.chkTitular.Checked == true)
             {
+                this.label_mensaje.Visible = false;
                 GB_filtros.Visible = false;
                 dataGridView_resultados_filtros.Visible = false;
                 btnLimpiar.Visible = false;
@@ -205,6 +213,7 @@ namespace ClinicaFrba.Abm_Afiliado
             }
             else
             {
+                this.label_mensaje.Visible = true;
                 GB_filtros.Visible = true;
                 dataGridView_resultados_filtros.Visible = true;
                 btnLimpiar.Visible = true;

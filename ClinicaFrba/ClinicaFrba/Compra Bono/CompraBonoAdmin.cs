@@ -108,7 +108,7 @@ namespace ClinicaFrba.Compra_Bono
 
 
                 //DATAGRID
-                DataTable datos = BD_Afiliados.obtener_afiliados_filtros(nombre, apellido, documento);
+                DataTable datos = BD_Afiliados.obtener_afiliados_filtros(nombre, apellido, documento, false);
 
                 if (datos.Rows.Count <= 0) throw new Exception("No hay Afiliados para Estos Filtros");
 

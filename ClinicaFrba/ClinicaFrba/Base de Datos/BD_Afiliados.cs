@@ -55,25 +55,28 @@ namespace ClinicaFrba.Base_de_Datos
         /// <param name="apellido"></param>
         /// <param name="documento"></param>
         /// <returns></returns>
-        public static DataTable obtener_afiliados_filtros(string nombre, string apellido, string documento)
+        public static DataTable obtener_afiliados_filtros(string nombre, string apellido, string documento, bool flag_buscar_titulares)
         {
             try
             {
                 if (String.IsNullOrEmpty(documento)) documento = "0";
 
 
-                string funcion = "SELECT * FROM KFC.obtener_afiliados_filtros(@nombre, @apellido, @documento)";
+                string funcion = "SELECT * FROM KFC.obtener_afiliados_filtros(@nombre, @apellido, @documento, @flag_buscar_titulares)";
                 SqlParameter parametro1 = new SqlParameter("@nombre", SqlDbType.Text);
                 parametro1.Value = nombre.ToUpper();
                 SqlParameter parametro2 = new SqlParameter("@apellido", SqlDbType.Text);
                 parametro2.Value = apellido.ToUpper();
                 SqlParameter parametro3 = new SqlParameter("@documento", SqlDbType.Decimal);
                 parametro3.Value = Convert.ToDecimal(documento);
+                SqlParameter parametro4 = new SqlParameter("@flag_buscar_titulares", SqlDbType.Bit);
+                parametro4.Value = flag_buscar_titulares;
 
                 var parametros = new List<SqlParameter>();
                 parametros.Add(parametro1);
                 parametros.Add(parametro2);
                 parametros.Add(parametro3);
+                parametros.Add(parametro4);
 
                 var tabla_datos = InteraccionDB.ejecutar_funcion_table(funcion, parametros);
 

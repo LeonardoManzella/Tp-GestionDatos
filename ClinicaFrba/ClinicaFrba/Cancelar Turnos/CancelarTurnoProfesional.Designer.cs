@@ -50,10 +50,10 @@ namespace ClinicaFrba.CancelarTurno
             // 
             // cancelarTurnoProButton
             // 
-            this.cancelarTurnoProButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cancelarTurnoProButton.Location = new System.Drawing.Point(294, 235);
+            this.cancelarTurnoProButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cancelarTurnoProButton.Location = new System.Drawing.Point(289, 235);
             this.cancelarTurnoProButton.Name = "cancelarTurnoProButton";
-            this.cancelarTurnoProButton.Size = new System.Drawing.Size(140, 43);
+            this.cancelarTurnoProButton.Size = new System.Drawing.Size(142, 52);
             this.cancelarTurnoProButton.TabIndex = 5;
             this.cancelarTurnoProButton.Text = "Cancelar turnos";
             this.cancelarTurnoProButton.UseVisualStyleBackColor = true;
@@ -61,9 +61,10 @@ namespace ClinicaFrba.CancelarTurno
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(24, 240);
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(25, 235);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(90, 33);
+            this.button2.Size = new System.Drawing.Size(92, 52);
             this.button2.TabIndex = 6;
             this.button2.Text = "Cancelar";
             this.button2.UseVisualStyleBackColor = true;
@@ -111,7 +112,7 @@ namespace ClinicaFrba.CancelarTurno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(455, 292);
+            this.ClientSize = new System.Drawing.Size(455, 314);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.motivoTextBox);
             this.Controls.Add(this.fechaHastaPicker);

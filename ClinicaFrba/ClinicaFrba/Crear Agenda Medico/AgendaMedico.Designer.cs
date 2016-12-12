@@ -57,10 +57,10 @@
             // 
             // agregarHorarioButton
             // 
-            this.agregarHorarioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.agregarHorarioButton.Location = new System.Drawing.Point(273, 137);
+            this.agregarHorarioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.agregarHorarioButton.Location = new System.Drawing.Point(273, 129);
             this.agregarHorarioButton.Name = "agregarHorarioButton";
-            this.agregarHorarioButton.Size = new System.Drawing.Size(75, 34);
+            this.agregarHorarioButton.Size = new System.Drawing.Size(84, 50);
             this.agregarHorarioButton.TabIndex = 3;
             this.agregarHorarioButton.Text = "Agregar Horario";
             this.agregarHorarioButton.UseVisualStyleBackColor = true;
@@ -68,9 +68,10 @@
             // 
             // borrarHorarioButton
             // 
-            this.borrarHorarioButton.Location = new System.Drawing.Point(273, 225);
+            this.borrarHorarioButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.borrarHorarioButton.Location = new System.Drawing.Point(273, 216);
             this.borrarHorarioButton.Name = "borrarHorarioButton";
-            this.borrarHorarioButton.Size = new System.Drawing.Size(75, 36);
+            this.borrarHorarioButton.Size = new System.Drawing.Size(84, 53);
             this.borrarHorarioButton.TabIndex = 4;
             this.borrarHorarioButton.Text = "Borrar Horario";
             this.borrarHorarioButton.UseVisualStyleBackColor = true;
@@ -190,10 +191,10 @@
             // 
             // aceptarAgendaMedicaButton
             // 
-            this.aceptarAgendaMedicaButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.aceptarAgendaMedicaButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.aceptarAgendaMedicaButton.Location = new System.Drawing.Point(255, 384);
             this.aceptarAgendaMedicaButton.Name = "aceptarAgendaMedicaButton";
-            this.aceptarAgendaMedicaButton.Size = new System.Drawing.Size(102, 39);
+            this.aceptarAgendaMedicaButton.Size = new System.Drawing.Size(102, 53);
             this.aceptarAgendaMedicaButton.TabIndex = 19;
             this.aceptarAgendaMedicaButton.Text = "Aceptar";
             this.aceptarAgendaMedicaButton.UseVisualStyleBackColor = true;
@@ -201,9 +202,10 @@
             // 
             // cancelarAgendaMedicaButton
             // 
-            this.cancelarAgendaMedicaButton.Location = new System.Drawing.Point(12, 392);
+            this.cancelarAgendaMedicaButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cancelarAgendaMedicaButton.Location = new System.Drawing.Point(12, 388);
             this.cancelarAgendaMedicaButton.Name = "cancelarAgendaMedicaButton";
-            this.cancelarAgendaMedicaButton.Size = new System.Drawing.Size(105, 31);
+            this.cancelarAgendaMedicaButton.Size = new System.Drawing.Size(109, 49);
             this.cancelarAgendaMedicaButton.TabIndex = 20;
             this.cancelarAgendaMedicaButton.Text = "Cancelar";
             this.cancelarAgendaMedicaButton.UseVisualStyleBackColor = true;
@@ -213,7 +215,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(412, 442);
+            this.ClientSize = new System.Drawing.Size(412, 466);
             this.Controls.Add(this.cancelarAgendaMedicaButton);
             this.Controls.Add(this.aceptarAgendaMedicaButton);
             this.Controls.Add(this.label5);

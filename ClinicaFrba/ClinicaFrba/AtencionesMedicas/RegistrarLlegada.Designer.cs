@@ -83,9 +83,10 @@
             // 
             // btnLimpiar
             // 
-            this.btnLimpiar.Location = new System.Drawing.Point(18, 465);
+            this.btnLimpiar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLimpiar.Location = new System.Drawing.Point(18, 433);
             this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(75, 32);
+            this.btnLimpiar.Size = new System.Drawing.Size(106, 62);
             this.btnLimpiar.TabIndex = 18;
             this.btnLimpiar.Text = "Limpiar";
             this.btnLimpiar.UseVisualStyleBackColor = true;
@@ -196,10 +197,10 @@
             // button_Registrar
             // 
             this.button_Registrar.Enabled = false;
-            this.button_Registrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_Registrar.Location = new System.Drawing.Point(939, 458);
+            this.button_Registrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_Registrar.Location = new System.Drawing.Point(907, 423);
             this.button_Registrar.Name = "button_Registrar";
-            this.button_Registrar.Size = new System.Drawing.Size(97, 44);
+            this.button_Registrar.Size = new System.Drawing.Size(124, 67);
             this.button_Registrar.TabIndex = 24;
             this.button_Registrar.Text = "REGISTRAR LLEGADA";
             this.button_Registrar.UseVisualStyleBackColor = true;
@@ -219,27 +220,28 @@
             // dataGridView_resultados_filtros
             // 
             this.dataGridView_resultados_filtros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView_resultados_filtros.Location = new System.Drawing.Point(2, 185);
+            this.dataGridView_resultados_filtros.Location = new System.Drawing.Point(2, 140);
             this.dataGridView_resultados_filtros.Name = "dataGridView_resultados_filtros";
-            this.dataGridView_resultados_filtros.Size = new System.Drawing.Size(1043, 207);
+            this.dataGridView_resultados_filtros.Size = new System.Drawing.Size(1034, 269);
             this.dataGridView_resultados_filtros.TabIndex = 30;
             this.dataGridView_resultados_filtros.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_resultados_filtros_CellContentClick);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(391, 154);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(401, 117);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(144, 18);
+            this.label3.Size = new System.Drawing.Size(171, 20);
             this.label3.TabIndex = 30;
             this.label3.Text = "Turnos Encontrados";
             // 
             // button_cancelar
             // 
-            this.button_cancelar.Location = new System.Drawing.Point(361, 464);
+            this.button_cancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button_cancelar.Location = new System.Drawing.Point(361, 433);
             this.button_cancelar.Name = "button_cancelar";
-            this.button_cancelar.Size = new System.Drawing.Size(93, 32);
+            this.button_cancelar.Size = new System.Drawing.Size(121, 62);
             this.button_cancelar.TabIndex = 31;
             this.button_cancelar.Text = "Cancelar";
             this.button_cancelar.UseVisualStyleBackColor = true;
@@ -267,7 +269,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1048, 510);
+            this.ClientSize = new System.Drawing.Size(1043, 510);
             this.Controls.Add(this.label_profesional);
             this.Controls.Add(this.label_Afiliado);
             this.Controls.Add(this.button_cancelar);

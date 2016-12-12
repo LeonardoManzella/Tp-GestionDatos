@@ -191,7 +191,7 @@
             // cancelarButton
             // 
             this.cancelarButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cancelarButton.Location = new System.Drawing.Point(239, 425);
+            this.cancelarButton.Location = new System.Drawing.Point(326, 425);
             this.cancelarButton.Name = "cancelarButton";
             this.cancelarButton.Size = new System.Drawing.Size(96, 55);
             this.cancelarButton.TabIndex = 27;
@@ -201,8 +201,8 @@
             // 
             // registrarAtencionButton
             // 
-            this.registrarAtencionButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.registrarAtencionButton.Location = new System.Drawing.Point(341, 425);
+            this.registrarAtencionButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.registrarAtencionButton.Location = new System.Drawing.Point(597, 425);
             this.registrarAtencionButton.Name = "registrarAtencionButton";
             this.registrarAtencionButton.Size = new System.Drawing.Size(139, 55);
             this.registrarAtencionButton.TabIndex = 28;
@@ -213,7 +213,7 @@
             // limpiarDataGrid
             // 
             this.limpiarDataGrid.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.limpiarDataGrid.Location = new System.Drawing.Point(640, 425);
+            this.limpiarDataGrid.Location = new System.Drawing.Point(25, 425);
             this.limpiarDataGrid.Name = "limpiarDataGrid";
             this.limpiarDataGrid.Size = new System.Drawing.Size(96, 55);
             this.limpiarDataGrid.TabIndex = 29;

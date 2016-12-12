@@ -2592,7 +2592,7 @@ AS
 											)
 											VALUES
 											(
-													floor(@max_user/100)*100 + 1
+													(floor(@max_user/100)+1)*100 + 1
 													,  @nombre
 													, @apellido
 													, @tipo_doc

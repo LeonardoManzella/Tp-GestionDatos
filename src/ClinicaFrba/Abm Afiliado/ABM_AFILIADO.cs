@@ -77,7 +77,7 @@ namespace ClinicaFrba.Abm_Afiliado
             try
             {
                 //var cerrar = false; por pedido
-                var cerrar = true;
+                var cerrar = false;
                 var error = "";
                 var id_us = 0;
 
@@ -91,6 +91,7 @@ namespace ClinicaFrba.Abm_Afiliado
                         mapAfiliado_Vista(afiliado);
                         Negocio.ABMAFIL.modifica_afiliado(afiliado);
                         MessageBox.Show("Se ha modificado el afiliado sastifactoriamente");
+                        cerrar = true;
                     }
                 }
                 else if (funcionalidad == tipos_funcionalidad.ALTA)
@@ -116,6 +117,7 @@ namespace ClinicaFrba.Abm_Afiliado
                                 MessageBox.Show("Se ha realizado el alta correctamente");
                                 funcionalidad = tipos_funcionalidad.MODIFICACION;
                                 bloquearNoEditable();
+                                cerrar = true;
                             }
                             else
                             {
@@ -153,6 +155,7 @@ namespace ClinicaFrba.Abm_Afiliado
                                     MessageBox.Show("Se ha realizado el alta correctamente");
                                     funcionalidad = tipos_funcionalidad.MODIFICACION;
                                     bloquearNoEditable();
+                                    cerrar = true;
                                 }
                             }
                         }
@@ -167,12 +170,12 @@ namespace ClinicaFrba.Abm_Afiliado
                     {
                         error = "";
                         MessageBox.Show("Se ha realizado la baja correctamente");
+                        cerrar = true;
                     }
                     else
                     {
                         error = "Ha ocurrido un error la baja no ha podido realizarse \r\n";
                     }
-                    cerrar = true;
                 };
 
                 if (error != "")

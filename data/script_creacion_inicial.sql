@@ -891,6 +891,8 @@ RETURN
 								SELECT afil_id FROM afiliados 
 								WHERE floor(afil_id/100) = floor(@afiliado_id/100) AND habilitado = 1 )
                     AND b.consumido = 0
+					AND b.plan_id IN (SELECT plan_id FROM afiliados
+									  WHERE afil_id = @afiliado_id)
 );
 GO
 

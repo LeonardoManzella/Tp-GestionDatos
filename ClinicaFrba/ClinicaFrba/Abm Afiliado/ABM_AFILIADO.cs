@@ -406,6 +406,7 @@ namespace ClinicaFrba.Abm_Afiliado
         private void btn_fecha_Click(object sender, EventArgs e)
         {
             var seleccionarFecha = new SelecionarFecha();
+            seleccionarFecha.fecha = DateTime.Parse(this.txtFec_Nac.Text);
             seleccionarFecha.ShowDialog();
             this.afiliado.fecha_nac = seleccionarFecha.fecha;
             this.txtFec_Nac.Text = afiliado.fecha_nac.ToShortDateString();

@@ -76,7 +76,8 @@ namespace ClinicaFrba.Abm_Afiliado
         {
             try
             {
-                var cerrar = false;
+                //var cerrar = false; por pedido
+                var cerrar = true;
                 var error = "";
                 var id_us = 0;
 
@@ -106,7 +107,7 @@ namespace ClinicaFrba.Abm_Afiliado
                                 afiliado.id = ID_CONYUGE;
                             }
                             id_us = Negocio.ABMAFIL.alta_afiliado_adjunto(afiliado);
-                            if (id_us >= 0)
+                            if (id_us > 0)
                             {
                                 this.txtAfilId.Text = id_us.ToString();
                                 this.Text = "MODIFICA AFILIADO";
@@ -116,6 +117,10 @@ namespace ClinicaFrba.Abm_Afiliado
                                 funcionalidad = tipos_funcionalidad.MODIFICACION;
                                 bloquearNoEditable();
                             }
+                            else
+                            {
+                                MessageBox.Show("Ha ocurrido un error no manejado, contacte a su administrador de BD", "ERROR ABM AFILIADOS", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            };
 
                         }
                         else

@@ -55,7 +55,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.cmbPlan = new System.Windows.Forms.ComboBox();
             this.btnLimpiar = new System.Windows.Forms.Button();
-            this.chkConc = new System.Windows.Forms.CheckBox();
+            this.chkConyuge = new System.Windows.Forms.CheckBox();
             this.txtFec_Nac = new System.Windows.Forms.TextBox();
             this.btn_fecha = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -334,14 +334,14 @@
             // 
             // chkConc
             // 
-            this.chkConc.AutoSize = true;
-            this.chkConc.Location = new System.Drawing.Point(373, 349);
-            this.chkConc.Name = "chkConc";
-            this.chkConc.Size = new System.Drawing.Size(117, 17);
-            this.chkConc.TabIndex = 22;
-            this.chkConc.Text = "¿Pareja del Titular?";
-            this.chkConc.UseVisualStyleBackColor = true;
-            this.chkConc.Visible = false;
+            this.chkConyuge.AutoSize = true;
+            this.chkConyuge.Location = new System.Drawing.Point(373, 349);
+            this.chkConyuge.Name = "chkConc";
+            this.chkConyuge.Size = new System.Drawing.Size(117, 17);
+            this.chkConyuge.TabIndex = 22;
+            this.chkConyuge.Text = "¿Pareja del Titular?";
+            this.chkConyuge.UseVisualStyleBackColor = true;
+            this.chkConyuge.Visible = false;
             // 
             // txtFec_Nac
             // 
@@ -366,7 +366,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(515, 427);
-            this.Controls.Add(this.chkConc);
+            this.Controls.Add(this.chkConyuge);
             this.Controls.Add(this.btnLimpiar);
             this.Controls.Add(this.cmbPlan);
             this.Controls.Add(this.label11);
@@ -421,7 +421,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.ComboBox cmbPlan;
         private System.Windows.Forms.Button btnLimpiar;
-        private System.Windows.Forms.CheckBox chkConc;
+        private System.Windows.Forms.CheckBox chkConyuge;
         private System.Windows.Forms.Button btn_fecha;
         private System.Windows.Forms.TextBox txtFec_Nac;
     }

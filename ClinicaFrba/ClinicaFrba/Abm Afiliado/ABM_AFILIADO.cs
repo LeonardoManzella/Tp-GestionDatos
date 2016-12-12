@@ -21,6 +21,7 @@ namespace ClinicaFrba.Abm_Afiliado
         public Afiliado afiliado;
         public Afiliado afiliado_principal;
         private List<Afiliado> afiliados_a_cargo = new List<Afiliado>();
+        private int ID_CONYUGE = 2;     //El ID base para Conyuge debe ser 2
 
         public ABM_AFILIADO()
         {
@@ -100,17 +101,17 @@ namespace ClinicaFrba.Abm_Afiliado
                         {
                             afiliado.id_principal = afiliado_principal.id;
                             mapAfiliado_Vista(afiliado);
-                            if (this.chkConc.Checked == true)
+                            if (this.chkConyuge.Checked == true)
                             {
-                                afiliado.id = 2;
+                                afiliado.id = ID_CONYUGE;
                             }
                             id_us = Negocio.ABMAFIL.alta_afiliado_adjunto(afiliado);
                             if (id_us >= 0)
                             {
                                 this.txtAfilId.Text = id_us.ToString();
                                 this.Text = "MODIFICA AFILIADO";
-                                this.chkConc.Visible = false;
-                                this.chkConc.Checked = false;
+                                this.chkConyuge.Visible = false;
+                                this.chkConyuge.Checked = false;
                                 MessageBox.Show("Se ha realizado el alta correctamente");
                                 funcionalidad = tipos_funcionalidad.MODIFICACION;
                                 bloquearNoEditable();
@@ -204,11 +205,11 @@ namespace ClinicaFrba.Abm_Afiliado
                     this.Text = "ALTA AFILIADO";
                     if (afiliado_principal.id != 0)
                     {
-                        this.chkConc.Visible = true;
+                        this.chkConyuge.Visible = true;
                     }
                     else
                     {
-                        this.chkConc.Visible = false;
+                        this.chkConyuge.Visible = false;
                     };
                 }
                 else if (funcionalidad == tipos_funcionalidad.MODIFICACION)

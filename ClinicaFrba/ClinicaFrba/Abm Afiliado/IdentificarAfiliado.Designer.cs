@@ -40,6 +40,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_Apellido = new System.Windows.Forms.TextBox();
             this.chkTitular = new System.Windows.Forms.CheckBox();
+            this.label_mensaje = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_resultados_filtros)).BeginInit();
             this.GB_filtros.SuspendLayout();
             this.SuspendLayout();
@@ -78,9 +79,9 @@
             // dataGridView_resultados_filtros
             // 
             this.dataGridView_resultados_filtros.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView_resultados_filtros.Location = new System.Drawing.Point(39, 104);
+            this.dataGridView_resultados_filtros.Location = new System.Drawing.Point(6, 104);
             this.dataGridView_resultados_filtros.Name = "dataGridView_resultados_filtros";
-            this.dataGridView_resultados_filtros.Size = new System.Drawing.Size(607, 248);
+            this.dataGridView_resultados_filtros.Size = new System.Drawing.Size(700, 248);
             this.dataGridView_resultados_filtros.TabIndex = 20;
             this.dataGridView_resultados_filtros.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_resultados_filtros_CellContentClick);
             // 
@@ -92,7 +93,7 @@
             this.GB_filtros.Controls.Add(this.label_apellido);
             this.GB_filtros.Controls.Add(this.label1);
             this.GB_filtros.Controls.Add(this.textBox_Apellido);
-            this.GB_filtros.Location = new System.Drawing.Point(39, 24);
+            this.GB_filtros.Location = new System.Drawing.Point(39, 34);
             this.GB_filtros.Name = "GB_filtros";
             this.GB_filtros.Size = new System.Drawing.Size(607, 60);
             this.GB_filtros.TabIndex = 19;
@@ -156,19 +157,32 @@
             // chkTitular
             // 
             this.chkTitular.AutoSize = true;
-            this.chkTitular.Location = new System.Drawing.Point(301, 12);
+            this.chkTitular.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkTitular.Location = new System.Drawing.Point(428, 12);
             this.chkTitular.Name = "chkTitular";
-            this.chkTitular.Size = new System.Drawing.Size(70, 17);
+            this.chkTitular.Size = new System.Drawing.Size(188, 20);
             this.chkTitular.TabIndex = 21;
-            this.chkTitular.Text = "Es Titular";
+            this.chkTitular.Text = "El Nuevo Afiliado es Titular";
             this.chkTitular.UseVisualStyleBackColor = true;
             this.chkTitular.CheckedChanged += new System.EventHandler(this.chkTitular_CheckedChanged);
+            // 
+            // label_mensaje
+            // 
+            this.label_mensaje.AutoSize = true;
+            this.label_mensaje.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_mensaje.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.label_mensaje.Location = new System.Drawing.Point(112, 11);
+            this.label_mensaje.Name = "label_mensaje";
+            this.label_mensaje.Size = new System.Drawing.Size(102, 15);
+            this.label_mensaje.TabIndex = 22;
+            this.label_mensaje.Text = "label_mensaje";
             // 
             // IdentificarAfiliado
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(709, 427);
+            this.Controls.Add(this.label_mensaje);
             this.Controls.Add(this.chkTitular);
             this.Controls.Add(this.dataGridView_resultados_filtros);
             this.Controls.Add(this.GB_filtros);
@@ -199,5 +213,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox_Apellido;
         private System.Windows.Forms.CheckBox chkTitular;
+        private System.Windows.Forms.Label label_mensaje;
     }
 }

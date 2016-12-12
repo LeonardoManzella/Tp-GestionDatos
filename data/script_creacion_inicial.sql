@@ -1831,6 +1831,7 @@ AS
         BEGIN 
           --- Caso :    CancelDesde----AgendaDesde-----CancelHasta-----AgendaHasta
           IF CONVERT(date, @cursor_fecha_desde) >= CONVERT(date, @fechaDesde) AND CONVERT(date, @cursor_fecha_hasta) > CONVERT(date, @fechaHasta)
+            AND CONVERT(date, @fechaHasta) > CONVERT(date, @cursor_fecha_desde)
             BEGIN 
               UPDATE KFC.agenda SET fecha_desde = @fechaHasta + CAST(hora_desde as DATETIME)
               WHERE prof_id = @prof_id AND espe_id = @cursor_espe_id AND fecha_desde = @cursor_fecha_desde AND fecha_hasta = @cursor_fecha_hasta
@@ -1838,6 +1839,7 @@ AS
             END
           --- Caso :    AgendaDesde----CancelDesde-----AgendaHasta-----CancelHasta
           ELSE IF CONVERT(date, @cursor_fecha_desde) < CONVERT(date, @fechaDesde) AND CONVERT(date, @cursor_fecha_hasta) <= CONVERT(date, @fechaHasta)
+            AND CONVERT(date, @fechaDesde) < CONVERT(date, @cursor_fecha_hasta)
             BEGIN
               UPDATE KFC.agenda SET fecha_hasta = @fechaDesde + CAST(hora_hasta as DATETIME)
               WHERE prof_id = @prof_id AND espe_id = @cursor_espe_id AND fecha_desde = @cursor_fecha_desde AND fecha_hasta = @cursor_fecha_hasta
@@ -1846,7 +1848,7 @@ AS
           --- Caso :    AgendaDesde----CancelDesde-----CancelHasta-----AgendaHasta
           ELSE IF CONVERT(date, @cursor_fecha_desde) < CONVERT(date, @fechaDesde) AND CONVERT(date, @cursor_fecha_hasta) > CONVERT(date, @fechaHasta)
             BEGIN
-              UPDATE KFC.agenda SET fecha_hasta = @fechaDesde + CAST(hora_hasta as DATETIME)
+              UPDATE KFC.agenda SET fecha_hasta = DATEADD(day, -1, @fechaDesde + CAST(hora_hasta as DATETIME))
               WHERE prof_id = @prof_id AND espe_id = @cursor_espe_id AND fecha_desde = @cursor_fecha_desde AND fecha_hasta = @cursor_fecha_hasta
               AND dia = @cursor_dia
 

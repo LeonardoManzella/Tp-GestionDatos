@@ -2864,10 +2864,13 @@ BEGIN
 
 	WHILE @@FETCH_STATUS = 0  
 	BEGIN 
-	EXECUTE KFC.baja_afiliado @interno, @fecha
-	FETCH NEXT FROM adjuntos
-	INTO @interno
+		EXECUTE KFC.baja_afiliado @interno, @fecha
+		FETCH NEXT FROM adjuntos
+		INTO @interno
 	END 
+
+	CLOSE adjuntos
+    DEALLOCATE adjuntos
 END
 go
 

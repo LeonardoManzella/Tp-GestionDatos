@@ -2942,7 +2942,7 @@ INSERT INTO KFC.estado_civil(descripcion) VALUES ('CASADO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('VIUDO/A')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('CONCUBINATO')
 INSERT INTO KFC.estado_civil(descripcion) VALUES ('DIVORCIADO/A')
-INSERT INTO KFC.estado_civil(descripcion) VALUES ('MIGRADO')			--Para los Datos de la Tabla Maestra
+INSERT INTO KFC.estado_civil(descripcion) VALUES ('NO ESPECIFICA')			--Para los Datos de la Tabla Maestra
 
 -- Insercion Funcionalidades
 PRINT '- Llenando Tabla funcionalidades...'
@@ -3211,7 +3211,7 @@ FROM
 		  INNER JOIN KFC.usuarios u
 		  ON m.Paciente_Mail = u.nick
 		  INNER JOIN KFC.estado_civil e
-		  ON e.descripcion = 'MIGRADO'
+		  ON e.descripcion = 'NO ESPECIFICA'
 WHERE
 			Paciente_Dni IS NOT NULL
 ORDER BY

@@ -1,0 +1,29 @@
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\Abm Afiliado\IdentificarAfiliado.resx
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\Abm Afiliado\ABM_AFILIADO.resx
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\Abm Afiliado\IdentificarAfiliado.cs
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\Abm Afiliado\IdentificarAfiliado.Designer.cs
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\Abm Afiliado\ABM_AFILIADO.cs
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\Abm Afiliado\ABM_AFILIADO.Designer.cs
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\ClinicaFrba.exe.config
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\ClinicaFrba.exe
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\bin\Debug\ClinicaFrba.pdb
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.csprojResolveAssemblyReference.cache
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Abm_Afiliado.IdentificarAfiliado.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Abm_Afiliado.ABM_AFILIADO.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.AbmRol.CrearRol.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.AbmRol.ModificarRol.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.AtencionesMedicas.RegistrarLlegada.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.AtencionesMedicas.RegistrarResultado.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.CancelarTurno.CancelarTurnoAfiliado.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.CancelarTurno.CancelarTurnoProfesional.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Clases.SelecionarFecha.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Compra_Bono.CompraBonoAfiliado.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Compra_Bono.CompraBonoAdmin.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.AgendaMedico.AgendaMedico.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Estadisticas.Estadisticas.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Home.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Pedir_Turno.PedirTurno.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.Properties.Resources.resources
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.csproj.GenerateResource.Cache
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.exe
+E:\Documentos\GitHub\Tp-GestionDatos\src\ClinicaFrba\obj\Debug\ClinicaFrba.pdb

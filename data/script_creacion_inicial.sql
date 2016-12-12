@@ -2523,40 +2523,93 @@ AS
                               SELECT @usuario = @@IDENTITY
                               END;
 
-							  --Insercion Afiliado
-                              INSERT INTO kfc.afiliados
-                                        (
-                                                  nombre
-                                                , apellido
-                                                , tipo_doc
-                                                , numero_doc
-                                                , direccion
-                                                , telefono
-                                                , mail
-                                                , sexo
-                                                , fecha_nacimiento
-                                                , estado_id
-                                                , plan_id
-                                                , us_id
-                                                , habilitado
-                                        )
-                                        VALUES
-                                        (
-                                                  @nombre
-                                                , @apellido
-                                                , @tipo_doc
-                                                , @nro_doc
-                                                , @direccion
-                                                , @telefono
-                                                , @mail
-                                                , @sexo
-                                                , @fecha_nac
-                                                , @estado
-                                                , @plan
-                                                , @usuario
-                                                , 1
-                                        )
-                              ;
+							  --Veo Ultimo Ingresado
+							  DECLARE @max_user INT
+								SELECT TOP 1 @max_user=a.afil_id
+								FROM	KFC.afiliados a
+								ORDER BY a.afil_id DESC
+
+							  --Insercion Afiliado, si es el ultimo afiliado fue titular
+							  if(
+									KFC.obtener_titular(@max_user)=@max_user
+								)
+							  BEGIN
+								--Inserto normal
+								  INSERT INTO kfc.afiliados
+											(
+													  nombre
+													, apellido
+													, tipo_doc
+													, numero_doc
+													, direccion
+													, telefono
+													, mail
+													, sexo
+													, fecha_nacimiento
+													, estado_id
+													, plan_id
+													, us_id
+													, habilitado
+											)
+											VALUES
+											(
+													  @nombre
+													, @apellido
+													, @tipo_doc
+													, @nro_doc
+													, @direccion
+													, @telefono
+													, @mail
+													, @sexo
+													, @fecha_nac
+													, @estado
+													, @plan
+													, @usuario
+													, 1
+											)
+								  ;
+							  END
+							  --Sino, hay que insertar con 1
+							  ELSE
+							  BEGIN
+								SET IDENTITY_INSERT KFC.afiliados ON;
+								INSERT INTO kfc.afiliados
+											(
+													afil_id
+													, nombre
+													, apellido
+													, tipo_doc
+													, numero_doc
+													, direccion
+													, telefono
+													, mail
+													, sexo
+													, fecha_nacimiento
+													, estado_id
+													, plan_id
+													, us_id
+													, habilitado
+											)
+											VALUES
+											(
+													floor(@max_user/100)*100 + 1
+													,  @nombre
+													, @apellido
+													, @tipo_doc
+													, @nro_doc
+													, @direccion
+													, @telefono
+													, @mail
+													, @sexo
+													, @fecha_nac
+													, @estado
+													, @plan
+													, @usuario
+													, 1
+											)
+								  ;
+								SET IDENTITY_INSERT KFC.afiliados OFF;
+							  END
                               
                               SELECT @afil_id = @@IDENTITY;
                               

@@ -159,6 +159,7 @@
             this.fechaDesdePicker.Name = "fechaDesdePicker";
             this.fechaDesdePicker.Size = new System.Drawing.Size(195, 20);
             this.fechaDesdePicker.TabIndex = 14;
+            this.fechaDesdePicker.ValueChanged += new System.EventHandler(this.fechaDesdePicker_ValueChanged);
             // 
             // label6
             // 

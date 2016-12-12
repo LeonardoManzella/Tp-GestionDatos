@@ -1682,7 +1682,7 @@ AS
 				SET @prof_id = KFC.fun_obtener_id_profesional(@prof_nombre, @prof_apellido)
 
 
-				INSERT INTO KFC.turnos(fecha_hora,hora,afil_id,espe_id,prof_id) VALUES (@fecha, @horaConvertida, @afil_id, @espe_id, @prof_id)
+				INSERT INTO KFC.turnos(fecha_hora,hora,afil_id,espe_id,prof_id) VALUES (@fecha + CAST(@horaConvertida as DATETIME), @horaConvertida, @afil_id, @espe_id, @prof_id)
 			COMMIT;
 		END TRY
 		BEGIN CATCH

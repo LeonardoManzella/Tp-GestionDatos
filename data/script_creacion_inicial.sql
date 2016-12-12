@@ -1030,7 +1030,7 @@ RETURN
           WHERE
                     A.nombre              LIKE '%' + UPPER(@afil_nombre) + '%'
                     AND A.apellido        LIKE '%' + UPPER(@afil_apellido) + '%'
-                    AND A.numero_doc         = CAST(@documento AS NUMERIC(18,0))
+                    AND A.numero_doc      LIKE '%' + @documento + '%'
                     AND P.prof_id            = @prof_id
                     AND AT.sintomas    IS NULL
                     AND AT.diagnostico IS NULL

@@ -2109,9 +2109,14 @@ GO
 CREATE PROCEDURE KFC.pro_top_5_compradores_bonos
           @año INT, @plazo_init INT, @plazo_fin INT AS
 BEGIN
-          SELECT DISTINCT TOP 5 CONCAT(afi.apellido,', ', afi.nombre) titular
-                  , ISNULL(afi.personas_a_car,0)                      grupo_familiar
-                  , ISNULL(COUNT(*),0)                                bonos
+          SELECT DISTINCT TOP 5 CONCAT(afi.apellido,', ', afi.nombre) 'Afiliado'
+                  , 
+					CASE 
+						WHEN ISNULL(afi.personas_a_car,0) >0  THEN 'Si'                     
+						ELSE 'No'
+					END
+					AS 'Tiene Grupo Familiar'
+                  , ISNULL(COUNT(*),0)                                'Bonos Comprados'
           FROM-- Todos los afiliados con bonos
                     kfc.afiliados afi
                     INNER JOIN

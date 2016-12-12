@@ -45,6 +45,11 @@ namespace ClinicaFrba.Estadisticas
                     //throw new Exception("Debe indicar un año, para realizar la consulta \r\n Usar 0 si se quiere de todos los años");
                 }
 
+                if (mes_desde > mes_hasta)
+                {
+                    throw new Exception("El Mes de Inicio no puede ser mayor al Mes Final");
+                }
+
                 var estadistica = ComboData.obtener_identificador(this.comboTop5);
                 switch (estadistica)
                 {

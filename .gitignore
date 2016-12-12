@@ -49,9 +49,9 @@ Temporary Items
 
 
 # Visual Studio
-ClinicaFrba/ClinicaFrba/bin/*
-ClinicaFrba/ClinicaFrba/bin/Debug/*
-ClinicaFrba/ClinicaFrba/obj/*
+src/ClinicaFrba/bin/*
+src/ClinicaFrba/bin/Debug/*
+src/ClinicaFrba/obj/*
 *.suo
 
 #Script Bat

@@ -112,7 +112,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
                 var parametro3_5 = new SqlParameter("@nro_doc", SqlDbType.Int);
                 var parametro4 = new SqlParameter("@direccion", SqlDbType.Text);
-                var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
+                //var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
                 var parametro6 = new SqlParameter("@mail", SqlDbType.Text);
                 var parametro7 = new SqlParameter("@sexo", SqlDbType.Char);
                 var parametro8 = new SqlParameter("@fecha_nac", SqlDbType.DateTime);
@@ -126,7 +126,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro3.Value = afiliado.tipo_doc.ToUpper();
                 parametro3_5.Value = afiliado.nro_doc;
                 parametro4.Value = afiliado.direccion.ToUpper();
-                parametro5.Value = afiliado.telefono.ToUpper();
+                //parametro5.Value = afiliado.telefono ;
                 parametro6.Value = afiliado.e_mail.ToUpper();
                 parametro7.Value = afiliado.sexo;
                 parametro8.Value = afiliado.fecha_nac;
@@ -140,7 +140,16 @@ namespace ClinicaFrba.Base_de_Datos
                 comando_sql.Parameters.Add(parametro3);
                 comando_sql.Parameters.Add(parametro3_5);
                 comando_sql.Parameters.Add(parametro4);
-                comando_sql.Parameters.Add(parametro5);
+                //comando_sql.Parameters.Add(parametro5);
+                if (afiliado.telefono == null)
+                {
+                    comando_sql.Parameters.AddWithValue("@telefono", DBNull.Value);
+                }
+                else {
+                    var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
+                    parametro5.Value = afiliado.telefono;
+                    comando_sql.Parameters.Add(parametro5);
+                }
                 comando_sql.Parameters.Add(parametro6);
                 comando_sql.Parameters.Add(parametro7);
                 comando_sql.Parameters.Add(parametro8);
@@ -185,7 +194,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
                 var parametro3_5 = new SqlParameter("@nro_doc", SqlDbType.Int);
                 var parametro4 = new SqlParameter("@direccion", SqlDbType.Text);
-                var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
+                //var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
                 var parametro6 = new SqlParameter("@mail", SqlDbType.Text);
                 var parametro7 = new SqlParameter("@sexo", SqlDbType.Char);
                 var parametro8 = new SqlParameter("@fecha_nac", SqlDbType.DateTime);
@@ -200,7 +209,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro3.Value = afiliado.tipo_doc.ToUpper();
                 parametro3_5.Value = afiliado.nro_doc;
                 parametro4.Value = afiliado.direccion.ToUpper();
-                parametro5.Value = afiliado.telefono.ToUpper();
+                //parametro5.Value = afiliado.telefono;
                 parametro6.Value = afiliado.e_mail.ToUpper();
                 parametro7.Value = afiliado.sexo;
                 parametro8.Value = afiliado.fecha_nac;
@@ -215,7 +224,15 @@ namespace ClinicaFrba.Base_de_Datos
                 comando_sql.Parameters.Add(parametro3);
                 comando_sql.Parameters.Add(parametro3_5);
                 comando_sql.Parameters.Add(parametro4);
-                comando_sql.Parameters.Add(parametro5);
+                if (afiliado.telefono == null)
+                {
+                    comando_sql.Parameters.AddWithValue("@telefono", DBNull.Value);
+                }
+                else {
+                    var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
+                    parametro5.Value = afiliado.telefono;
+                    comando_sql.Parameters.Add(parametro5);
+                }
                 comando_sql.Parameters.Add(parametro6);
                 comando_sql.Parameters.Add(parametro7);
                 comando_sql.Parameters.Add(parametro8);
@@ -236,7 +253,7 @@ namespace ClinicaFrba.Base_de_Datos
             {
                 if (e.Message.Contains("duplic"))
                 {
-                   var texto  = string.Format("El afiliado {0}, ya tiene un cónyuge declarado.", afiliado.id_principal);
+                    var texto = string.Format("El afiliado {0}, ya tiene un cónyuge declarado.", afiliado.id_principal);
 
                     e = new Exception(texto);
                 }
@@ -263,7 +280,7 @@ namespace ClinicaFrba.Base_de_Datos
                 var parametro0 = new SqlParameter("@afiliado", SqlDbType.Int);
                 var parametro3 = new SqlParameter("@tipo_doc", SqlDbType.Text);
                 var parametro4 = new SqlParameter("@direccion", SqlDbType.Text);
-                var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
+                //var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
                 var parametro6 = new SqlParameter("@mail", SqlDbType.Text);
                 var parametro7 = new SqlParameter("@sexo", SqlDbType.Char);
                 var parametro9 = new SqlParameter("@estado", SqlDbType.Int);
@@ -273,7 +290,7 @@ namespace ClinicaFrba.Base_de_Datos
                 parametro0.Value = afiliado.id;
                 parametro3.Value = afiliado.tipo_doc.ToUpper();
                 parametro4.Value = afiliado.direccion.ToUpper();
-                parametro5.Value = afiliado.telefono.ToUpper();
+                //parametro5.Value = afiliado.telefono;
                 parametro6.Value = afiliado.e_mail.ToUpper();
                 parametro7.Value = afiliado.sexo;
                 parametro9.Value = afiliado.estado_civil;
@@ -283,7 +300,16 @@ namespace ClinicaFrba.Base_de_Datos
                 comando_sql.Parameters.Add(parametro0);
                 comando_sql.Parameters.Add(parametro3);
                 comando_sql.Parameters.Add(parametro4);
-                comando_sql.Parameters.Add(parametro5);
+                //comando_sql.Parameters.Add(parametro5);
+                if (afiliado.telefono == null)
+                {
+                    comando_sql.Parameters.AddWithValue("@telefono", DBNull.Value);
+                }
+                else {
+                    var parametro5 = new SqlParameter("@telefono", SqlDbType.Int);
+                    parametro5.Value = afiliado.telefono;
+                    comando_sql.Parameters.Add(parametro5);
+                }
                 comando_sql.Parameters.Add(parametro6);
                 comando_sql.Parameters.Add(parametro7);
                 comando_sql.Parameters.Add(parametro9);
@@ -333,7 +359,7 @@ namespace ClinicaFrba.Base_de_Datos
                     afiliado.tipo_doc = pRow["tipo_doc"].ToString();
                     afiliado.nro_doc = Int32.Parse(pRow["numero_doc"].ToString());
                     afiliado.direccion = pRow["direccion"].ToString();
-                    afiliado.telefono = pRow["telefono"].ToString();
+                    afiliado.telefono = Int32.Parse(pRow["telefono"].ToString());
                     afiliado.e_mail = pRow["mail"].ToString();
                     afiliado.sexo = pRow["sexo"].ToString()[0];
                     afiliado.fecha_nac = DateTime.Parse(pRow["fecha_nacimiento"].ToString());

@@ -245,7 +245,7 @@ namespace ClinicaFrba.Abm_Afiliado
             txtNombre.Text = afiliado.nombre;
             txtNroDoc.Text = afiliado.nro_doc.ToString();
             cmbPlan.SelectedIndex = ComboData.obtener_indice(afiliado.plan_id.Value, cmbPlan);
-            txtNroTelefono.Text = afiliado.telefono;
+            txtNroTelefono.Text = afiliado.telefono.ToString();
             //selecciono el item que tiene de descripcion
             cmbSexo.SelectedIndex = ComboData.obtener_indice(afiliado.sexo, cmbSexo);
             //selecciono el item que tiene de descripcion
@@ -338,9 +338,9 @@ namespace ClinicaFrba.Abm_Afiliado
 
             afiliado.plan_id = ComboData.obtener_identificador(cmbPlan);
             afiliado.sexo = ComboData.obtener_descripcion(cmbSexo)[0];
-            afiliado.telefono = txtNroTelefono.Text;
+            afiliado.telefono = string.IsNullOrEmpty(txtNroTelefono.Text.Trim())? new int?(): Int32.Parse(txtNroTelefono.Text.Trim());
             afiliado.tipo_doc = ComboData.obtener_descripcion(cmbTipoDoc);
-
+            afiliado.fecha_nac = DateTime.Parse(txtFec_Nac.Text);
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
@@ -396,7 +396,7 @@ namespace ClinicaFrba.Abm_Afiliado
             }
             txtDireccion.Text = afiliado.direccion;
             TxtMail.Text = afiliado.e_mail;
-            txtNroTelefono.Text = afiliado.telefono;
+            txtNroTelefono.Text = afiliado.telefono.ToString();
             cmbTipoDoc.SelectedIndex = 0;
             cmbPlan.SelectedIndex = 0;
             cmbSexo.SelectedIndex = 0;
@@ -410,7 +410,8 @@ namespace ClinicaFrba.Abm_Afiliado
             seleccionarFecha.fecha = DateTime.Parse(this.txtFec_Nac.Text);
             seleccionarFecha.ShowDialog();
             this.afiliado.fecha_nac = seleccionarFecha.fecha;
-            this.txtFec_Nac.Text = afiliado.fecha_nac.ToShortDateString();
+            this.afiliado_principal.fecha_nac = seleccionarFecha.fecha;
+            this.txtFec_Nac.Text = afiliado_principal.fecha_nac.ToShortDateString();
         }
     }
 }

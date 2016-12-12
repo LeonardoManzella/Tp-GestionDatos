@@ -17,7 +17,7 @@ namespace ClinicaFrba.Clases
         public string tipo_doc {get;set;}
         public int nro_doc { get; set; }
         public string direccion { get; set; }
-        public string telefono { get; set; }
+        public int? telefono { get; set; }
         public string e_mail { get; set; }
         public DateTime fecha_nac { get; set; }
         public int estado_civil { get; set; }
